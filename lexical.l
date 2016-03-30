@@ -1,4 +1,11 @@
 
+OTHERS_RESERVADS = (asm|auto|extern|register|return|union|void|volatile)
+DECISION_RESERVADS = (break|case|continue|default|do|else|for|goto|if|switch|while)
+TYPE_RESERVADS = (char|const|double|enum|float|int|long|short|signed|sizeof|static|struct|typedef|unsigned)
+ALL_RESERVADS = (OTHERS_RESERVADS|DECISION_RESERVADS|TYPE_RESERVADS)
+
+
+
 
 %%
 /* Reserved words Portugol */
@@ -37,3 +44,5 @@
 "(" return(LEFT_PARENTHESIS);
 ")" return(RIGHT_PARENTHESIS);
 "\n" return(END);
+
+%%
