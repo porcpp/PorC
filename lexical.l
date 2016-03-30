@@ -1,13 +1,14 @@
 
-OTHERS_RESERVADS = (asm|auto|extern|register|return|union|void|volatile)
-DECISION_RESERVADS = (break|case|continue|default|do|else|for|goto|if|switch|while)
-TYPE_RESERVADS = (char|const|double|enum|float|int|long|short|signed|sizeof|static|struct|typedef|unsigned)
-ALL_RESERVADS = (OTHERS_RESERVADS|DECISION_RESERVADS|TYPE_RESERVADS)
-
-
+other_reserved (asm|auto|extern|register|return|union|void|volatile)
+decision_reserved (break|case|continue|default|do|else|for|goto|if|switch|while)
+type_reserved (char|const|double|enum|float|int|long|short|signed|sizeof|static|struct|typedef|unsigned)
+all_reserved (other_reserved|decision_reserved|type_reserved)
 
 
 %%
+{ /* Define all reserverd world */ }
+{all_reserved} return(RESERVED_WORLD);
+
 /* Reserved words Portugol */
 "leia" return(READ);
 "escreva" return(WRITE);

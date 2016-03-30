@@ -5,6 +5,7 @@
 
 %}
 
+%token RESERVED_WORLD
 %token END
 %start Compile
 %error-verbose
