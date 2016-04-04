@@ -4,4 +4,4 @@ porcpp:
 		gcc sintatica.tab.c lex.yy.c
 		
 clean:
-		rm *.c *.out 
+		rm *.tab.* *.yy.* *.out 
