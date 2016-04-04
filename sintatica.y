@@ -1,29 +1,42 @@
 %{
 
-#include "common.h"
 #include <stdio.h>
 
 %}
 
-%token RESERVED_WORLD
+%token PLUS
+%token MINUS
+%token TIMES
+%token DIVIDE
+%token NUM
 %token END
+
 %start Compile
+
 %error-verbose
  
 %%
 
 Compile:
-	END { printf("FIM\n"); }
+    | Compile Expression
+;
+Expression:
+    END
+    | NUM PLUS NUM END { printf("a+b"); }
+    | NUM MINUS NUM END { printf("a-b"); }
+    | NUM TIMES NUM END { printf("a*b"); }
+    | NUM DIVIDE NUM END { printf("a/b"); }
+
 ;
 
 %%
  
-void yyerror(const char* errmsg)
+void yyerror(char* errmsg)
 {
 	printf("\n*** Erro: %s\n", errmsg);
 }
  
-int yywrap(void) { return 1; }
+int yywrap() { return 1; }
  
 int main(int argc, char** argv)
 {
