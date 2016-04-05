@@ -37,11 +37,16 @@
 %%
 
 Compile:
-    | Compile Expression
+    VAR END_LINE Variables END_LINE Algorithm END_LINE 
 ;
-Expression:
-    END_LINE
+Variables:
+   NAMEVAR Variables
+   | COLON Variables
+   | T_INT 
 ;
+
+Algorithm:
+    ALGORITHM END_LINE END_ALGORITHM 
 
 %%
  
