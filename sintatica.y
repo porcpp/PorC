@@ -5,6 +5,7 @@
 %}
 
 %token RESERVED_WORD_C
+%token TO_IMPLEMENT
 %token ALGORITHM
 %token END_ALGORITHM
 %token CONSTANTS
@@ -12,11 +13,13 @@
 %token BEGIN_
 %token VAR
 
-%token INT
-%token DOUBLE
-%token BOOLEAN
-%token CHAR
-%token STRING
+%token NAMEVAR
+
+%token T_INT
+%token T_DOUBLE
+%token T_BOOLEAN
+%token T_CHAR
+%token T_STRING
 
 
 %token COMMENT

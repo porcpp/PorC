@@ -7,7 +7,7 @@ decision_reserved (break|case|continue|default|do|else|for|goto|if|switch|while)
 type_reserved (char|const|double|enum|float|int|long|short|signed|sizeof|static|struct|typedef|unsigned)
 all_reserved (other_reserved|decision_reserved|type_reserved)
 
-
+reserved_portugol (para|fim_para|de|ate|faca|enquanto|fim_enquanto|repita|pare|se|fim_se|entao|senao|verdadeiro|falso)
 
 digit [0-9]
 intenger [digit]+
@@ -16,69 +16,34 @@ character_min [a-z]
 character_mai [A-Z]
 character ({character_min}|{character_mai})
 string ({character_min}|{character_mai})+
-whitespace [ \n\r\t]+
 
 %%
-{all_reserved} return(RESERVED_WORD_C);
+{all_reserved} {return(RESERVED_WORD_C);}
+{reserved_portugol} {return(TO_IMPLEMENT);}
 
-^character[({intenger}|{character}|"_")]* {return NAMEVAR}
+^character[({intenger}|{character}|"_")]* {return(NAMEVAR);}
 
-/* Reserved words Portugol */
 "algoritmo" 		        {return(ALGORITHM);}
 "fimalgoritmo" 		        {return(END_ALGORITHM);}
 "constantes" 		        {return(CONSTANTS);}
 "variaveis" 		        {return(VARIABLES);}
-"inicio"	 		        {return(BEGIN);}
+"inicio"	 		        {return(BEGIN_);}
 "var" 						{return(VAR);}
 
-"para" 						{return(FOR);} 
-"fim_para" 					{return(END_FOR);}
-"de" 						{return(IN);}
-"ate" 						{return(UNTIL);}
-"faca" 						{return(DO_IT);}
-"enquanto" 					{return(WHILE);} 
-"fim_enquanto" 		        {return(END_WHILE);}
-"repita"		 			{return(REPEAT);}
-"pare"	 					{return(STOP);}
 
-"se" 						{return(IF_IT);}
-"fim_se" 					{return(END_IF);}
-"entao" 					{return(SO);}
-"senao" 					{return(IF_NO);}
+"inteiro" 					{return(T_INT);}
+"real" 						{return(T_DOUBLE);}
+"logico" 					{return(T_BOOLEAN);}
+"caractere" 		        {return(T_CHAR);}
+"literal"                   {return(T_STRING);}
 
-"inteiro" 					{return(INT);}
-"real" 						{return(DOUBLE);}
-"logico" 					{return(BOOLEAN);}
-"caractere" 		        {return(CHAR);}
-"literal"                   {return(STRING);}
 
-"verdadeiro" 		        {return(TRUE);}
-"falso" 					{return(FALSO);}
-
-"+" 						{return(PLUS);}
-"-" 						{return(MINUS);}
-"*" 						{return(TIMES);}
-"/" 						{return(DIVIDE);}
-"div" 						{return(DIVIDE);}
-"mod"                       {return(MOD);}
-"^" 						{return(POWER);}
-
-":=" 				{return(ATRIBUICION);}
-"!=" 				{return(DIFERENT);}
-"&&" 				{return(AND_);}
-"||" 				{return(OR_);}
 
 "//" 				{return(COMMENT);}
 ":" 				{return(COLON);}
 ";" 				{return(SEMICOLON);}
 ","				{return(COMMA);}
 
-"(" 				{return(LEFT_PARENTHESIS);}
-")" 				{return(RIGHT_PARENTHESIS);}
-"{" 				{return(LEFT_KEY);}
-"}" 				{return(RIGHT_KEY);}
-"[" 				{return(LEFT_BRACKET);}
-"]" 				{return(RIGHT_BRACKET);}
 
 "\n" 				{return(END_LINE);}
 "\t" 				{return(TABULATION);}
