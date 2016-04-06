@@ -37,11 +37,12 @@
 %%
 
 Compile:
-    VAR END_LINE Variables END_LINE      
+    VAR END_LINE Variables Algorithm END_LINE    
 ;
 
-Variables:
-    NAMEVAR COLON Type
+Variables:   
+    NAMEVAR COLON Type END_LINE END_LINE
+    | NAMEVAR COLON Type END_LINE Variables
     | NAMEVAR COMMA Variables 
 ;
 
