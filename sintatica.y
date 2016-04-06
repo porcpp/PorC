@@ -37,16 +37,25 @@
 %%
 
 Compile:
-    VAR END_LINE Variables END_LINE Algorithm END_LINE 
+    VAR END_LINE Variables END_LINE      
 ;
+
 Variables:
-   NAMEVAR Variables
-   | COLON Variables
-   | T_INT 
+    NAMEVAR COLON Type
+    | NAMEVAR COMMA Variables 
+;
+
+Type: 
+    |T_INT
+    |T_DOUBLE
+    |T_CHAR
+    |T_STRING
+    |T_BOOLEAN	
 ;
 
 Algorithm:
     ALGORITHM END_LINE END_ALGORITHM 
+;
 
 %%
  

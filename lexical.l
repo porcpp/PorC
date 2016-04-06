@@ -10,18 +10,17 @@ all_reserved (other_reserved|decision_reserved|type_reserved)
 reserved_portugol (para|fim_para|de|ate|faca|enquanto|fim_enquanto|repita|pare|se|fim_se|entao|senao|verdadeiro|falso)
 
 digit [0-9]
-intenger [digit]+
+intenger {digit}+
 
 character_min [a-z]
 character_mai [A-Z]
 character ({character_min}|{character_mai})
-string ({character_min}|{character_mai})+
+string character+
 
 %%
 {all_reserved} {return(RESERVED_WORD_C);}
 {reserved_portugol} {return(TO_IMPLEMENT);}
 
-^character[({intenger}|{character}|"_")]* {return(NAMEVAR);}
 
 "algoritmo" 		        {return(ALGORITHM);}
 "fimalgoritmo" 		        {return(END_ALGORITHM);}
@@ -47,5 +46,7 @@ string ({character_min}|{character_mai})+
 
 "\n" 				{return(END_LINE);}
 "\t" 				{return(TABULATION);}
+
+{character}({intenger}|{character}|"_")* {return(NAMEVAR);}
 
 %%
