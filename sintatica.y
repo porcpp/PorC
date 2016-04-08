@@ -4,6 +4,12 @@
 
 %}
 
+%union{
+    char* s;
+}
+
+%token <s> NAMEVAR
+
 %token RESERVED_WORD_C
 %token TO_IMPLEMENT
 %token ALGORITHM
@@ -12,8 +18,6 @@
 %token VARIABLES
 %token BEGIN_
 %token VAR
-
-%token NAMEVAR
 
 %token T_INT
 %token T_DOUBLE
@@ -41,13 +45,13 @@ Compile:
 ;
 
 Variables:   
-    NAMEVAR COLON Type END_LINE END_LINE
+    NAMEVAR COLON Type END_LINE {printf("%s",$1);}
     | NAMEVAR COLON Type END_LINE Variables
     | NAMEVAR COMMA Variables 
 ;
 
 Type: 
-    |T_INT
+    |T_INT {return "int";}
     |T_DOUBLE
     |T_CHAR
     |T_STRING

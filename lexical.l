@@ -1,5 +1,6 @@
 %{
     #include "sintatica.tab.h"
+    #define YYSTYPE char *
 %}
 
 other_reserved (asm|auto|extern|register|return|union|void|volatile)
@@ -16,10 +17,12 @@ character_min [a-z]
 character_mai [A-Z]
 character ({character_min}|{character_mai})
 string character+
+namevar {character}({intenger}|{character}|"_")* 
 
 %%
 {all_reserved} {return(RESERVED_WORD_C);}
 {reserved_portugol} {return(TO_IMPLEMENT);}
+
 
 
 "algoritmo" 		        {return(ALGORITHM);}
@@ -30,7 +33,7 @@ string character+
 "var" 						{return(VAR);}
 
 
-"inteiro" 					{return(T_INT);}
+"inteiro" 					{ yylval.s = strdup(yytext); return(T_INT);}
 "real" 						{return(T_DOUBLE);}
 "logico" 					{return(T_BOOLEAN);}
 "caractere" 		        {return(T_CHAR);}
@@ -38,15 +41,15 @@ string character+
 
 
 
-"//" 				{return(COMMENT);}
-":" 				{return(COLON);}
-";" 				{return(SEMICOLON);}
-","				{return(COMMA);}
+"//" 						{return(COMMENT);}
+":" 						{return(COLON);}
+";" 						{return(SEMICOLON);}
+","							{return(COMMA);}
 
 
-"\n" 				{return(END_LINE);}
-"\t" 				{return(TABULATION);}
+"\n" 						{return(END_LINE);}
+"\t" 						{return(TABULATION);}
 
-{character}({intenger}|{character}|"_")* {return(NAMEVAR);}
+{namevar} {	yylval.s = strdup(yytext); {return(NAMEVAR);} }
 
 %%
