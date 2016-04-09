@@ -4,7 +4,7 @@
 
 %}
 
-%union{
+%union {
     char* s;
 }
 
@@ -19,12 +19,15 @@
 %token BEGIN_
 %token VAR
 
-%token T_INT
-%token T_DOUBLE
-%token T_BOOLEAN
-%token T_CHAR
-%token T_STRING
+/* define tokens type */
+%token <s> T_INT 
+%token <s> T_DOUBLE 
+%token <s> T_BOOLEAN 
+%token <s> T_CHAR 
+%token <s> T_STRING 
 
+/* define function type */
+%type <s> Type
 
 %token COMMENT
 %token COLON
@@ -45,13 +48,13 @@ Compile:
 ;
 
 Variables:   
-    NAMEVAR COLON Type END_LINE {printf("%s",$1);}
-    | NAMEVAR COLON Type END_LINE Variables
-    | NAMEVAR COMMA Variables 
-;
+    NAMEVAR COLON Type END_LINE { printf("%s %s;\n",$3, $1); }
+    | NAMEVAR COLON Type END_LINE Variables { printf("%s %s;\n", $3, $1); }
+    | NAMEVAR COMMA Variables { printf("%s, ",$1); }
+;   
 
 Type: 
-    |T_INT {return "int";}
+    |T_INT 
     |T_DOUBLE
     |T_CHAR
     |T_STRING

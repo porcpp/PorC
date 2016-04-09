@@ -23,8 +23,6 @@ namevar {character}({intenger}|{character}|"_")*
 {all_reserved} {return(RESERVED_WORD_C);}
 {reserved_portugol} {return(TO_IMPLEMENT);}
 
-
-
 "algoritmo" 		        {return(ALGORITHM);}
 "fimalgoritmo" 		        {return(END_ALGORITHM);}
 "constantes" 		        {return(CONSTANTS);}
@@ -32,20 +30,16 @@ namevar {character}({intenger}|{character}|"_")*
 "inicio"	 		        {return(BEGIN_);}
 "var" 						{return(VAR);}
 
-
-"inteiro" 					{ yylval.s = strdup(yytext); return(T_INT);}
-"real" 						{return(T_DOUBLE);}
-"logico" 					{return(T_BOOLEAN);}
-"caractere" 		        {return(T_CHAR);}
-"literal"                   {return(T_STRING);}
-
-
+"inteiro" 					{ yylval.s = "int"; return(T_INT);}
+"real" 						{ yylval.s = "double"; return(T_DOUBLE);}
+"logico" 					{ yylval.s = "bool"; return(T_BOOLEAN);}
+"caractere" 		        { yylval.s = "char"; return(T_CHAR);}
+"literal"                   { yylval.s = "string"; return(T_STRING);}
 
 "//" 						{return(COMMENT);}
 ":" 						{return(COLON);}
 ";" 						{return(SEMICOLON);}
 ","							{return(COMMA);}
-
 
 "\n" 						{return(END_LINE);}
 "\t" 						{return(TABULATION);}
