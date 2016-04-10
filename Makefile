@@ -1,7 +1,7 @@
 porcpp:
-		bison -d sintatica.y 
-		flex lexical.l 
+		bison -d sintatica.y
+		flex lexical.l
 		gcc sintatica.tab.c lex.yy.c
-		
+
 clean:
-		rm *.tab.* *.yy.* *.out 
+		rm *.tab.* *.yy.* *.out
