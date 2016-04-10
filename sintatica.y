@@ -16,8 +16,9 @@
 %token END_ALGORITHM
 %token CONSTANTS
 %token VARIABLES
-%token BEGIN_
-%token VAR
+%token VARIABLES_END
+%token BEGIN_BODY
+%token END_BODY
 
 /* define tokens type */
 %token <s> T_INT
@@ -44,7 +45,24 @@
 %%
 
 Compile:
-    VAR END_LINE Variables Algorithm END_LINE
+    Header Body
+;
+
+Header:
+    HeaderAlgorithm HeaderVariables
+;
+
+HeaderAlgorithm:
+    ALGORITHM NAMEVAR END_LINE
+;
+
+HeaderVariables:
+    VARIABLES END_LINE Variables VARIABLES_END END_LINE
+;
+
+Body:
+    BEGIN_BODY END_LINE END_BODY
+    | BEGIN_BODY END_LINE END_BODY END_LINE
 ;
 
 Variables:
@@ -61,22 +79,18 @@ Type:
     |T_BOOLEAN
 ;
 
-Algorithm:
-    ALGORITHM END_LINE END_ALGORITHM
-;
-
 %%
 
 int yyerror(char* errmsg)
 {
-  printf("\n*** Erro: %s\n", errmsg);
-  return 0;
+    printf("\n*** Erro: %s\n", errmsg);
+    return 0;
 }
 
 int yywrap() { return 1; }
 
 int main(int argc, char** argv)
 {
-     yyparse();
-     return 0;
+    yyparse();
+    return 0;
 }
