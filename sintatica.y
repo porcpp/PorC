@@ -67,9 +67,10 @@ Algorithm:
 
 %%
 
-void yyerror(char* errmsg)
+int yyerror(char* errmsg)
 {
-	printf("\n*** Erro: %s\n", errmsg);
+  printf("\n*** Erro: %s\n", errmsg);
+  return 0;
 }
 
 int yywrap() { return 1; }
