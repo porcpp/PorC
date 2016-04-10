@@ -1,6 +1,23 @@
 %{
-
+#include <stdlib.h>
 #include <stdio.h>
+#include "c_templates.h"
+
+FILE* output_file = NULL;
+
+void open_output_file(char* algorithm_name) {
+    if (!output_file) {
+        char file_name[60];
+        sprintf(file_name, "%s.c", algorithm_name);
+        output_file = fopen(file_name, "w");
+    }
+}
+
+void close_output_file() {
+    if (output_file != NULL) {
+        fclose(output_file);
+    }
+}
 
 %}
 
@@ -53,16 +70,15 @@ Header:
 ;
 
 HeaderAlgorithm:
-    ALGORITHM NAMEVAR END_LINE
+    ALGORITHM NAMEVAR END_LINE {
+        open_output_file($2);
+        write_default_header(output_file);
+        write_body_begin(output_file);
+    }
 ;
 
 HeaderVariables:
     VARIABLES END_LINE Variables VARIABLES_END END_LINE
-;
-
-Body:
-    BEGIN_BODY END_LINE END_BODY
-    | BEGIN_BODY END_LINE END_BODY END_LINE
 ;
 
 Variables:
@@ -77,6 +93,17 @@ Type:
     |T_CHAR
     |T_STRING
     |T_BOOLEAN
+;
+
+Body:
+    BEGIN_BODY END_LINE END_BODY {
+        write_body_end(output_file);
+        close_output_file();
+    }
+    | BEGIN_BODY END_LINE END_BODY END_LINE {
+        write_body_end(output_file);
+        close_output_file();
+    }
 ;
 
 %%
