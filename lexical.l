@@ -35,11 +35,10 @@ namevar {character}({integer}|{character}|"_")*
 "início"              { return(BEGIN_BODY); }
 "fim"                 { return(END_BODY); }
 
-"inteiro"             { yylval.s = "int"; return(T_INT);}
-"real"                { yylval.s = "double"; return(T_DOUBLE);}
-"logico"              { yylval.s = "bool"; return(T_BOOLEAN);}
-"caractere"           { yylval.s = "char"; return(T_CHAR);}
-"literal"             { yylval.s = "string"; return(T_STRING);}
+"inteiro"             { yylval.strings = "int"; return(T_INT);}
+"real"                { yylval.strings = "double"; return(T_DOUBLE);}
+"logico"              { yylval.strings = "bool"; return(T_BOOLEAN);}
+"caractere"           { yylval.strings = "char"; return(T_CHAR);}
 
 ":="				  { return(ATTRIBUTION); }
 
@@ -47,13 +46,10 @@ namevar {character}({integer}|{character}|"_")*
 ":"             	  { return(COLON); }
 ";"             	  { return(SEMICOLON); }
 ","             	  { return(COMMA); }
-
-"\n"            	  { return(END_LINE); }
 	
-{namevar} 			  { yylval.s = strdup(yytext); return(NAMEVAR); }
+{namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
+
 {integer}			  { yylval.num = atoi(yytext); return(VALUE_INT); }
-{real} 				  { yylval.num = atof(yytext); return(VALUE_DOUBLE); }
 {character}			  { return(VALUE_CHARACTER); }
-{string}			  { return(VALUE_STRING); }
 
 %%

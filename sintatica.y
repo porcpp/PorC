@@ -22,17 +22,17 @@ void close_output_file() {
 %}
 
 %union {
-    char* s;
+    char* strings;
     int num;
+    char characters;
 }
 
-%token <s> NAMEVAR
+%token <strings> NAMEVAR
 
+/* define types of attribution */
 %token ATTRIBUTION
 %token <num> VALUE_INT
-%token <num> VALUE_DOUBLE
-%token VALUE_STRING
-%token VALUE_CHARACTER
+%token <characters> VALUE_CHARACTER
 
 %token RESERVED_WORD_C
 %token TO_IMPLEMENT
@@ -45,21 +45,22 @@ void close_output_file() {
 %token END_BODY
 
 /* define tokens type */
-%token <s> T_INT
-%token <s> T_DOUBLE
-%token <s> T_BOOLEAN
-%token <s> T_CHAR
-%token <s> T_STRING
+%token <strings> T_INT
+%token <strings> T_DOUBLE
+%token <strings> T_BOOLEAN
+%token <strings> T_CHAR
 
 /* define function type */
-%type <s> Type
+%type <strings> Type
+/* How change type of function */
+%type <num> ValueInt
+%type <characters> ValueChar
 
 %token COMMENT
 %token COLON
 %token SEMICOLON
 %token COMMA
 
-%token END_LINE
 %token TABULATION
 
 %start Compile
@@ -77,7 +78,7 @@ Header:
 ;
 
 HeaderAlgorithm:
-    ALGORITHM NAMEVAR END_LINE {
+    ALGORITHM NAMEVAR {
         open_output_file($2);
         write_default_header(output_file);
         write_body_begin(output_file);
@@ -85,44 +86,45 @@ HeaderAlgorithm:
 ;
 
 HeaderVariables:
-    VARIABLES END_LINE Variables VARIABLES_END END_LINE
+    VARIABLES Variables VARIABLES_END
 ;
 
 Variables:
-    NAMEVAR COLON Type END_LINE { printf("%s %s;\n",$3, $1); }
-    | NAMEVAR COLON Type END_LINE Variables { printf("%s %s;\n", $3, $1); }
+    NAMEVAR COLON Type { printf("%s %s;\n",$3, $1); }
+    | NAMEVAR COLON Type Variables { printf("%s %s;\n", $3, $1); }
     | NAMEVAR COMMA Variables { printf("%s, ",$1); }
 ;
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION Value SEMICOLON 
+    NAMEVAR ATTRIBUTION ValueInt SEMICOLON { printf("%s = %d;\n", $1, $3); }
 ;
-Value:
-    VALUE_INT {printf("int\n");}
-    | VALUE_DOUBLE {printf("double\n");}
-    | VALUE_CHARACTER {printf("character\n");}
-    | VALUE_STRING {printf("string\n");}
+ValueInt:
+    VALUE_INT 
 ;
+
 Type:
     T_INT
     |T_DOUBLE
     |T_CHAR
-    |T_STRING
     |T_BOOLEAN
 ;
 Body:
-    BEGIN_BODY END_LINE END_BODY {
+    BEGIN_BODY END_BODY {
         write_body_end(output_file);
         close_output_file();
     }
-    | BEGIN_BODY END_LINE END_BODY END_LINE {
+    | BEGIN_BODY END_BODY {
         write_body_end(output_file);
         close_output_file();
     }
-    | BEGIN_BODY END_LINE AttribuitionVariables END_LINE END_BODY {
+    | BEGIN_BODY AlgorithmBody END_BODY {
         write_body_end(output_file);
         close_output_file();
     } 
 ;
+AlgorithmBody:
+    AttribuitionVariables
+;
+
 
 %%
 
