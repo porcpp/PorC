@@ -23,9 +23,16 @@ void close_output_file() {
 
 %union {
     char* s;
+    int num;
 }
 
 %token <s> NAMEVAR
+
+%token ATTRIBUTION
+%token <num> VALUE_INT
+%token <num> VALUE_DOUBLE
+%token VALUE_STRING
+%token VALUE_CHARACTER
 
 %token RESERVED_WORD_C
 %token TO_IMPLEMENT
@@ -86,7 +93,15 @@ Variables:
     | NAMEVAR COLON Type END_LINE Variables { printf("%s %s;\n", $3, $1); }
     | NAMEVAR COMMA Variables { printf("%s, ",$1); }
 ;
-
+AttribuitionVariables:
+    NAMEVAR ATTRIBUTION Value SEMICOLON 
+;
+Value:
+    VALUE_INT {printf("int\n");}
+    | VALUE_DOUBLE {printf("double\n");}
+    | VALUE_CHARACTER {printf("character\n");}
+    | VALUE_STRING {printf("string\n");}
+;
 Type:
     T_INT
     |T_DOUBLE
@@ -94,7 +109,6 @@ Type:
     |T_STRING
     |T_BOOLEAN
 ;
-
 Body:
     BEGIN_BODY END_LINE END_BODY {
         write_body_end(output_file);
@@ -104,6 +118,10 @@ Body:
         write_body_end(output_file);
         close_output_file();
     }
+    | BEGIN_BODY END_LINE AttribuitionVariables END_LINE END_BODY {
+        write_body_end(output_file);
+        close_output_file();
+    } 
 ;
 
 %%

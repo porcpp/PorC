@@ -13,25 +13,27 @@ portugol_types (inteiro|real|caractere|literal|lógico)
 portugol_statements (e|ou|não|se|então|senão|fim-se|enquanto|fim-enquanto|para|de|até|faça|fim-para|verdadeiro|falso)
 
 digit [0-9]
-intenger {digit}+
+integer {digit}+
+real {integer}("."{integer})
 
 character_min [a-z]
 character_mai [A-Z]
 character ({character_min}|{character_mai})
-string character+
-namevar {character}({intenger}|{character}|"_")*
+string {character}+
+
+namevar {character}({integer}|{character}|"_")*
 
 %%
-{all_reserved}        {return(RESERVED_WORD_C);}
-{portugol_statements} {return(TO_IMPLEMENT);}
+{all_reserved}        { return(RESERVED_WORD_C); }
+{portugol_statements} { return(TO_IMPLEMENT); }
 
-"algoritmo"           {return(ALGORITHM);}
-"fim-algoritmo"       {return(END_ALGORITHM);}
-"constantes"          {return(CONSTANTS);}
-"variáveis"           {return(VARIABLES);}
-"fim-variáveis"       {return(VARIABLES_END);}
-"início"              {return(BEGIN_BODY);}
-"fim"                 {return(END_BODY);}
+"algoritmo"           { return(ALGORITHM); }
+"fim-algoritmo"       { return(END_ALGORITHM); }
+"constantes"          { return(CONSTANTS); }
+"variáveis"           { return(VARIABLES); }
+"fim-variáveis"       { return(VARIABLES_END); }
+"início"              { return(BEGIN_BODY); }
+"fim"                 { return(END_BODY); }
 
 "inteiro"             { yylval.s = "int"; return(T_INT);}
 "real"                { yylval.s = "double"; return(T_DOUBLE);}
@@ -39,14 +41,19 @@ namevar {character}({intenger}|{character}|"_")*
 "caractere"           { yylval.s = "char"; return(T_CHAR);}
 "literal"             { yylval.s = "string"; return(T_STRING);}
 
-"//"            {return(COMMENT);}
-":"             {return(COLON);}
-";"             {return(SEMICOLON);}
-","             {return(COMMA);}
+":="				  { return(ATTRIBUTION); }
 
-"\n"            {return(END_LINE);}
-"\t"            {return(TABULATION);}
+"//"            	  { return(COMMENT); }
+":"             	  { return(COLON); }
+";"             	  { return(SEMICOLON); }
+","             	  { return(COMMA); }
 
-{namevar} {	yylval.s = strdup(yytext); {return(NAMEVAR);} }
+"\n"            	  { return(END_LINE); }
+	
+{namevar} 			  { yylval.s = strdup(yytext); return(NAMEVAR); }
+{integer}			  { yylval.num = atoi(yytext); return(VALUE_INT); }
+{real} 				  { yylval.num = atof(yytext); return(VALUE_DOUBLE); }
+{character}			  { return(VALUE_CHARACTER); }
+{string}			  { return(VALUE_STRING); }
 
 %%
