@@ -20,6 +20,7 @@ character_mai [A-Z]
 character ({character_min}|{character_mai})
 string character+
 namevar {character}({intenger}|{character}|"_")*
+semicolon [";"]+
 
 %%
 {all_reserved}        {return(RESERVED_WORD_C);}
@@ -41,12 +42,8 @@ namevar {character}({intenger}|{character}|"_")*
 
 "//"            {return(COMMENT);}
 ":"             {return(COLON);}
-";"             {return(SEMICOLON);}
 ","             {return(COMMA);}
 
-"\n"            {return(END_LINE);}
-"\t"            {return(TABULATION);}
-
 {namevar} {	yylval.s = strdup(yytext); {return(NAMEVAR);} }
-
+{semicolon} {return(SEMICOLON);}
 %%
