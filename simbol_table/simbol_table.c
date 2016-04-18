@@ -4,11 +4,11 @@
 
 Node * tree;
 // Create a new node with value K
-Node * new_node(int k){
+Node * new_node(var variable){
     Node * treeLeft = (Node *) malloc(sizeof(Node));
     if( treeLeft !=NULL){
 
-        treeLeft->content=k;
+        treeLeft->content=variable;
         treeLeft->node_left=NULL;
         treeLeft->node_right=NULL;
     }else{
@@ -16,16 +16,23 @@ Node * new_node(int k){
     }
     return treeLeft;
 }
+var new_data (char name, char type, int value){
+    var data;
+    data.name = name;
+    data.type = type;
+    data.value = value;
+    return data;
+}
 // Search the node with value of k
-Node * search(int k, Node * node){
+Node * search(char name, Node * node){
     Node * find_node = NULL;
     if(node != NULL){
-        if(k == node->content){
+        if(name == node->content.name){
             find_node = node;
-        }else if(k> node->content){
-            find_node = search(k, node->node_right);
+        }else if(name> node->content.name){
+            find_node = search(name, node->node_right);
         }else{
-            find_node = search(k, node->node_left);
+            find_node = search(name, node->node_left);
         }
     }else{
         find_node =NULL;
@@ -33,21 +40,21 @@ Node * search(int k, Node * node){
     return find_node;
 }
 // Search for the data with value k
-int find(int k){
-    Node * node_result =search(k,tree);
-    int result = 0;
+var * find(char name){
+    Node * node_result =search(name,tree);
+    var * result = NULL;
     if (node_result != NULL){
-        result = node_result->content;
+        result = &node_result->content;
     }else{
-       result = 0; 
+       result = NULL; 
     }
     return result;
 }
 
 // Add a new data to the tree
-int insert(int k) {
+int insert(var variable) {
     Node* actual_node = tree;
-    Node* node = new_node(k);
+    Node* node = new_node(variable);
     int node_added = 0;
 
     if (tree == NULL) {
@@ -55,7 +62,7 @@ int insert(int k) {
         node_added = 1;
     } else {
         do {
-            if (k < actual_node->content) {
+            if (variable.name < actual_node->content.name) {
                 if (actual_node->node_left == NULL) {
                     actual_node->node_left = node;
                     node_added = 1;
@@ -76,17 +83,23 @@ int insert(int k) {
     return node_added;
 }
 
+void free_dfs(){
+    
+}
 int main(){
-    insert(5);
-    insert(2);
-    insert(7);
-    insert(3);
-    insert(8);
-    insert(1);
-
-    printf("%d\n", find(15));
-    printf("%d\n", find(5));
-    printf("%d\n", find(1));
-    printf("%d\n", find(9));
-//    printf("%c %c %d\n%d\n%p %p %p",x.name,x.type,x.value,tree->content,&tree,tree->node_left,tree->node_right);
+    insert(new_data('m','c',10));
+    insert(new_data('c','c',11));
+    insert(new_data('p','c',12));
+    insert(new_data('a','c',13));
+    insert(new_data('n','c',14));
+    insert(new_data('d','c',15));
+    
+    printf("%d\n", (find('d') != NULL) ? find('d')->value : 0);
+    printf("%d\n", (find('a') != NULL) ? find('a')->value : 0);
+    printf("%d\n", (find('c') != NULL) ? find('c')->value : 0);
+    printf("%d\n", (find('i') != NULL) ? find('i')->value : 0);
+    printf("%d\n", (find('n') != NULL) ? find('n')->value : 0);
+    printf("%d\n", (find('z') != NULL) ? find('z')->value : 0);
+    printf("%p\n", (void*) find('z'));
+    //    printf("%c %c %d\n%d\n%p %p %p",x.name,x.type,x.value,tree->content,&tree,tree->node_left,tree->node_right);
 }
