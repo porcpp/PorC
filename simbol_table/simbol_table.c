@@ -1,13 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "simbol_table.h"
 
 Node * tree;
-// Create a new node with value K
-Node * new_node(var variable){
-    Node * treeLeft = (Node *) malloc(sizeof(Node));
-    if( treeLeft !=NULL){
 
+var new_data (char* name, char* type, void* value){
+    var data;
+    data.name = name;
+    data.type = type;
+    data.value = value;
+    return data;
+}
+
+// Create a new node
+Node * new_node(var variable) {
+    Node * treeLeft = (Node *) malloc(sizeof(Node));
+
+    if(treeLeft != NULL) {
         treeLeft->content=variable;
         treeLeft->node_left=NULL;
         treeLeft->node_right=NULL;
@@ -16,20 +26,16 @@ Node * new_node(var variable){
     }
     return treeLeft;
 }
-var new_data (char name, char type, int value){
-    var data;
-    data.name = name;
-    data.type = type;
-    data.value = value;
-    return data;
-}
+
 // Search the node with value of k
-Node * search(char name, Node * node){
+Node * search(char* name, Node * node){
     Node * find_node = NULL;
     if(node != NULL){
-        if(name == node->content.name){
+        int cmp = strcmp(name, node->content.name); 
+
+        if(cmp == 0){
             find_node = node;
-        }else if(name> node->content.name){
+        }else if(cmp > 0){
             find_node = search(name, node->node_right);
         }else{
             find_node = search(name, node->node_left);
@@ -40,7 +46,7 @@ Node * search(char name, Node * node){
     return find_node;
 }
 // Search for the data with value k
-var * find(char name){
+var * find(char* name){
     Node * node_result =search(name,tree);
     var * result = NULL;
     if (node_result != NULL){
@@ -62,7 +68,9 @@ int insert(var variable) {
         node_added = 1;
     } else {
         do {
-            if (variable.name < actual_node->content.name) {
+            int cmp = strcmp(variable.name, actual_node->content.name);
+
+            if (cmp < 0) {
                 if (actual_node->node_left == NULL) {
                     actual_node->node_left = node;
                     node_added = 1;
@@ -94,26 +102,20 @@ void free_node(Node* node) {
 
 
 int main(){
-    insert(new_data('m','c',10));
-    insert(new_data('c','c',11));
-    insert(new_data('p','c',12));
-    insert(new_data('a','c',13));
-    insert(new_data('n','c',14));
-    insert(new_data('d','c',15));
+    int i[] = {1,2,3,4,5};
+    insert(new_data("foo", "int", (void*) &i[0]));
+    insert(new_data("bar", "int", (void*) &i[1]));
+    insert(new_data("foobar", "int", (void*) &i[2]));
+    insert(new_data("token", "int", (void*) &i[3]));
+    insert(new_data("hadouken", "int", (void*) &i[4]));
     
-    printf("%d\n", (find('d') != NULL) ? find('d')->value : 0);
-    printf("%d\n", (find('a') != NULL) ? find('a')->value : 0);
-    printf("%d\n", (find('c') != NULL) ? find('c')->value : 0);
-    printf("%d\n", (find('i') != NULL) ? find('i')->value : 0);
-    printf("%d\n", (find('n') != NULL) ? find('n')->value : 0);
-    printf("%d\n", (find('z') != NULL) ? find('z')->value : 0);
-    printf("%p\n", (void*) find('z'));
+    printf("%d\n", (find("foo") != NULL) ? *(int* )find("foo")->value : 0);
+    printf("%d\n", (find("bar") != NULL) ? *(int* )find("bar")->value : 0);
+    printf("%d\n", (find("foobar") != NULL) ? *(int* )find("foobar")->value : 0);
+    printf("%d\n", (find("token") != NULL) ? *(int* )find("token")->value : 0);
+    printf("%d\n", (find("hadouken") != NULL) ? *(int* )find("hadouken")->value : 0);
+    printf("%d\n", (find("hey joe") != NULL) ? *(int* )find("hey joe")->value : 0);
 
     free_node(tree);
-
-    insert(new_data('z', 'i', 33));
-    printf("%d\n", (find('z') != NULL) ? find('z')->value : 0);
-    printf("%d\n", tree->content.value);
-
     //    printf("%c %c %d\n%d\n%p %p %p",x.name,x.type,x.value,tree->content,&tree,tree->node_left,tree->node_right);
 }
