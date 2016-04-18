@@ -4,18 +4,18 @@ the operations of remove.
 */
 
 // The content of each node, witch receive the data from compiler
-struct data{
+typedef struct data{
     char  name; // Name of variable identify by compiler 
     char  type; // The type of variable 
-    int  value; // The actual value of a variable
-} ;
+    int   value; // The actual value of a variable
+} var;
 
 typedef struct node{
-    int content;
+    var  content;
     struct node * node_left;
     struct node * node_right;
 } Node;
 
-int insert(int k);
-int find(int k);
+int insert(var variable);
+var *find(char name);
 
