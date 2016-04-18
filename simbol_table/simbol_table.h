@@ -5,9 +5,9 @@ the operations of remove.
 
 // The content of each node, witch receive the data from compiler
 typedef struct data{
-    char  name; // Name of variable identify by compiler 
-    char  type; // The type of variable 
-    int   value; // The actual value of a variable
+    char*  name; // Name of variable identify by compiler 
+    char*  type; // The type of variable 
+    void*   value; // The actual value of a variable
 } var;
 
 typedef struct node{
@@ -17,5 +17,5 @@ typedef struct node{
 } Node;
 
 int insert(var variable);
-var *find(char name);
+var *find(char* name);
 
