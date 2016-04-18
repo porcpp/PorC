@@ -10,7 +10,7 @@ Node * new_node(int k){
 
         treeLeft->content=k;
         treeLeft->node_left=NULL;
-        treeLeft->node_rigth=NULL;
+        treeLeft->node_right=NULL;
     }else{
         printf("fails create a new node");
     }
@@ -23,7 +23,7 @@ Node * search(int k, Node * node){
         if(k == node->content){
             find_node = node;
         }else if(k> node->content){
-            find_node = search(k, node->node_rigth);
+            find_node = search(k, node->node_right);
         }else{
             find_node = search(k, node->node_left);
         }
@@ -44,15 +44,49 @@ int find(int k){
     return result;
 }
 
+// Add a new data to the tree
+int insert(int k) {
+    Node* actual_node = tree;
+    Node* node = new_node(k);
+    int node_added = 0;
+
+    if (tree == NULL) {
+        tree = node;
+        node_added = 1;
+    } else {
+        do {
+            if (k < actual_node->content) {
+                if (actual_node->node_left == NULL) {
+                    actual_node->node_left = node;
+                    node_added = 1;
+                } else {
+                    actual_node = actual_node->node_left;
+                }
+            } else {
+                if (actual_node->node_right == NULL) {
+                    actual_node->node_right = node;
+                    node_added = 1;
+                } else {
+                    actual_node = actual_node->node_right;
+                }
+            }
+        } while(!node_added);
+    }
+
+    return node_added;
+}
+
 int main(){
-    tree = new_node(10);
-    tree->node_left = new_node(1); 
-    tree->node_rigth = new_node(15);
-    struct data x;
-    x.name = 'c';
-    x.type = 'd';    
-    x.value= 100;
-    
-    printf("%d\n",find(15))  ;
-//    printf("%c %c %d\n%d\n%p %p %p",x.name,x.type,x.value,tree->content,&tree,tree->node_left,tree->node_rigth);
+    insert(5);
+    insert(2);
+    insert(7);
+    insert(3);
+    insert(8);
+    insert(1);
+
+    printf("%d\n", find(15));
+    printf("%d\n", find(5));
+    printf("%d\n", find(1));
+    printf("%d\n", find(9));
+//    printf("%c %c %d\n%d\n%p %p %p",x.name,x.type,x.value,tree->content,&tree,tree->node_left,tree->node_right);
 }

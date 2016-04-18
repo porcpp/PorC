@@ -13,7 +13,7 @@ struct data{
 typedef struct node{
     int content;
     struct node * node_left;
-    struct node * node_rigth;
+    struct node * node_right;
 } Node;
 
 int insert(int k);
