@@ -83,9 +83,16 @@ int insert(var variable) {
     return node_added;
 }
 
-void free_dfs(){
-    
+// remove an entire tree from the memory
+void free_node(Node* node) {
+    if (node != NULL) {
+        free_node(node->node_left);
+        free_node(node->node_right);
+        free(node);
+    }
 }
+
+
 int main(){
     insert(new_data('m','c',10));
     insert(new_data('c','c',11));
@@ -101,5 +108,12 @@ int main(){
     printf("%d\n", (find('n') != NULL) ? find('n')->value : 0);
     printf("%d\n", (find('z') != NULL) ? find('z')->value : 0);
     printf("%p\n", (void*) find('z'));
+
+    free_node(tree);
+
+    insert(new_data('z', 'i', 33));
+    printf("%d\n", (find('z') != NULL) ? find('z')->value : 0);
+    printf("%d\n", tree->content.value);
+
     //    printf("%c %c %d\n%d\n%p %p %p",x.name,x.type,x.value,tree->content,&tree,tree->node_left,tree->node_right);
 }
