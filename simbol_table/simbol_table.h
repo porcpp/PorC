@@ -10,10 +10,12 @@ struct data{
     int  value; // The actual value of a variable
 } ;
 
-struct node{
-    struct data  content;
+typedef struct node{
+    int content;
     struct node * node_left;
     struct node * node_rigth;
-} ;
+} Node;
 
-int insert(struct data,struct node raiz);
+int insert(int k);
+int find(int k);
+
