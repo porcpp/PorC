@@ -1,6 +1,6 @@
 algoritmo exemplo
 variáveis
-	a: inteiro	
+	a: inteiro;	
 fim-variáveis
 início
 a := "e";

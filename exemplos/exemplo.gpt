@@ -7,4 +7,5 @@ variáveis
     a: inteiro; b:real; c: caractere; d: literal;
 fim-variáveis
 início
+	a := "e";
 fim

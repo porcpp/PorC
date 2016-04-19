@@ -109,7 +109,7 @@ Body:
         write_body_end(output_file);
         close_output_file();
     }
-    | BEGIN_BODY END_LINE AttribuitionVariables END_LINE END_BODY {
+    | BEGIN_BODY AttribuitionVariables END_BODY {
         write_body_end(output_file);
         close_output_file();
     } 
