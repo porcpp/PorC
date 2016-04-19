@@ -22,18 +22,20 @@ void close_output_file() {
 %}
 
 %union {
-    char* s;
     int num_int;
     double num_double;
+    char* strings;
 }
 
-%token <s> NAMEVAR
+%token <strings> NAMEVAR
 
+/* define types of attribution */
 %token ATTRIBUTION
+
 %token <num_int> VALUE_INT
 %token <num_double> VALUE_DOUBLE
-%token <s>VALUE_STRING
-%token <s>VALUE_CHARACTER
+%token <strings>VALUE_STRING
+%token <strings>VALUE_CHARACTER
 
 %token RESERVED_WORD_C
 %token TO_IMPLEMENT
@@ -46,21 +48,19 @@ void close_output_file() {
 %token END_BODY
 
 /* define tokens type */
-%token <s> T_INT
-%token <s> T_DOUBLE
-%token <s> T_BOOLEAN
-%token <s> T_CHAR
-%token <s> T_STRING
+%token <strings> T_INT
+%token <strings> T_DOUBLE
+%token <strings> T_BOOLEAN
+%token <strings> T_CHAR
 
 /* define function type */
-%type <s> Type
+%type <strings> Type
 
 %token COMMENT
 %token COLON
 %token COMMA
 
 %token SEMICOLON
-
 %start Compile
 
 %error-verbose
@@ -96,7 +96,6 @@ Type:
     T_INT
     |T_DOUBLE
     |T_CHAR
-    |T_STRING
     |T_BOOLEAN
 ;
 AttribuitionVariables:
@@ -109,10 +108,13 @@ Body:
         write_body_end(output_file);
         close_output_file();
     }
-    | BEGIN_BODY AttribuitionVariables END_BODY {
-        write_body_end(output_file);
+    | BEGIN_BODY AlgorithmBody END_BODY {
+       write_body_end(output_file);
         close_output_file();
     } 
+;
+AlgorithmBody:
+    AttribuitionVariables
 ;
 
 %%

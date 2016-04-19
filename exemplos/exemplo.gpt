@@ -1,10 +1,8 @@
 algoritmo exemplo;;;;
 
 
-
-
 variáveis
-    a: inteiro; b:real; c: caractere; d: literal;
+    a: inteiro; b:real; c: caractere;
 fim-variáveis
 início
 	a := "e";

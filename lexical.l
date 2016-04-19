@@ -40,22 +40,21 @@ namevar {character}({integer}|{character}|"_")*
 "início"              { return(BEGIN_BODY); }
 "fim"                 { return(END_BODY); }
 
-"inteiro"             { yylval.s = "int"; return(T_INT);}
-"real"                { yylval.s = "double"; return(T_DOUBLE);}
-"logico"              { yylval.s = "bool"; return(T_BOOLEAN);}
-"caractere"           { yylval.s = "char"; return(T_CHAR);}
-"literal"             { yylval.s = "string"; return(T_STRING);}
+"inteiro"             { yylval.strings = "int"; return(T_INT);}
+"real"                { yylval.strings = "double"; return(T_DOUBLE);}
+"logico"              { yylval.strings = "bool"; return(T_BOOLEAN);}
+"caractere"           { yylval.strings = "char"; return(T_CHAR);}
 
-":="				{ return(ATTRIBUTION); }
+":="				  { return(ATTRIBUTION); }
 
 "//"            	  { return(COMMENT); }
 ":"             	  { return(COLON); }
 ","             	  { return(COMMA); }
 
-{namevar} 			  { yylval.s = strdup(yytext); return(NAMEVAR); }
+{namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
 {integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
 {real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
-{string_value}		  { yylval.s = strdup(yytext); return(VALUE_STRING); }
-{semicolon} 		  {return(SEMICOLON);}
+{string_value}		  { yylval.strings = strdup(yytext); return(VALUE_STRING); }
+{semicolon} 		  { return(SEMICOLON); }
 
 %%
