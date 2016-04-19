@@ -57,11 +57,9 @@ void close_output_file() {
 
 %token COMMENT
 %token COLON
-%token SEMICOLON
 %token COMMA
 
-%token END_LINE
-%token TABULATION
+%token SEMICOLON
 
 %start Compile
 
@@ -78,7 +76,7 @@ Header:
 ;
 
 HeaderAlgorithm:
-    ALGORITHM NAMEVAR END_LINE {
+    ALGORITHM NAMEVAR SEMICOLON {
         open_output_file($2);
         write_default_header(output_file);
         write_body_begin(output_file);
@@ -86,12 +84,12 @@ HeaderAlgorithm:
 ;
 
 HeaderVariables:
-    VARIABLES END_LINE Variables VARIABLES_END END_LINE
+    VARIABLES Variables VARIABLES_END
 ;
 
 Variables:
-    NAMEVAR COLON Type END_LINE { printf("%s %s;\n",$3, $1); }
-    | NAMEVAR COLON Type END_LINE Variables { printf("%s %s;\n", $3, $1); }
+    NAMEVAR COLON Type SEMICOLON { printf("%s %s;\n",$3, $1); }
+    | NAMEVAR COLON Type SEMICOLON Variables { printf("%s %s;\n", $3, $1); }
     | NAMEVAR COMMA Variables { printf("%s, ",$1); }
 ;
 Type:
@@ -107,11 +105,7 @@ AttribuitionVariables:
     | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { printf("%s = %s;", $1, $3); }
 ;
 Body:
-    BEGIN_BODY END_LINE END_BODY {
-        write_body_end(output_file);
-        close_output_file();
-    }
-    | BEGIN_BODY END_LINE END_BODY END_LINE {
+    BEGIN_BODY END_BODY {
         write_body_end(output_file);
         close_output_file();
     }

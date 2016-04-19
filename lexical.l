@@ -20,9 +20,11 @@ character_min [a-z]
 character_mai [A-Z]
 
 character ({character_min}|{character_mai})
+
 string {character}+
 
 string_value (("\""|"\'")({character}+)("\""|"\'"))
+semicolon [";"]+
 
 namevar {character}({integer}|{character}|"_")*
 
@@ -44,7 +46,7 @@ namevar {character}({integer}|{character}|"_")*
 "caractere"           { yylval.s = "char"; return(T_CHAR);}
 "literal"             { yylval.s = "string"; return(T_STRING);}
 
-":="				  { return(ATTRIBUTION); }
+":="			{ return(ATTRIBUTION); }
 
 "//"            	  { return(COMMENT); }
 ":"             	  { return(COLON); }
@@ -57,5 +59,6 @@ namevar {character}({integer}|{character}|"_")*
 {integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
 {real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
 {string_value}		  { yylval.s = strdup(yytext); return(VALUE_STRING); }
+{semicolon} {return(SEMICOLON);}
 
 %%
