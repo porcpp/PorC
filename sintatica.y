@@ -23,16 +23,17 @@ void close_output_file() {
 
 %union {
     char* s;
-    int num;
+    int num_int;
+    double num_double;
 }
 
 %token <s> NAMEVAR
 
 %token ATTRIBUTION
-%token <num> VALUE_INT
-%token <num> VALUE_DOUBLE
-%token VALUE_STRING
-%token VALUE_CHARACTER
+%token <num_int> VALUE_INT
+%token <num_double> VALUE_DOUBLE
+%token <s>VALUE_STRING
+%token <s>VALUE_CHARACTER
 
 %token RESERVED_WORD_C
 %token TO_IMPLEMENT
@@ -93,21 +94,17 @@ Variables:
     | NAMEVAR COLON Type END_LINE Variables { printf("%s %s;\n", $3, $1); }
     | NAMEVAR COMMA Variables { printf("%s, ",$1); }
 ;
-AttribuitionVariables:
-    NAMEVAR ATTRIBUTION Value SEMICOLON 
-;
-Value:
-    VALUE_INT {printf("int\n");}
-    | VALUE_DOUBLE {printf("double\n");}
-    | VALUE_CHARACTER {printf("character\n");}
-    | VALUE_STRING {printf("string\n");}
-;
 Type:
     T_INT
     |T_DOUBLE
     |T_CHAR
     |T_STRING
     |T_BOOLEAN
+;
+AttribuitionVariables:
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { printf("%s = %d;", $1, $3); } 
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { printf("%s = %lf;", $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { printf("%s = %s;", $1, $3); }
 ;
 Body:
     BEGIN_BODY END_LINE END_BODY {
