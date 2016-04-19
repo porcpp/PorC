@@ -3,5 +3,5 @@ variáveis
 	a: inteiro	
 fim-variáveis
 início
-a:=13;
+a := "e";
 fim

@@ -18,8 +18,11 @@ real {integer}("."{integer})
 
 character_min [a-z]
 character_mai [A-Z]
+
 character ({character_min}|{character_mai})
 string {character}+
+
+string_value (("\""|"\'")({character}+)("\""|"\'"))
 
 namevar {character}({integer}|{character}|"_")*
 
@@ -51,9 +54,8 @@ namevar {character}({integer}|{character}|"_")*
 "\n"            	  { return(END_LINE); }
 	
 {namevar} 			  { yylval.s = strdup(yytext); return(NAMEVAR); }
-{integer}			  { yylval.num = atoi(yytext); return(VALUE_INT); }
-{real} 				  { yylval.num = atof(yytext); return(VALUE_DOUBLE); }
-{character}			  { return(VALUE_CHARACTER); }
-{string}			  { return(VALUE_STRING); }
+{integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
+{real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
+{string_value}		  { yylval.s = strdup(yytext); return(VALUE_STRING); }
 
 %%
