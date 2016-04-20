@@ -2,7 +2,8 @@ algoritmo exemplo;;;;
 
 
 variáveis
-    a: inteiro; b:real; c: caractere;
+    a: inteiro; b: real; c: caractere;
+    f,d,fda,werd: caractere;
 fim-variáveis
 início
 	a := "e";
