@@ -1,6 +1,7 @@
 %{
     #include "sintatica.tab.h"
     #define YYSTYPE char *
+    int lines = 0;
 %}
 
 other_reserved (asm|auto|extern|register|return|union|void|volatile)
@@ -16,17 +17,17 @@ digit [0-9]
 integer {digit}+
 real {integer}("."{integer})
 
-character_min [a-z]
-character_mai [A-Z]
+letter_min [a-z]
+letter_mai [A-Z]
 
-character ({character_min}|{character_mai})
+letter ({letter_min}|{letter_mai})
+any_char .
+string {letter}+
 
-string {character}+
-
-string_value (("\""|"\'")({character}+)("\""|"\'"))
+string_value (("\""|"\'")({any_char}+)("\""|"\'"))
 semicolon [";"]+
 
-namevar {character}({integer}|{character}|"_")*
+namevar {letter}({integer}|{letter}|"_")*
 
 %%
 {all_reserved}        { return(RESERVED_WORD_C); }
@@ -47,14 +48,15 @@ namevar {character}({integer}|{character}|"_")*
 
 ":="				  { return(ATTRIBUTION); }
 
-"//"            	  { return(COMMENT); }
+"//"          	 	  { return(COMMENT); }
 ":"             	  { return(COLON); }
+{semicolon} 		  { return(SEMICOLON); }
 ","             	  { return(COMMA); }
+"\n"				  { lines+=1; }
 
 {namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
 {integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
 {real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
 {string_value}		  { yylval.strings = strdup(yytext); return(VALUE_STRING); }
-{semicolon} 		  { return(SEMICOLON); }
 
 %%

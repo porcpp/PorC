@@ -59,8 +59,8 @@ void close_output_file() {
 %token COMMENT
 %token COLON
 %token COMMA
-
 %token SEMICOLON
+
 %start Compile
 
 %error-verbose
@@ -70,11 +70,9 @@ void close_output_file() {
 Compile:
     Header Body
 ;
-
 Header:
     HeaderAlgorithm HeaderVariables
 ;
-
 HeaderAlgorithm:
     ALGORITHM NAMEVAR SEMICOLON {
         open_output_file($2);
@@ -82,15 +80,13 @@ HeaderAlgorithm:
         write_body_begin(output_file);
     }
 ;
-
 HeaderVariables:
     VARIABLES Variables VARIABLES_END
 ;
-
 Variables:
-    NAMEVAR COLON Type SEMICOLON { printf("%s %s;\n",$3, $1); }
-    | NAMEVAR COLON Type SEMICOLON Variables { printf("%s %s;\n", $3, $1); }
-    | NAMEVAR COMMA Variables { printf("%s, ",$1); }
+    NAMEVAR COLON Type SEMICOLON { write_declares_variable(output_file, $3 , $1);}
+    | NAMEVAR COLON Type SEMICOLON Variables { write_declares_variable(output_file, $3 , $1);}
+    | NAMEVAR COMMA Variables { write_declares_variable_with_comma(output_file, $1); printf("%s, ",$1);}
 ;
 Type:
     T_INT
@@ -99,9 +95,9 @@ Type:
     |T_BOOLEAN
 ;
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { printf("%s = %d;", $1, $3); } 
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { printf("%s = %lf;", $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { printf("%s = %s;", $1, $3); }
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { printf("%s = %d;\n", $1, $3); } 
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { printf("%s = %lf;\n", $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { printf("%s = %s;\n", $1, $3); }
 ;
 Body:
     BEGIN_BODY END_BODY {
