@@ -3,11 +3,10 @@
 #include <string.h>
 #include "simbol_table.h"
 
-var new_data (char* name, char* type, void* value){
+var new_data (char* name, char* type){
     var data;
     data.name = name;
     data.type = type;
-    data.value = value;
     return data;
 }
 
@@ -15,7 +14,7 @@ var new_data (char* name, char* type, void* value){
 Node * new_node(var variable) {
     Node * treeLeft = (Node *) malloc(sizeof(Node));
 
-    if(treeLeft != NULL) {
+    if( treeLeft != NULL ) {
         treeLeft->content=variable;
         treeLeft->node_left=NULL;
         treeLeft->node_right=NULL;
@@ -77,14 +76,17 @@ int insert(var variable) {
                 } else {
                     actual_node = actual_node->node_left;
                 }
-            } else {
+            } else if (cmp >0) {
                 if (actual_node->node_right == NULL) {
                     actual_node->node_right = node;
                     node_added = 1;
                 } else {
                     actual_node = actual_node->node_right;
                 }
+            } else {
+                // Variable already declared
             }
+
         } while(!node_added);
     }
     if(node_added){
@@ -144,27 +146,3 @@ var * array_iterator(){
     return all_data;
 }
 
-int main(){
-    int i[] = {1,2,3,4,5};
-    insert(new_data("foo", "int", (void*) &i[0]));
-    insert(new_data("bar", "int", (void*) &i[1]));
-    insert(new_data("foobar", "int", (void*) &i[2]));
-    insert(new_data("token", "int", (void*) &i[3]));
-    insert(new_data("hadouken", "int", (void*) &i[4]));
-    
-    printf("%d\n", (find("foo") != NULL) ? *(int* )find("foo")->value : 0);
-    printf("%d\n", (find("bar") != NULL) ? *(int* )find("bar")->value : 0);
-    printf("%d\n", (find("foobar") != NULL) ? *(int* )find("foobar")->value : 0);
-    printf("%d\n", (find("token") != NULL) ? *(int* )find("token")->value : 0);
-    printf("%d\n", (find("hadouken") != NULL) ? *(int* )find("hadouken")->value : 0);
-    printf("size: %d\n", root->size);
-
-    printf("%d\n", (find("hey joe") != NULL) ? *(int* )find("hey joe")->value : 0);
-    var * teste = array_iterator();
-    int k=0;
-    for(k=0;k<root->size;k++){
-        printf("name: %s\n",teste[k].name);
-    }
-    free_node(root);
-    //    printf("%c %c %d\n%d\n%p %p %p",x.name,x.type,x.value,tree->content,&tree,tree->node_left,tree->node_right);
-}
