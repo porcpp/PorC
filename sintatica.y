@@ -84,9 +84,9 @@ HeaderVariables:
     VARIABLES Variables VARIABLES_END
 ;
 Variables:
-    NAMEVAR COLON Type SEMICOLON { write_declares_variable(output_file, $3 , $1);}
-    | NAMEVAR COLON Type SEMICOLON Variables { write_declares_variable(output_file, $3 , $1);}
-    | NAMEVAR COMMA Variables { write_declares_variable_with_comma(output_file, $1); printf("%s, ",$1);}
+    NAMEVAR COMMA Variables { write_declares_variable_with_comma(output_file, $1); printf("%s, 3",$1);} 
+    | NAMEVAR COLON Type SEMICOLON Variables { write_declares_variable(output_file, $3 , $1); printf("%s %s ,2\n",$3,$1);}
+    | NAMEVAR COLON Type SEMICOLON { write_declares_variable(output_file, $3 , $1); printf("%s %s ,fd1\n",$3,$1);}
 ;
 Type:
     T_INT
@@ -95,9 +95,9 @@ Type:
     |T_BOOLEAN
 ;
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { printf("%s = %d;\n", $1, $3); } 
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { printf("%s = %lf;\n", $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { printf("%s = %s;\n", $1, $3); }
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON {write_atribute_variable_int(output_file, $1, $3); } 
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { write_atribute_variable_double(output_file, $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { write_atribute_variable_string(output_file, $1, $3); }
 ;
 Body:
     BEGIN_BODY END_BODY {
