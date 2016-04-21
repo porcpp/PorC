@@ -1,10 +1,10 @@
-algoritmo exemplo;;;;
+algoritmo exemplo;
 
 
 variáveis
-    a: inteiro; b: real; c: caractere;
-    f,d,fda,werd: caractere;
+    werd,a,sa,fds,dfs: caractere;
+    asd: inteiro
 fim-variáveis
 início
-	a := "e";
+    b := "ads";
 fim
