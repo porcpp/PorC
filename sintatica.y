@@ -81,15 +81,15 @@ HeaderAlgorithm:
     }
 ;
 HeaderVariables:
-    VARIABLES MultiVariables VARIABLES_END
+    VARIABLES MultiVariables VARIABLES_END{fprintf(output_file,";\n");}
 ;
 MultiVariables:
-    Variables {fprintf(output_file,";\n");}
+    Variables
+    | Variables{fprintf(output_file,";\n");}MultiVariables
 ;
 Variables:
     NAMEVAR COMMA Variables { write_declares_variable_with_comma(output_file, $1); printf(", %s",$1);}
     | NAMEVAR COLON Type SEMICOLON { write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
-    | NAMEVAR COLON Type SEMICOLON Variables {fprintf(output_file,";\n");}
 ;
 Type:
     T_INT

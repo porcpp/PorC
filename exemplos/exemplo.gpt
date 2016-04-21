@@ -3,7 +3,8 @@ algoritmo exemplo;
 
 variáveis
     werd,a,sa,fds,dfs: caractere;
-    asd: inteiro
+    asd: inteiro;
+    asdf,fgdsfh,dfgsfd,sdfdsg: real;
 fim-variáveis
 início
     b := "ads";
