@@ -1,7 +1,7 @@
 %{
 #include <stdlib.h>
 #include <stdio.h>
-#include "c_templates.h"
+#include "lib/templates/c_templates.h"
 
 FILE* output_file = NULL;
 
@@ -98,7 +98,7 @@ Type:
     |T_BOOLEAN
 ;
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON {write_atribute_variable_int(output_file, $1, $3); } 
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON {write_atribute_variable_int(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { write_atribute_variable_double(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { write_atribute_variable_string(output_file, $1, $3); }
 ;
@@ -110,7 +110,7 @@ Body:
     | BEGIN_BODY AlgorithmBody END_BODY {
        write_body_end(output_file);
         close_output_file();
-    } 
+    }
 ;
 AlgorithmBody:
     AttribuitionVariables
@@ -118,16 +118,19 @@ AlgorithmBody:
 
 %%
 
-int yyerror(char* errmsg)
-{
+int yyerror(char* errmsg) {
     printf("\n*** Erro: %s\n", errmsg);
     return 0;
 }
 
-int yywrap() { return 1; }
 
-int main(int argc, char** argv)
-{
+int yywrap() {
+  return 1;
+}
+
+
+int main(int argc, char** argv) {
     yyparse();
     return 0;
 }
+

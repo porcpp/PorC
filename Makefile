@@ -1,5 +1,6 @@
 CC=gcc
-FILES=sintatica.tab.c lex.yy.c c_templates.c
+LIB=lib/templates/c_templates.c
+FILES=sintatica.tab.c lex.yy.c ${LIB}
 FLAGS=-ggdb
 
 

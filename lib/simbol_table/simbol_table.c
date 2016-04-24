@@ -3,7 +3,7 @@
 #include <string.h>
 #include "simbol_table.h"
 
-var new_data (char* name, char* type){
+var new_data (char* name, char* type) {
     var data;
     data.name = name;
     data.type = type;
@@ -14,45 +14,49 @@ var new_data (char* name, char* type){
 Node * new_node(var variable) {
     Node * treeLeft = (Node *) malloc(sizeof(Node));
 
-    if( treeLeft != NULL ) {
-
+    if (treeLeft != NULL) {
         treeLeft->content=variable;
         treeLeft->node_left=NULL;
         treeLeft->node_right=NULL;
-    }else{
+    } else {
         printf("fails create a new node");
     }
+
     return treeLeft;
 }
 
 // Search the node with value of k
-Node * search(char* name, Node * node){
+Node * search(char* name, Node * node) {
     Node * find_node = NULL;
-    if(node != NULL){
-        int cmp = strcmp(name, node->content.name); 
 
-        if(cmp == 0){
+    if (node != NULL) {
+        int cmp = strcmp(name, node->content.name);
+
+        if (cmp == 0) {
             find_node = node;
-        }else if(cmp > 0){
+        } else if (cmp > 0) {
             find_node = search(name, node->node_right);
-        }else{
+        } else {
             find_node = search(name, node->node_left);
         }
-    }else{
+    } else {
         find_node =NULL;
     }
+
     return find_node;
 }
 
 // Search for the data with value k
-var * find(char* name){
+var * find(char* name) {
     Node * node_result =search(name,root);
     var * result = NULL;
+
     if (node_result != NULL){
         result = &node_result->content;
-    }else{
-       result = NULL; 
+    } else {
+       result = NULL;
     }
+
     return result;
 }
 
@@ -90,11 +94,13 @@ int insert(var variable) {
 
         } while(!node_added);
     }
-    if(node_added){
+
+    if (node_added) {
         root->size++;
-    }else{
+    } else {
         // Node don't added
     }
+
     return node_added;
 }
 
@@ -115,21 +121,20 @@ void destroy(){
 }
 
 var * array_iterator(){
-    
     var * all_data =  NULL; // Array with all data of nodes in the tree
-    if( root!=NULL){
 
+    if ( root!=NULL) {
         all_data = (var *) malloc(sizeof(var)*root->size+1);
         Node * all_nodes = (Node *) malloc(sizeof(Node)*root->size+1);
 
         all_data[0] = root->content;
         all_nodes[0] = *root;
         int i,actual_index=1;
- 
+
         // Travessing the tree using BFS algorithm
-        for(i=0; i<root->size; i++){
+        for (i=0; i<root->size; i++) {
             // Add the left node
-            if(all_nodes[i].node_left != NULL){
+            if (all_nodes[i].node_left != NULL) {
                 all_nodes[actual_index] = *all_nodes[i].node_left;
                 all_data[actual_index] = all_nodes[i].node_left->content;
                 actual_index++;
@@ -141,9 +146,10 @@ var * array_iterator(){
                 actual_index++;
             }
         }
-    }else{
-        // The tree doesn't have nodes 
+    } else {
+        // The tree doesn't have nodes
     }
+
     return all_data;
 }
 

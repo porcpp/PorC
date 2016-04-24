@@ -1,3 +1,6 @@
+#ifndef SIMBOL_TABLE
+#define SIMBOL_TABLE
+
 /*simbol_table.h
 The data struct implemented is a binary tree with basic operations without
 the operations of remove.
@@ -5,8 +8,8 @@ the operations of remove.
 
 // The content of each node, witch receive the data from compiler
 typedef struct data{
-    char*  name; // Name of variable identify by compiler 
-    char*  type; // The type of variable 
+    char*  name; // Name of variable identify by compiler
+    char*  type; // The type of variable
 } var;
 
 typedef struct node{
@@ -25,4 +28,4 @@ void destroy();
 var new_data(char* name, char* type);
 var * array_iterator();
 
-
+#endif
