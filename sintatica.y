@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "lib/templates/c_templates.h"
 #include "lib/simbol_table/simbol_table.h"
+#include "lib/templates/verify_templates.h"
 
 FILE* output_file = NULL;
 char * tipo=NULL; 
@@ -111,7 +112,9 @@ Type:
 ;
 
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON {write_atribute_variable_int(output_file, $1, $3); }
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { // verify_type(simbols,$1,"inteiro"); 
+        write_atribute_variable_int(output_file, $1, $3); 
+    }
     | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { write_atribute_variable_double(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { write_atribute_variable_string(output_file, $1, $3); }
 ;
