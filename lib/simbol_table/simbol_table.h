@@ -1,31 +1,27 @@
 #ifndef SIMBOL_TABLE
 #define SIMBOL_TABLE
 
-/*simbol_table.h
-The data struct implemented is a binary tree with basic operations without
-the operations of remove.
-*/
+#include "variable.h"
+#include "node.h"
 
-// The content of each node, witch receive the data from compiler
-typedef struct data{
-    char*  name; // Name of variable identify by compiler
-    char*  type; // The type of variable
-} var;
+typedef struct _simbol_table {
+  Node* root;
+  size_t size;
+} SimbolTable;
 
-typedef struct node{
-    var  content;
-    int size ;
-    struct node * node_left;
-    struct node * node_right;
-} Node;
 
-// The root node of the tree
-Node * root;
+SimbolTable* SimbolTable_new();
 
-int insert(var variable);
-var *find(char* name);
-void destroy();
-var new_data(char* name, char* type);
-var * array_iterator();
+Node* SimbolTable_search_node(SimbolTable* simbol_table, char* name);
+
+Variable* SimbolTable_find(SimbolTable* simbol_table, char* name);
+
+int SimbolTable_insert_variable(SimbolTable* simbol_table, Variable* variable);
+
+int SimbolTable_insert(SimbolTable* simbol_table, char* name, char* type);
+
+void SimbolTable_destroy(SimbolTable* simbol_table);
+
+Variable* SimbolTable_get_variables_as_array(SimbolTable* simbol_table);
 
 #endif

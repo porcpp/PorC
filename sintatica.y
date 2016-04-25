@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lib/templates/c_templates.h"
+#include "lib/simbol_table/simbol_table.h"
 
 FILE* output_file = NULL;
+
 
 void open_output_file(char* algorithm_name) {
     if (!output_file) {
