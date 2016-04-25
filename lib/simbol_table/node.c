@@ -39,7 +39,9 @@ unsigned int Node_add_variable_to_array(Node* node, Variable* array, unsigned in
 
     if (node->node_left != NULL) {
       index = Node_add_variable_to_array(node->node_left, array, index);
-    } else {
+    }
+
+    if (node->node_right != NULL) {
       index = Node_add_variable_to_array(node->node_right, array, index);
     }
   }

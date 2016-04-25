@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include "../lib/simbol_table/variable.h"
 #include "../lib/simbol_table/node.h"
@@ -55,10 +56,14 @@ void should_create_a_array_of_variables() {
 
   Variable* variable_array = (Variable*) malloc(sizeof(Variable)*3);
 
-  unsigned int last_added_index = Node_add_variable_to_array(node, variable_array, 0);
+  unsigned int array_size = Node_add_variable_to_array(node, variable_array, 0);
 
-  assert(last_added_index == 2);
+  assert(array_size == 3);
   assert(variable_array != NULL);
+
+  assert(strcmp(variable_array[0].name, "test_v1") == 0);
+  assert(strcmp(variable_array[1].name, "test_v2") == 0);
+  assert(strcmp(variable_array[2].name, "test_v3") == 0);
 
   free(variable_array);
   free(node->node_left);
