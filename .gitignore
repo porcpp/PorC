@@ -4,3 +4,4 @@
 *.yy.*
 *.out
 compiler
+execute_tests
