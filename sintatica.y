@@ -5,8 +5,9 @@
 #include "lib/simbol_table/simbol_table.h"
 
 FILE* output_file = NULL;
+char * tipo=NULL; 
 
-
+SimbolTable * simbols ;
 void open_output_file(char* algorithm_name) {
     if (!output_file) {
         char file_name[60];
@@ -70,13 +71,22 @@ void close_output_file() {
 %%
 
 Compile:
-    Header Body
+    Header Body {
+        Variable * variables = SimbolTable_get_variables_as_array(simbols);
+        int i=0;
+        printf("\nDEBUG - Variables insert in simbol table\n");
+        for(i =0; i< simbols->size; i++){
+            printf("%s %s\n",variables[i].type,variables[i].name);
+        }
+        SimbolTable_destroy(simbols);
+    }
 ;
 Header:
     HeaderAlgorithm HeaderVariables
 ;
 HeaderAlgorithm:
     ALGORITHM NAMEVAR SEMICOLON {
+        simbols = SimbolTable_new();
         open_output_file($2);
         write_default_header(output_file);
         write_body_begin(output_file);
@@ -87,11 +97,11 @@ HeaderVariables:
 ;
 MultiVariables:
     Variables
-    | Variables{fprintf(output_file,";\n");}MultiVariables
+    | Variables {fprintf(output_file,";\n");} MultiVariables
 ;
 Variables:
-    NAMEVAR COMMA Variables { write_declares_variable_with_comma(output_file, $1); printf(", %s",$1);}
-    | NAMEVAR COLON Type SEMICOLON { write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
+    NAMEVAR COMMA Variables { SimbolTable_insert(simbols,$1,tipo); write_declares_variable_with_comma(output_file, $1); printf(", %s, ",$1);}
+    | NAMEVAR COLON Type {tipo=$3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
 ;
 Type:
     T_INT
@@ -99,6 +109,7 @@ Type:
     |T_CHAR
     |T_BOOLEAN
 ;
+
 AttribuitionVariables:
     NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON {write_atribute_variable_int(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { write_atribute_variable_double(output_file, $1, $3); }
