@@ -78,7 +78,6 @@ void write_body_end(FILE* file) {
 
 
 
-
 void write_to_file_open_close_conditional(FILE* file, char* content) {
     if (file != NULL) {
         fprintf(file, "\n\t%s\n\t\t", content);
@@ -96,6 +95,23 @@ void write_condicional_sentece_namevar(FILE* file, char* content, char* content0
         exit(0);
     }
 }
+void write_condicional_sentece_double(FILE* file, double content, char* content01, double content02){
+    if (file != NULL) {
+        fprintf(file, "\tif(%lf %s %lf)", content, content01, content02);
+    } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }   
+}
+void write_condicional_sentece_int(FILE* file, int content, char* content01, int content02){
+    if (file != NULL) {
+        fprintf(file, "\tif(%d %s %d)", content, content01, content02);
+    } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}
+
 
 void write_condicional_sentece_namevar_int(FILE* file, char* content, char* content01, int content02) {
     if (file != NULL) {
