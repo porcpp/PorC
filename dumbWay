@@ -1,0 +1,63 @@
+
+    IF_ NAMEVAR EQUAL NAMEVAR { printf("\n if(%s == %s)\n", $2, $4); }
+    | IF_ NAMEVAR NOT_EQUAL NAMEVAR { printf("\nif(%s != %s)\n", $2, $4); }    
+    | IF_ NAMEVAR Symbol NAMEVAR { printf("\n if(%s %s %s)\n", $2, $3, $4); }    
+    
+    /* NAMEVAR with PARENTHESIS */    
+    | IF_ LEFT_PARENTHESIS NAMEVAR EQUAL NAMEVAR RIGHT_PARENTHESIS { printf("\n if(%s == %s)\n", $3, $5); }
+    | IF_ LEFT_PARENTHESIS NAMEVAR NOT_EQUAL NAMEVAR RIGHT_PARENTHESIS { printf("\nif(%s != %s)\n", $3, $5); }    
+    | IF_ LEFT_PARENTHESIS NAMEVAR Symbol NAMEVAR RIGHT_PARENTHESIS { printf("\n if(%s %s %s)\n", $3, $4, $5); }    
+
+    /* NAMEVAR AND VALUE_INT */
+    | IF_ NAMEVAR EQUAL VALUE_INT { printf("\n if(%s == %d)\n", $2, $4); }    
+    | IF_ NAMEVAR NOT_EQUAL VALUE_INT { printf("\n if(%s != %d);\n", $2, $4); }    
+    | IF_ NAMEVAR Symbol VALUE_INT { printf("\n if(%s %s %d);\n", $2, $3, $4); }    
+
+    /* NAMEVAR with PARENTHESIS */    
+    | IF_ LEFT_PARENTHESIS NAMEVAR EQUAL VALUE_INT RIGHT_PARENTHESIS { printf("\n if(%s == %d)\n", $3, $5); }
+    | IF_ LEFT_PARENTHESIS NAMEVAR NOT_EQUAL VALUE_INT RIGHT_PARENTHESIS { printf("\nif(%s != %d)\n", $3, $5); }    
+    | IF_ LEFT_PARENTHESIS NAMEVAR Symbol VALUE_INT RIGHT_PARENTHESIS { printf("\n if(%s %s %d)\n", $3, $4, $5); }    
+    
+
+
+
+
+
+
+    
+    /* VALUE AND NAMEVAR */
+    | IF_ VALUE_INT EQUAL NAMEVAR SEMICOLON{ printf("\nif %d %s %s;\n", $2, $3, $4); }    
+    | IF_ VALUE_DOUBLE NOT_EQUAL NAMEVAR SEMICOLON{ printf("\nif %lf %s %s;\n", $2, $3, $4); }    
+    | IF_ VALUE_STRING Symbol NAMEVAR SEMICOLON{ printf("\nif %s %s %s;\n", $2, $3, $4); }    
+ 
+    /* VALUE_INT AND VALUE */
+    | IF_ VALUE_INT EQUAL VALUE_INT SEMICOLON{ printf("\nif %d %s %d;\n", $2, $3, $4); }    
+    | IF_ VALUE_INT NOT_EQUAL VALUE_DOUBLE SEMICOLON{ printf("\nif %d %s %lf;\n", $2, $3, $4); }    
+    | IF_ VALUE_INT Symbol VALUE_STRING SEMICOLON{ printf("\nif %d %s %s;\n", $2, $3, $4); }    
+
+    /* VALUE_DOUBLE AND VALUE */
+    | IF_ VALUE_DOUBLE EQUAL VALUE_INT SEMICOLON{ printf("\nif %lf %s %d;\n", $2, $3, $4); }    
+    | IF_ VALUE_DOUBLE NOT_EQUAL VALUE_DOUBLE SEMICOLON{ printf("\nif %lf %s %lf;\n", $2, $3, $4); }    
+    | IF_ VALUE_DOUBLE Symbol VALUE_STRING SEMICOLON{ printf("\nif %lf %s %s;\n", $2, $3, $4); }    
+
+    /* VALUE_STRING AND VALUE */
+    | IF_ VALUE_STRING EQUAL VALUE_INT SEMICOLON{ printf("\nif %s %s %d;\n", $2, $3, $4); }    
+    | IF_ VALUE_STRING NOT_EQUAL VALUE_DOUBLE SEMICOLON{ printf("\nif %s %s %lf;\n", $2, $3, $4); }    
+    | IF_ VALUE_STRING Symbol VALUE_STRING SEMICOLON{ printf("\nif %s %s %s;\n", $2, $3, $4); }    
+
+    /* VALUE AND VALUE_INT */    
+    | IF_ VALUE_INT EQUAL VALUE_INT SEMICOLON{ printf("\nif %d %s %d;\n", $2, $3, $4); }    
+    | IF_ VALUE_DOUBLE NOT_EQUAL VALUE_INT SEMICOLON{ printf("\nif %lf %s %d;\n", $2, $3, $4); }    
+    | IF_ VALUE_STRING Symbol VALUE_INT SEMICOLON{ printf("\nif %s %s %d;\n", $2, $3, $4); }    
+ 
+    /* VALUE AND VALUE_DOUBLE */
+    | IF_ VALUE_INT EQUAL VALUE_DOUBLE SEMICOLON{ printf("\nif %d %s %lf;\n", $2, $3, $4); }    
+    | IF_ VALUE_DOUBLE NOT_EQUAL VALUE_DOUBLE SEMICOLON{ printf("\nif %lf %s %lf;\n", $2, $3, $4); }    
+    | IF_ VALUE_STRING Symbol VALUE_DOUBLE SEMICOLON{ printf("\nif %s %s %lf;\n", $2, $3, $4); }    
+
+    /* VALUE AND VALUE_STRING */
+    | IF_ VALUE_INT EQUAL VALUE_STRING SEMICOLON{ printf("\nif %d %s %s;\n", $2, $3, $4); }    
+    | IF_ VALUE_DOUBLE NOT_EQUAL VALUE_STRING SEMICOLON{ printf("\nif %lf %s %s;\n", $2, $3, $4); }    
+    | IF_ VALUE_STRING Symbol VALUE_STRING SEMICOLON{ printf("\nif %s %s %s;\n", $2, $3, $4); }    
+  
+
