@@ -8,5 +8,7 @@ variáveis
 fim-variáveis
 início
     b := "ads";
-    se oi = "123" { ola; }
+    se oi = "123" então 
+    	ola; 
+    fim-se
 fim
