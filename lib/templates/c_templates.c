@@ -23,7 +23,6 @@ void write_declares_variable_with_comma(FILE* file, char* content) {
     }
 }
 
-
 void write_declares_variable(FILE* file, char* content, char* content01) {
     if (file != NULL) {
         fprintf(file, "\t%s %s", content, content01);
@@ -78,3 +77,66 @@ void write_body_end(FILE* file) {
     write_to_file_or_die(file, "\nreturn 0;\n}");
 }
 
+
+
+
+void write_condicional_sentece_namevar(FILE* file, char* content, char* content01, char* content02) {
+    if (file != NULL) {
+        fprintf(file, "\tif(%s %s %s) {", content, content01, content02);
+   } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}
+
+void write_condicional_sentece_namevar_int(FILE* file, char* content, char* content01, int content02) {
+    if (file != NULL) {
+        fprintf(file, "\tif(%s %s %d) {", content, content01, content02);
+   } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}
+void write_condicional_sentece_int_namevar(FILE* file, int content, char* content01, char* content02) {
+    if (file != NULL) {
+        fprintf(file, "\tif(%d %s %s) {", content, content01, content02);
+   } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}
+void write_condicional_sentece_double_namevar(FILE* file, double content, char* content01, char* content02) {
+    if (file != NULL) {
+        fprintf(file, "\tif(%lf %s %s) {", content, content01, content02);
+   } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}
+
+void write_condicional_sentece_namevar_double(FILE* file, char* content, char* content01, double content02) {
+    if (file != NULL) {
+        fprintf(file, "\tif(%s %s %lf) {", content, content01, content02);
+   } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}
+
+void write_condicional_sentece_string_namevar(FILE* file, char* content, char* content01, char* content02) {
+    if (file != NULL) {
+        fprintf(file, "\tif(%s %s %s) {", content, content01, content02);
+   } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}
+
+void write_condicional_sentece_namevar_string(FILE* file, char* content, char* content01, char* content02) {
+    if (file != NULL) {
+        fprintf(file, "\tif(%s %s %s) {", content, content01, content02);
+   } else {
+        printf("COULD NOT WRITE IN FILE !\n");
+        exit(0);
+    }
+}

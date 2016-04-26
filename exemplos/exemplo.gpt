@@ -8,4 +8,5 @@ variáveis
 fim-variáveis
 início
     b := "ads";
+    se oi = "123" { ola; }
 fim
