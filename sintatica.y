@@ -57,11 +57,14 @@ void close_output_file() {
 %token <strings> LESS_EQUAL
 %token <strings> LESS
 
+%token <strings> ELSE_
+%token <strings> THEN
+%token <strings> END_IF
+%token <strings> IF_
+
+
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
-
-%token LEFT_COL
-%token RIGHT_COL
 
 /* define tokens type */
 %token <strings> T_INT
@@ -78,9 +81,6 @@ void close_output_file() {
 %token COLON
 %token COMMA
 %token SEMICOLON
-
-%token IF_
-
 
 %start Compile
 
@@ -123,6 +123,7 @@ AttribuitionVariables:
     | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { write_atribute_variable_double(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { write_atribute_variable_string(output_file, $1, $3); }
 ;
+
 Fase01: 
     IF_ NAMEVAR Symbol NAMEVAR { write_condicional_sentece_namevar(output_file, $2, $3, $4); }    
     | IF_ LEFT_PARENTHESIS NAMEVAR Symbol NAMEVAR RIGHT_PARENTHESIS { write_condicional_sentece_namevar(output_file, $3, $4, $5); }    
@@ -152,11 +153,14 @@ Fase01:
 
 ;
 Fase02:
-    NAMEVAR SEMICOLON
+    NAMEVAR SEMICOLON { write_to_file_or_die(output_file, $1); }
 ;
-
-ConditionalStruct:
-    Fase01 LEFT_COL Fase02 RIGHT_COL    
+OpenCloseConditionalstructure:
+    THEN { write_to_file_open_close_conditional(output_file, $1); }
+    | END_IF { write_to_file_open_close_conditional(output_file, $1); }
+;
+ConditionalStructure:
+    Fase01 OpenCloseConditionalstructure Fase02 OpenCloseConditionalstructure    
 ;
 
 Symbol:
@@ -180,8 +184,7 @@ Body:
 ;
 AlgorithmBody:
     AttribuitionVariables
-    /* Estruturas condicionais confirmar nome em ingles */
-    ConditionalStruct
+    ConditionalStructure
 ;
 
 %%

@@ -11,7 +11,7 @@ all_reserved (other_reserved|decision_reserved|type_reserved)
 
 portugol_header (algoritmo|variáveis|fim-variáveis|início|fim)
 portugol_types (inteiro|real|caractere|literal|lógico)
-portugol_statements (e|ou|não|então|senão|fim-se|enquanto|fim-enquanto|para|de|até|faça|fim-para|verdadeiro|falso)
+portugol_statements (e|ou|não|enquanto|fim-enquanto|para|de|até|faça|fim-para|verdadeiro|falso)
 
 digit [0-9]
 integer {digit}+
@@ -35,6 +35,9 @@ namevar {letter}({integer}|{letter}|"_")*
 
 
 "se"				  { return(IF_); }
+"fim-se"			  { yylval.strings = "}"; return(END_IF); }
+"então"				  { yylval.strings = "{"; return(THEN); }
+"senão"				  { return(ELSE_); }
 
 "algoritmo"           { return(ALGORITHM); }
 "fim-algoritmo"       { return(END_ALGORITHM); }
@@ -65,9 +68,6 @@ namevar {letter}({integer}|{letter}|"_")*
 ">"					  { yylval.strings = ">"; return(LESS); }
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }
-"{" 				  { return(LEFT_COL); }
-"}" 				  { return(RIGHT_COL); }
-
 
 {namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
 {integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
