@@ -134,6 +134,7 @@ Body:
 ;
 AlgorithmBody:
     AttribuitionVariables
+    | AttribuitionVariables AlgorithmBody
 ;
 
 %%
