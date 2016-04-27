@@ -51,22 +51,13 @@ void close_output_file() {
 %token BEGIN_BODY
 %token END_BODY
 
-/* Symbols */
-%token <strings> EQUAL
-%token <strings> NOT_EQUAL
-%token <strings> GREATER_EQUAL
-%token <strings> GREATER
-%token <strings> LESS_EQUAL
-%token <strings> LESS
-
-%token <strings> ELSE_
-%token <strings> THEN
-%token <strings> END_IF
-%token <strings> IF_
-
+%token <strings> COMPARATOR
 
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
+
+%token LEFT_COL
+%token RIGHT_COL
 
 /* define tokens type */
 %token <strings> T_INT
@@ -83,6 +74,13 @@ void close_output_file() {
 %token COLON
 %token COMMA
 %token SEMICOLON
+
+%token IF_
+%token THAN_
+%token ELSE_
+%token END_IF_
+%token AND_
+%token OR_
 
 %start Compile
 
@@ -141,7 +139,6 @@ write_atribute_variable_string(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
 write_atribute_variable_string(output_file, $1, $3); }
 ;
-
 Fase01: 
     IF_ NAMEVAR Symbol NAMEVAR { write_condicional_sentece_namevar(output_file, $2, $3, $4); }    
     | IF_ LEFT_PARENTHESIS NAMEVAR Symbol NAMEVAR RIGHT_PARENTHESIS { write_condicional_sentece_namevar(output_file, $3, $4, $5); }    
@@ -160,6 +157,7 @@ Fase01:
     | IF_ VALUE_DOUBLE Symbol NAMEVAR { write_condicional_sentece_double_namevar(output_file, $2, $3, $4); }    
     | IF_ LEFT_PARENTHESIS VALUE_DOUBLE Symbol NAMEVAR RIGHT_PARENTHESIS{ write_condicional_sentece_double_namevar(output_file, $3, $4, $5); }
 
+
 /* STRING with VAR */
     | IF_ NAMEVAR Symbol VALUE_STRING { write_condicional_sentece_namevar_string(output_file, $2, $3, $4); }    
     | IF_ LEFT_PARENTHESIS NAMEVAR Symbol VALUE_STRING RIGHT_PARENTHESIS{ write_condicional_sentece_namevar_string(output_file, $3, $4, $5); }    
@@ -167,28 +165,29 @@ Fase01:
     | IF_ VALUE_STRING Symbol NAMEVAR { write_condicional_sentece_string_namevar(output_file, $2, $3, $4); }    
     | IF_ LEFT_PARENTHESIS VALUE_STRING Symbol NAMEVAR RIGHT_PARENTHESIS{ write_condicional_sentece_string_namevar(output_file, $3, $4, $5); }
 
-/* INT with INT */
-    | IF_ VALUE_INT Symbol VALUE_INT { write_condicional_sentece_int(output_file, $2, $3, $4); }    
-    | IF_ LEFT_PARENTHESIS VALUE_INT Symbol VALUE_INT RIGHT_PARENTHESIS{ write_condicional_sentece_int(output_file, $3, $4, $5); }    
 
-/* DOUBLE with DOUBLE */
-    | IF_ VALUE_DOUBLE Symbol VALUE_DOUBLE { write_condicional_sentece_double(output_file, $2, $3, $4); }    
-    | IF_ LEFT_PARENTHESIS VALUE_DOUBLE Symbol VALUE_DOUBLE RIGHT_PARENTHESIS{ write_condicional_sentece_double(output_file, $3, $4, $5); }    
-
-/* STRING with STRING */
-    | IF_ VALUE_STRING Symbol VALUE_STRING { write_condicional_sentece_namevar(output_file, $2, $3, $4); }    
-    | IF_ LEFT_PARENTHESIS VALUE_STRING Symbol VALUE_STRING RIGHT_PARENTHESIS{ write_condicional_sentece_namevar(output_file, $3, $4, $5); }    
-    
 ;
 Fase02:
-    NAMEVAR SEMICOLON { write_to_file_or_die(output_file, $1); }
+    NAMEVAR SEMICOLON
 ;
-OpenCloseConditionalstructure:
-    THEN { write_to_file_open_close_conditional(output_file, $1); }
-    | END_IF { write_to_file_open_close_conditional(output_file, $1); }
+
+Condition:
+  NAMEVAR COMPARATOR NAMEVAR
+  | AND_ Condition
+  | OR_ Condition
 ;
-ConditionalStructure:
-    Fase01 OpenCloseConditionalstructure Fase02 OpenCloseConditionalstructure    
+
+ConditionalBegin:
+    IF_ Condition THAN_
+;
+
+ConditionalEnd:
+    ELSE_ AlgorithmBody
+    | END_IF_
+;
+
+ConditionalStruct:
+    ConditionalBegin AlgorithmBody ConditionalEnd
 ;
 
 Symbol:
