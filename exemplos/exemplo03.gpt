@@ -4,8 +4,8 @@ algoritmo exemplo;
 variáveis
     werd,a,sa,fds,dfs: caractere;
     asd: inteiro;
-    asd,fgdsfh,dfgsfd,sdfdsg: real;
+    asdd,fgdsfh,dfgsfd,sdfdsg: real;
 fim-variáveis
 início
-    b := "ads";
+    asd := 1;
 fim

@@ -8,7 +8,7 @@
 FILE* output_file = NULL;
 char * tipo=NULL; 
 
-SimbolTable * simbols ;
+SimbolTable * simbols =NULL;
 void open_output_file(char* algorithm_name) {
     if (!output_file) {
         char file_name[60];
@@ -112,11 +112,15 @@ Type:
 ;
 
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { // verify_type(simbols,$1,"inteiro"); 
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); 
         write_atribute_variable_int(output_file, $1, $3); 
     }
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { write_atribute_variable_double(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { write_atribute_variable_string(output_file, $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); 
+write_atribute_variable_double(output_file, $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string"); 
+write_atribute_variable_string(output_file, $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
+write_atribute_variable_string(output_file, $1, $3); }
 ;
 Body:
     BEGIN_BODY END_BODY {

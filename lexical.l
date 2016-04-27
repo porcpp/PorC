@@ -24,7 +24,9 @@ letter ({letter_min}|{letter_mai})
 any_char .
 string {letter}+
 
-string_value (("\""|"\'")({any_char}+)("\""|"\'"))
+char_value ("\'"{any_char}"\'")
+
+string_value ("\""({any_char}+)"\"")
 semicolon [";"]+
 
 namevar {letter}({integer}|{letter}|"_")*
@@ -57,6 +59,7 @@ namevar {letter}({integer}|{letter}|"_")*
 {namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
 {integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
 {real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
+{char_value}          { yylval.strings = strdup(yytext); return(VALUE_CHARACTER); }
 {string_value}		  { yylval.strings = strdup(yytext); return(VALUE_STRING); }
 
 %%
