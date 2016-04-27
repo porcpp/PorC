@@ -83,11 +83,11 @@ HeaderAlgorithm:
     }
 ;
 HeaderVariables:
-    VARIABLES MultiVariables VARIABLES_END{fprintf(output_file,";\n");}
+    VARIABLES MultiVariables VARIABLES_END{write_to_file_or_die(output_file,";\n");}
 ;
 MultiVariables:
     Variables
-    | Variables{fprintf(output_file,";\n");}MultiVariables
+    | Variables{write_to_file_or_die(output_file,";\n");}MultiVariables
 ;
 Variables:
     NAMEVAR COMMA Variables { write_declares_variable_with_comma(output_file, $1); printf(", %s",$1);}
