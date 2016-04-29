@@ -3,7 +3,7 @@
 
 #include "variable.h"
 #include "node.h"
-
+#include <stdlib.h>
 typedef struct _simbol_table {
   Node* root;
   size_t size;

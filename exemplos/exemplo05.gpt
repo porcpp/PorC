@@ -7,5 +7,7 @@ variáveis
     asdd,fgdsfh,dfgsfd,sdfdsg: real;
 fim-variáveis
 início
-    asd := 1.2;
+    a := 'a';
+    asd := 2;
+    asdd := 123.2;
 fim

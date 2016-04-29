@@ -1,6 +1,6 @@
 CC=gcc
-SIMBLE_TABLE_FILES=lib/simbol_table/variable.c lib/simbol_table/node.c lib/simbol_table/simbol_table.c
-TEMPLATE_FILES=lib/templates/c_templates.c
+SIMBLE_TABLE_FILES=lib/simbol_table/variable.c lib/simbol_table/node.c lib/simbol_table/simbol_table.c 
+TEMPLATE_FILES=lib/templates/c_templates.c lib/templates/verify_templates.c
 LIB=${TEMPLATE_FILES} ${SIMBLE_TABLE_FILES}
 FILES=sintatica.tab.c lex.yy.c ${LIB}
 FLAGS=-ggdb
