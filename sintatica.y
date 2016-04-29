@@ -51,6 +51,14 @@ void close_output_file() {
 %token BEGIN_BODY
 %token END_BODY
 
+%token <strings> COMPARATOR
+
+%token LEFT_PARENTHESIS
+%token RIGHT_PARENTHESIS
+
+%token LEFT_COL
+%token RIGHT_COL
+
 /* define tokens type */
 %token <strings> T_INT
 %token <strings> T_DOUBLE
@@ -64,6 +72,13 @@ void close_output_file() {
 %token COLON
 %token COMMA
 %token SEMICOLON
+
+%token IF_
+%token THAN_
+%token ELSE_
+%token END_IF_
+%token AND_
+%token OR_
 
 %start Compile
 
@@ -122,6 +137,27 @@ write_atribute_variable_string(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
 write_atribute_variable_string(output_file, $1, $3); }
 ;
+
+Condition:
+  NAMEVAR COMPARATOR NAMEVAR
+  | AND_ Condition
+  | OR_ Condition
+;
+
+ConditionalBegin:
+    IF_ Condition THAN_
+;
+
+ConditionalEnd:
+    ELSE_ AlgorithmBody
+    | END_IF_
+;
+
+ConditionalStruct:
+    ConditionalBegin AlgorithmBody ConditionalEnd
+;
+
+
 Body:
     BEGIN_BODY END_BODY {
         write_body_end(output_file);
@@ -134,7 +170,9 @@ Body:
 ;
 AlgorithmBody:
     AttribuitionVariables
+    | ConditionalStruct
     | AttribuitionVariables AlgorithmBody
+    | ConditionalStruct AlgorithmBody
 ;
 
 %%

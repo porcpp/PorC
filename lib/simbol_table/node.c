@@ -34,12 +34,12 @@ unsigned int Node_add_variable_to_array(Node* node, Variable* array, unsigned in
   assert(array != NULL);
 
   if (node != NULL) {
-    array[index] = *node->variable;
-    index += 1;
-
     if (node->node_left != NULL) {
       index = Node_add_variable_to_array(node->node_left, array, index);
     }
+
+    array[index] = *node->variable;
+    index += 1;
 
     if (node->node_right != NULL) {
       index = Node_add_variable_to_array(node->node_right, array, index);

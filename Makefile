@@ -18,4 +18,4 @@ lib_tests:
 
 
 clean:
-	rm *.tab.* *.yy.* compiler
+	rm -f *.tab.* *.yy.* ./compiler ./execute_tests
