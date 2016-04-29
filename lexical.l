@@ -31,7 +31,7 @@ semicolon [";"]+
 
 namevar {letter}({integer}|{letter}|"_")*
 
-comparator {"="|"<"|">"|"<="|">="|"<>"}
+comparator ("="|"<"|">"|"<="|">="|"<>")
 
 %%
 {all_reserved}        { return(RESERVED_WORD_C); }
@@ -66,7 +66,7 @@ comparator {"="|"<"|">"|"<="|">="|"<>"}
 ","             	  { return(COMMA); }
 "\n"				  { lines+=1; }
 
-{comparator}        { yylval.strings = strdup(yytext); return (COMPARATOR); }
+{comparator}        { yylval.strings = strdup(yytext); return(COMPARATOR); }
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }

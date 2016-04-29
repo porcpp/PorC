@@ -45,13 +45,13 @@ void should_destroy_a_node_and_its_children() {
 
 
 void should_create_a_array_of_variables() {
-  Variable* v1 = Variable_new("test_v1", "char");
-  Variable* v2 = Variable_new("test_v2", "char");
-  Variable* v3 = Variable_new("test_v3", "char");
+  Variable* v1 = Variable_new("test_a", "char");
+  Variable* v2 = Variable_new("test_b", "char");
+  Variable* v3 = Variable_new("test_c", "char");
 
-  Node* node = Node_new(v1);
+  Node* node = Node_new(v2);
 
-  node->node_left = Node_new(v2);
+  node->node_left = Node_new(v1);
   node->node_right = Node_new(v3);
 
   Variable* variable_array = (Variable*) malloc(sizeof(Variable)*3);
@@ -61,9 +61,9 @@ void should_create_a_array_of_variables() {
   assert(array_size == 3);
   assert(variable_array != NULL);
 
-  assert(strcmp(variable_array[0].name, "test_v1") == 0);
-  assert(strcmp(variable_array[1].name, "test_v2") == 0);
-  assert(strcmp(variable_array[2].name, "test_v3") == 0);
+  assert(strcmp(variable_array[0].name, "test_a") == 0);
+  assert(strcmp(variable_array[1].name, "test_b") == 0);
+  assert(strcmp(variable_array[2].name, "test_c") == 0);
 
   free(variable_array);
   free(node->node_left);
