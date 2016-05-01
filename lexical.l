@@ -53,10 +53,10 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 "início"              { return(BEGIN_BODY); }
 "fim"                 { return(END_BODY); }
 
-"inteiro"             { yylval.strings = "int"; return(T_INT);}
-"real"                { yylval.strings = "double"; return(T_DOUBLE);}
-"logico"              { yylval.strings = "bool"; return(T_BOOLEAN);}
-"caractere"           { yylval.strings = "char"; return(T_CHAR);}
+"inteiro"             { yylval.strval = "int"; return(T_INT);}
+"real"                { yylval.strval = "double"; return(T_DOUBLE);}
+"logico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
+"caractere"           { yylval.strval = "char"; return(T_CHAR);}
 
 ":="				  { return(ATTRIBUTION); }
 
@@ -66,7 +66,7 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 ","             	  { return(COMMA); }
 "\n"				  { lines+=1; }
 
-{comparator}        { yylval.strings = strdup(yytext); return(COMPARATOR); }
+{comparator}        { yylval.strval = strdup(yytext); return(COMPARATOR); }
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }
@@ -74,10 +74,11 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 "}" 				  { return(RIGHT_COL); }
 
 
-{namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
-{integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
-{real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
-{char_value}          { yylval.strings = strdup(yytext); return(VALUE_CHARACTER); }
-{string_value}		  { yylval.strings = strdup(yytext); return(VALUE_STRING); }
+{namevar} 			  { yylval.strval = strdup(yytext); 	return(NAMEVAR); }
+{integer}			  { yylval.ival = atoi(yytext); 		return(VALUE_INT); }
+{real} 				  { yylval.dval = atof(yytext); 		return(VALUE_DOUBLE); }
+{char_value}                      { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
+{string_value}		         { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
+
 
 %%

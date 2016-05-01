@@ -1,0 +1,14 @@
+algoritmo exemplo;
+
+
+variáveis
+    werd,a,sa,fds,dfs: caractere;
+    asd: inteiro;
+    asdd,fgdsfh,dfgsfd,sdfdsg: real;
+fim-variáveis
+início
+    asd := 122;
+    se "{" <= FDSA então
+    	asd := 12;
+    fim-se
+fim

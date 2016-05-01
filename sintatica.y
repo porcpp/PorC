@@ -7,6 +7,7 @@
 
 FILE* output_file = NULL;
 char * tipo=NULL; 
+char * value=NULL; 
 
 SimbolTable * simbols =NULL;
 void open_output_file(char* algorithm_name) {
@@ -26,20 +27,23 @@ void close_output_file() {
 %}
 
 %union {
-    int num_int;
-    double num_double;
-    char* strings;
+    int ival;
+    double dval;
+    char* strval;
 }
 
-%token <strings> NAMEVAR
+%token <strval> NAMEVAR
 
 /* define types of attribution */
 %token ATTRIBUTION
 
-%token <num_int> VALUE_INT
-%token <num_double> VALUE_DOUBLE
-%token <strings>VALUE_STRING
-%token <strings>VALUE_CHARACTER
+%token <ival> VALUE_INT
+%token <dval> VALUE_DOUBLE
+%token <strval> VALUE_STRING
+%token <strval> VALUE_CHARACTER
+
+%token <strval> TEST_INT 
+
 
 %token RESERVED_WORD_C
 %token TO_IMPLEMENT
@@ -51,7 +55,7 @@ void close_output_file() {
 %token BEGIN_BODY
 %token END_BODY
 
-%token <strings> COMPARATOR
+%token <strval> COMPARATOR
 
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
@@ -60,13 +64,14 @@ void close_output_file() {
 %token RIGHT_COL
 
 /* define tokens type */
-%token <strings> T_INT
-%token <strings> T_DOUBLE
-%token <strings> T_BOOLEAN
-%token <strings> T_CHAR
+%token <strval> T_INT
+%token <strval> T_DOUBLE
+%token <strval> T_BOOLEAN
+%token <strval> T_CHAR
 
 /* define function type */
-%type <strings> Type
+%type <strval> Type
+%type <strval> Values
 
 %token COMMENT
 %token COLON
@@ -128,8 +133,7 @@ Type:
 
 AttribuitionVariables:
     NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); 
-        write_atribute_variable_int(output_file, $1, $3); 
-    }
+write_atribute_variable_int(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); 
 write_atribute_variable_double(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string"); 
@@ -138,8 +142,16 @@ write_atribute_variable_string(output_file, $1, $3); }
 write_atribute_variable_string(output_file, $1, $3); }
 ;
 
+Values:
+  NAMEVAR { $$ = $1; } 
+  | VALUE_INT { value = malloc(sizeof (int)); sprintf(value, "%i", $1); $$ = value;}
+  | VALUE_DOUBLE { value = malloc(sizeof (double)); snprintf(value, 50,"%f", $1); $$ = value;} 
+  | VALUE_STRING { $$ = $1;} /* ERROR for string COMPARATOR string */
+  | VALUE_CHARACTER { $$ = $1;} /* ERROR for char COMPARATOR char, talvez seja o $$ */ 
+;
+
 Condition:
-  NAMEVAR COMPARATOR NAMEVAR
+  Values COMPARATOR Values { write_condicional_sentece(output_file, $1, $2, $3); }
   | AND_ Condition
   | OR_ Condition
 ;
@@ -150,7 +162,7 @@ ConditionalBegin:
 
 ConditionalEnd:
     ELSE_ AlgorithmBody
-    | END_IF_
+    | END_IF_ { write_to_file_or_die(output_file, "\t}"); }
 ;
 
 ConditionalStruct:
