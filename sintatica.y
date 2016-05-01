@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lib/templates/c_templates.h"
+#include "lib/templates/transform_types.h"
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
 
@@ -132,20 +133,20 @@ Type:
 ;
 
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); 
-write_atribute_variable_int(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); 
-write_atribute_variable_double(output_file, $1, $3); }
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
+write_atribute_variable(output_file, $1, value); }
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3); 
+write_atribute_variable(output_file, $1, value); }
     | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string"); 
-write_atribute_variable_string(output_file, $1, $3); }
+write_atribute_variable(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
-write_atribute_variable_string(output_file, $1, $3); }
+write_atribute_variable(output_file, $1, $3); }
 ;
 
 Values:
   NAMEVAR { $$ = $1; } 
-  | VALUE_INT { value = malloc(sizeof (int)); sprintf(value, "%i", $1); $$ = value;}
-  | VALUE_DOUBLE { value = malloc(sizeof (double)); snprintf(value, 50,"%f", $1); $$ = value;} 
+  | VALUE_INT { $$ = transform_int_string(value,$1); }
+  | VALUE_DOUBLE { $$ = transform_double_string(value,$1); } 
   | VALUE_STRING { $$ = $1;} /* ERROR for string COMPARATOR string */
   | VALUE_CHARACTER { $$ = $1;} /* ERROR for char COMPARATOR char, talvez seja o $$ */ 
 ;

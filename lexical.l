@@ -77,8 +77,8 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 {namevar} 			  { yylval.strval = strdup(yytext); 	return(NAMEVAR); }
 {integer}			  { yylval.ival = atoi(yytext); 		return(VALUE_INT); }
 {real} 				  { yylval.dval = atof(yytext); 		return(VALUE_DOUBLE); }
-{char_value}                      { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
-{string_value}		         { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
+{char_value}          { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
+{string_value}		  { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
 
 
 %%

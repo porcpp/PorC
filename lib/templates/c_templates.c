@@ -31,18 +31,7 @@ void write_declares_variable(FILE* file, char* content, char* content01) {
     }
 }
 
-
-void write_atribute_variable_int(FILE* file, char* content, int content01) {
-    if (file != NULL) {
-        fprintf(file, "\n\t%s = %d;\n", content, content01);
-   } else {
-        printf("COULD NOT WRITE IN FILE !\n");
-        exit(0);
-    }
-}
-
-
-void write_atribute_variable_string(FILE* file, char* content, char* content01) {
+void write_atribute_variable(FILE* file, char* content, char* content01) {
     if (file != NULL) {
         fprintf(file, "\n\t%s = %s;\n", content, content01);
    } else {
@@ -51,15 +40,6 @@ void write_atribute_variable_string(FILE* file, char* content, char* content01) 
     }
 }
 
-
-void write_atribute_variable_double(FILE* file, char* content, double content01) {
-    if (file != NULL) {
-        fprintf(file, "\n\t%s = %lf;\n", content, content01);
-   } else {
-        printf("COULD NOT WRITE IN FILE !\n");
-        exit(0);
-    }
-}
 
 void write_default_header(FILE* file) {
     write_to_file_or_die(file, "#include <stdlib.h>\n");
