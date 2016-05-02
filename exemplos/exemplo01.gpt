@@ -1,0 +1,12 @@
+algoritmo exemplo;
+
+
+variáveis
+    dfs: caractere;
+    asd: inteiro;
+    asd: real;
+    dfs: inteiro;
+fim-variáveis
+início
+    b := "ads";
+fim

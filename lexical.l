@@ -1,39 +1,83 @@
+%{
+    #include "sintatica.tab.h"
+    #define YYSTYPE char *
+    int lines = 0;
+%}
 
+other_reserved (asm|auto|extern|register|return|union|void|volatile)
+decision_reserved (break|case|continue|default|do|else|for|goto|if|switch|while)
+type_reserved (char|const|double|enum|float|int|long|short|signed|sizeof|static|struct|typedef|unsigned)
+all_reserved (other_reserved|decision_reserved|type_reserved)
+
+portugol_header (algoritmo|variáveis|fim-variáveis|início|fim)
+portugol_types (inteiro|real|caractere|literal|lógico)
+portugol_statements (não|enquanto|fim-enquanto|para|de|até|faça|fim-para|verdadeiro|falso)
+
+digit [0-9]
+integer {digit}+
+real {integer}("."{integer})
+
+letter_min [a-z]
+letter_mai [A-Z]
+
+letter ({letter_min}|{letter_mai})
+any_char .
+string {letter}+
+
+char_value ("\'"{any_char}"\'")
+
+string_value ("\""({any_char}+)"\"")
+semicolon [";"]+
+
+namevar {letter}({integer}|{letter}|"_")*
+
+comparator ("="|"<"|">"|"<="|">="|"<>")
 
 %%
-/* Reserved words Portugol */
-"leia" return(READ);
-"escreva" return(WRITE);
-"algoritmo" return(ALGORITHM);
-"constantes" return(CONSTANTS);
-"variaveis" return(VARIABLES);
-
-// Repeating structure Portugol
-"para" return(FOR);
-"de" return(IN);
-"ate" return(UNTIL);
-"passo" return(STEP);
-"faca" return(DO_IT);
-"fim_para" return(END_FOR);
-"enquanto" return(WHILE);
-"fim_enquanto" return(END_WHILE);
-"repita" return(REPEAT);
-"pare" return(STOP);
-
-// Condition structure
-"se" return(IF_IT);
-"entao" return(SO);
-"senao" return(IF_NO);
-"fim_se" return(END_IF);
+{all_reserved}        { return(RESERVED_WORD_C); }
+{portugol_statements} { return(TO_IMPLEMENT); }
 
 
+"se"				  { return(IF_); }
+"então"               { return(THAN_); }
+"senão"               { return(ELSE_); }
+"fim-se"              { return(END_IF_); }
+"e"                   { return(AND_); }
+"ou"                  { return(OR_); }
 
-/* Symbols */
-"+" return(PLUS);
-"-" return(MINUS);
-"*" return(TIMES);
-"/" return(DIVIDE);
-"^" return(POWER);
-"(" return(LEFT_PARENTHESIS);
-")" return(RIGHT_PARENTHESIS);
-"\n" return(END);
+"algoritmo"           { return(ALGORITHM); }
+"fim-algoritmo"       { return(END_ALGORITHM); }
+"constantes"          { return(CONSTANTS); }
+"variáveis"           { return(VARIABLES); }
+"fim-variáveis"       { return(VARIABLES_END); }
+"início"              { return(BEGIN_BODY); }
+"fim"                 { return(END_BODY); }
+
+"inteiro"             { yylval.strings = "int"; return(T_INT);}
+"real"                { yylval.strings = "double"; return(T_DOUBLE);}
+"logico"              { yylval.strings = "bool"; return(T_BOOLEAN);}
+"caractere"           { yylval.strings = "char"; return(T_CHAR);}
+
+":="				  { return(ATTRIBUTION); }
+
+"//"          	 	  { return(COMMENT); }
+":"             	  { return(COLON); }
+{semicolon} 		  { return(SEMICOLON); }
+","             	  { return(COMMA); }
+"\n"				  { lines+=1; }
+
+{comparator}        { yylval.strings = strdup(yytext); return(COMPARATOR); }
+
+"(" 				  { return(LEFT_PARENTHESIS); }
+")" 				  { return(RIGHT_PARENTHESIS); }
+"{" 				  { return(LEFT_COL); }
+"}" 				  { return(RIGHT_COL); }
+
+
+{namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
+{integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
+{real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
+{char_value}          { yylval.strings = strdup(yytext); return(VALUE_CHARACTER); }
+{string_value}		  { yylval.strings = strdup(yytext); return(VALUE_STRING); }
+
+%%

@@ -1,0 +1,24 @@
+algoritmo potencia;
+
+variáveis
+  i : inteiro;
+  resultado : real;
+  base: real;
+  exp: inteiro;
+fim-variáveis
+
+início
+  imprima("Base: ");
+  base := leia();
+
+  imprima("Exp: ");
+  exp := leia();
+
+  resultado := 1;
+
+  para i de 1 até exp faça
+    resultado := resultado * base;
+  fim-para
+
+  imprima("Resultado: ", resultado);
+fim
