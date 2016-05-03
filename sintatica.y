@@ -72,7 +72,8 @@ void close_output_file() {
 
 /* define function type */
 %type <strval> Type
-%type <strval> Values
+%type <strval> ValuesNumber
+%type <strval> ValuesString
 
 %token COMMENT
 %token COLON
@@ -143,31 +144,47 @@ write_atribute_variable(output_file, $1, $3); }
 write_atribute_variable(output_file, $1, $3); }
 ;
 
-Values:
-  NAMEVAR { $$ = $1; } 
-  | VALUE_INT { $$ = transform_int_string(value,$1); }
+ValuesNumber:
+  VALUE_INT { $$ = transform_int_string(value,$1); }
   | VALUE_DOUBLE { $$ = transform_double_string(value,$1); } 
-  | VALUE_STRING { $$ = $1;} /* ERROR for string COMPARATOR string */
-  | VALUE_CHARACTER { $$ = $1;} /* ERROR for char COMPARATOR char, talvez seja o $$ */ 
 ;
+ValuesString:
+  VALUE_STRING /* ERROR for string COMPARATOR string */
+  | VALUE_CHARACTER  /* ERROR for char COMPARATOR char, talvez seja o $$ */ 
+;
+Values:
+  NAMEVAR COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  
+  | NAMEVAR COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesString COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  
+  | ValuesNumber COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); } 
+  | ValuesString COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
 
+;
+AndOr:
+  AND_ { write_to_file(output_file, " && "); } Condition
+  | OR_ { write_to_file(output_file, " || "); } Condition
+;
 Condition:
-  Values COMPARATOR Values { write_condicional_sentece(output_file, $1, $2, $3); }
-  | AND_ Condition
-  | OR_ Condition
+  Values
+  | Values AndOr
 ;
 
 ConditionalBegin:
-    IF_ Condition THAN_
+    IF_ { write_to_file(output_file, "\n\tif"); } Condition THAN_{ write_to_file(output_file, " {"); }
 ;
 
 ConditionalEnd:
-    ELSE_ AlgorithmBody
-    | END_IF_ { write_to_file_or_die(output_file, "\t}"); }
+    ELSE_ { write_to_file(output_file, "\t}\n\telse {"); } AlgorithmBody ConditionalEnd
+    | END_IF_ { write_to_file(output_file, "\t}"); }
 ;
 
 ConditionalStruct:
     ConditionalBegin AlgorithmBody ConditionalEnd
+    | ConditionalBegin ConditionalStruct ConditionalEnd
 ;
 
 

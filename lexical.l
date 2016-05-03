@@ -66,7 +66,7 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 ","             	  { return(COMMA); }
 "\n"				  { lines+=1; }
 
-{comparator}        { yylval.strval = strdup(yytext); return(COMPARATOR); }
+{comparator}          { yylval.strval = strdup(yytext); return(COMPARATOR); }
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }

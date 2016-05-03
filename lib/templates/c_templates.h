@@ -1,7 +1,7 @@
 #ifndef C_TEMPLATES
 #define C_TEMPLATES
 
-void write_to_file_or_die(FILE* file, char* content);
+void write_to_file(FILE* file, char* content);
 
 void write_declares_variable(FILE* file, char* content, char* content01);
 
