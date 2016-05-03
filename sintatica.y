@@ -149,11 +149,12 @@ ValuesNumber:
   | VALUE_DOUBLE { $$ = transform_double_string(value,$1); } 
 ;
 ValuesString:
-  VALUE_STRING /* ERROR for string COMPARATOR string */
-  | VALUE_CHARACTER  /* ERROR for char COMPARATOR char, talvez seja o $$ */ 
+  VALUE_STRING 
+  | VALUE_CHARACTER  
 ;
 Values:
   NAMEVAR COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  
   | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
   

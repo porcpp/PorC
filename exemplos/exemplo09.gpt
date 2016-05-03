@@ -6,7 +6,7 @@ variáveis
 fim-variáveis
 início
     asd := 122;
-    se asd <= 123 ou asd > 12 e asd = 15 então
+    se asd <= 123 ou asd > 13.87 e asd = 15 então
     	se asd = 12 então
     		asd := 12;
     	senão
