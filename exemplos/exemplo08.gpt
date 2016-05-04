@@ -15,17 +15,17 @@ início
     senão
     	asd := 13;
     fim-se
-    se asd <= asd e asd > "ffdsa" ou asd = "}" então
+    se asd <= asd e asd > 'f' ou asd = 'A' então
     	asd := 12;
     senão
     	asd := 13;
     fim-se
 
-    se asd > "#" ou asd = "}" então
+    se asd > '$' ou asd = '#' então
     	asd := 12;
     fim-se
 
-    se asd > "#" e asd = "}" então
+    se asd > '{' e asd = '}' então
     	asd := 12;
     fim-se
 fim

@@ -26,8 +26,8 @@ string {letter}+
 
 char_value ("\'"{any_char}"\'")
 
-string_value ("\""({any_char}+)"\"")
-semicolon [";"]+
+this_is_a_commit "não estamos tratando strings por enquanto então essa parte embaixo é inutil"
+string_value ("\"")((\w+)(\W+))("\"")|("\"")((\W+)(\w+))("\"")|("\"")((\W+)|(\w+))("\"")
 
 namevar {letter}({integer}|{letter}|"_")*
 
@@ -62,7 +62,7 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 
 "//"          	 	  { return(COMMENT); }
 ":"             	  { return(COLON); }
-{semicolon} 		  { return(SEMICOLON); }
+";"			 		  { return(SEMICOLON); }
 ","             	  { return(COMMA); }
 "\n"				  { lines+=1; }
 
