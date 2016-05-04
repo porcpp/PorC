@@ -55,8 +55,10 @@ void close_output_file() {
 %token VARIABLES_END
 %token BEGIN_BODY
 %token END_BODY
+/* define tokens off operations */
 
 %token <strval> COMPARATOR
+%token <strval> ARITIMETIC
 
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
@@ -133,17 +135,6 @@ Type:
     |T_BOOLEAN
 ;
 
-AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
-write_atribute_variable(output_file, $1, value); }
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3); 
-write_atribute_variable(output_file, $1, value); }
-    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string"); 
-write_atribute_variable(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
-write_atribute_variable(output_file, $1, $3); }
-;
-
 ValuesNumber:
   VALUE_INT { $$ = transform_int_string(value,$1); }
   | VALUE_DOUBLE { $$ = transform_double_string(value,$1); } 
@@ -152,19 +143,46 @@ ValuesString:
   VALUE_STRING 
   | VALUE_CHARACTER  
 ;
+
 Values:
   NAMEVAR COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
-  
+
   | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
-  
   | NAMEVAR COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesString COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
-  
-  | ValuesNumber COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); } 
+  | ValuesNumber COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesString COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
+;
+
+Aritmetic:
+    NAMEVAR ARITIMETIC NAMEVAR { printf("%s %s %s",$1, $2, $3); }
+    | ValuesNumber ARITIMETIC ValuesNumber { printf("%s %s %s",$1, $2, $3); }
+    | NAMEVAR ARITIMETIC ValuesNumber  { printf("%s %s %s",$1, $2, $3); }
+    | ValuesNumber ARITIMETIC NAMEVAR { printf("%s %s %s",$1, $2, $3); }
+    | Values
+;
+Operations:
+    Aritmetic
+    | Aritmetic ARITIMETIC Operations { printf("%s",$2); }
+    | LEFT_PARENTHESIS Operations RIGHT_PARENTHESIS { printf("( )"); }
+    | LEFT_PARENTHESIS Operations RIGHT_PARENTHESIS ARITIMETIC Operations { printf("() +"); }
 
 ;
+
+AttribuitionVariables:
+    NAMEVAR ATTRIBUTION Operations SEMICOLON { printf("Operation: " ); }
+    | NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
+write_atribute_variable(output_file, $1, value); }
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3); 
+write_atribute_variable(output_file, $1, value); }
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string"); 
+write_atribute_variable(output_file, $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
+write_atribute_variable(output_file, $1, $3); }
+    ;
+
+
 AndOr:
   AND_ { write_to_file(output_file, " && "); } Condition
   | OR_ { write_to_file(output_file, " || "); } Condition

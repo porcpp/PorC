@@ -32,6 +32,7 @@ string_value ("\"")((\w+)(\W+))("\"")|("\"")((\W+)(\w+))("\"")|("\"")((\W+)|(\w+
 namevar {letter}({integer}|{letter}|"_")*
 
 comparator ("="|"<"|">"|"<="|">="|"<>")
+aritimetic ("+"|"-"|"*"|"/")
 
 %%
 {all_reserved}        { return(RESERVED_WORD_C); }
@@ -66,10 +67,10 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 ","             	  { return(COMMA); }
 "\n"				  { lines+=1; }
 
-{comparator}          { yylval.strval = strdup(yytext); return(COMPARATOR); }
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }
+
 "{" 				  { return(LEFT_COL); }
 "}" 				  { return(RIGHT_COL); }
 
@@ -79,6 +80,10 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 {real} 				  { yylval.dval = atof(yytext); 		return(VALUE_DOUBLE); }
 {char_value}          { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
 {string_value}		  { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
+
+{comparator}          { yylval.strval = strdup(yytext);     return(COMPARATOR); }
+
+{aritimetic}          { yylval.strval = strdup(yytext);     return(ARITIMETIC); }
 
 
 %%
