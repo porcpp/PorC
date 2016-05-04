@@ -76,6 +76,7 @@ void close_output_file() {
 %type <strval> Type
 %type <strval> ValuesNumber
 %type <strval> ValuesString
+%type <strval> Operations
 
 %token COMMENT
 %token COLON
@@ -156,22 +157,20 @@ Values:
 ;
 
 Aritmetic:
-    NAMEVAR ARITIMETIC NAMEVAR { printf("%s %s %s",$1, $2, $3); }
-    | ValuesNumber ARITIMETIC ValuesNumber { printf("%s %s %s",$1, $2, $3); }
-    | NAMEVAR ARITIMETIC ValuesNumber  { printf("%s %s %s",$1, $2, $3); }
-    | ValuesNumber ARITIMETIC NAMEVAR { printf("%s %s %s",$1, $2, $3); }
-    | Values
+    NAMEVAR ARITIMETIC{printf("%s %s",$1, $2);} Operations 
+    | ValuesNumber ARITIMETIC {printf("%s %s",$1,$2); }Operations
 ;
 Operations:
-    Aritmetic
-    | Aritmetic ARITIMETIC Operations { printf("%s",$2); }
-    | LEFT_PARENTHESIS Operations RIGHT_PARENTHESIS { printf("( )"); }
-    | LEFT_PARENTHESIS Operations RIGHT_PARENTHESIS ARITIMETIC Operations { printf("() +"); }
-
+    LEFT_PARENTHESIS { printf("(\n"); } Operations RIGHT_PARENTHESIS { printf(")\n"); }
+    | LEFT_PARENTHESIS { printf("(\n"); } Operations RIGHT_PARENTHESIS { printf(")\n"); } ARITIMETIC { printf("%s" ,$3); } Operations
+    | Aritmetic 
+    | Aritmetic Operations 
+    | NAMEVAR { printf("%s",$1); }
+    | ValuesNumber {printf("%s",$1); }
 ;
 
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION Operations SEMICOLON { printf("Operation: " ); }
+    NAMEVAR ATTRIBUTION Operations SEMICOLON 
     | NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
 write_atribute_variable(output_file, $1, value); }
     | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3); 
