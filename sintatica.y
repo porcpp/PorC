@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lib/templates/c_templates.h"
+#include "lib/templates/transform_types.h"
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
 
 FILE* output_file = NULL;
-char * tipo=NULL; 
+char* type=NULL;
+char* value=NULL;
 
 SimbolTable * simbols =NULL;
 void open_output_file(char* algorithm_name) {
@@ -26,20 +28,23 @@ void close_output_file() {
 %}
 
 %union {
-    int num_int;
-    double num_double;
-    char* strings;
+    int ival;
+    double dval;
+    char* strval;
 }
 
-%token <strings> NAMEVAR
+%token <strval> NAMEVAR
 
 /* define types of attribution */
 %token ATTRIBUTION
 
-%token <num_int> VALUE_INT
-%token <num_double> VALUE_DOUBLE
-%token <strings>VALUE_STRING
-%token <strings>VALUE_CHARACTER
+%token <ival> VALUE_INT
+%token <dval> VALUE_DOUBLE
+%token <strval> VALUE_STRING
+%token <strval> VALUE_CHARACTER
+
+%token <strval> TEST_INT
+
 
 %token RESERVED_WORD_C
 %token TO_IMPLEMENT
@@ -51,7 +56,7 @@ void close_output_file() {
 %token BEGIN_BODY
 %token END_BODY
 
-%token <strings> COMPARATOR
+%token <strval> COMPARATOR
 
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
@@ -60,13 +65,15 @@ void close_output_file() {
 %token RIGHT_COL
 
 /* define tokens type */
-%token <strings> T_INT
-%token <strings> T_DOUBLE
-%token <strings> T_BOOLEAN
-%token <strings> T_CHAR
+%token <strval> T_INT
+%token <strval> T_DOUBLE
+%token <strval> T_BOOLEAN
+%token <strval> T_CHAR
 
 /* define function type */
-%type <strings> Type
+%type <strval> Type
+%type <strval> ValuesNumber
+%type <strval> ValuesString
 
 %token COMMENT
 %token COLON
@@ -109,15 +116,15 @@ HeaderAlgorithm:
     }
 ;
 HeaderVariables:
-    VARIABLES MultiVariables VARIABLES_END{write_to_file_or_die(output_file,";\n");}
+    VARIABLES MultiVariables VARIABLES_END{write_to_file(output_file,";\n");}
 ;
 MultiVariables:
     Variables
-    | Variables{write_to_file_or_die(output_file,";\n");}MultiVariables
+    | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
-    NAMEVAR COMMA Variables { SimbolTable_insert(simbols,$1,tipo); write_declares_variable_with_comma(output_file, $1); printf(", %s, ",$1);}
-    | NAMEVAR COLON Type {tipo=$3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
+    NAMEVAR COMMA Variables { SimbolTable_insert(simbols,$1,type); write_declares_variable_with_comma(output_file, $1); printf(", %s, ",$1);}
+    | NAMEVAR COLON Type {type=$3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
 ;
 Type:
     T_INT
@@ -127,34 +134,55 @@ Type:
 ;
 
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); 
-        write_atribute_variable_int(output_file, $1, $3); 
-    }
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); 
-write_atribute_variable_double(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string"); 
-write_atribute_variable_string(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
-write_atribute_variable_string(output_file, $1, $3); }
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
+write_atribute_variable(output_file, $1, value); }
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3);
+write_atribute_variable(output_file, $1, value); }
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string");
+write_atribute_variable(output_file, $1, $3); }
+    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char");
+write_atribute_variable(output_file, $1, $3); }
 ;
 
+ValuesNumber:
+  VALUE_INT { $$ = transform_int_string(value,$1); }
+  | VALUE_DOUBLE { $$ = transform_double_string(value,$1); }
+;
+ValuesString:
+  VALUE_STRING
+  | VALUE_CHARACTER
+;
+Values:
+  NAMEVAR COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  | NAMEVAR COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesString COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesNumber COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesString COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
+
+;
+AndOr:
+  AND_ { write_to_file(output_file, " && "); } Condition
+  | OR_ { write_to_file(output_file, " || "); } Condition
+;
 Condition:
-  NAMEVAR COMPARATOR NAMEVAR
-  | AND_ Condition
-  | OR_ Condition
+  Values
+  | Values AndOr
 ;
 
 ConditionalBegin:
-    IF_ Condition THAN_
+    IF_ { write_to_file(output_file, "\tif"); } Condition THAN_{ write_to_file(output_file, " {"); }
 ;
 
 ConditionalEnd:
-    ELSE_ AlgorithmBody
-    | END_IF_
+    ELSE_ { write_to_file(output_file, "}else {"); } AlgorithmBody ConditionalEnd
+    | END_IF_ { write_to_file(output_file, "}"); }
 ;
 
 ConditionalStruct:
-    ConditionalBegin AlgorithmBody ConditionalEnd
+    ConditionalBegin  AlgorithmBody {write_to_file(output_file,"\t");} ConditionalEnd
+    | ConditionalBegin ConditionalStruct ConditionalEnd
 ;
 
 
@@ -168,8 +196,8 @@ Body:
         close_output_file();
     }
 ;
-AlgorithmBody:
-    AttribuitionVariables
+ AlgorithmBody:
+    AttribuitionVariables{write_to_file(output_file,"\t");}
     | ConditionalStruct
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody

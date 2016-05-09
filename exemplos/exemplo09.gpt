@@ -1,0 +1,15 @@
+algoritmo exemplo;
+
+
+variáveis
+    asd:caractere;
+fim-variáveis
+início
+    asd := '#';
+
+    se asd > '#' ou asd = '}' então
+        asd := 'f';
+	asd := 'd';
+    fim-se
+
+fim

@@ -1,0 +1,31 @@
+algoritmo exemplo;
+
+
+variáveis
+    asd: inteiro;
+fim-variáveis
+início
+    asd := 122;
+    se asd <= 123 então
+    	se 13 < 123 então
+    		se 32.09 = 123 então
+    			asd := 12;
+    		fim-se
+    	fim-se
+    senão
+    	asd := 13;
+    fim-se
+    se asd <= asd e asd > 'f' ou asd = 'A' então
+    	asd := 12;
+    senão
+    	asd := 13;
+    fim-se
+
+    se asd > '$' ou asd = '#' então
+    	asd := 12;
+    fim-se
+
+    se asd > '{' e asd = '}' então
+    	asd := 12;
+    fim-se
+fim
