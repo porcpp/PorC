@@ -77,7 +77,8 @@ void close_output_file() {
 %type <strval> ValuesNumber
 %type <strval> ValuesString
 %type <strval> Operations
-
+%type <strval> Aritmetic
+%type <strval> Parenthesis
 %token COMMENT
 %token COLON
 %token COMMA
@@ -157,18 +158,19 @@ Values:
 ;
 
 Aritmetic:
-    NAMEVAR ARITIMETIC{printf("%s %s",$1, $2);} Operations 
-    | ValuesNumber ARITIMETIC {printf("%s %s",$1,$2); }Operations
+    NAMEVAR {printf("%s",$1); }
+    | ValuesNumber {printf("%s",$1); }
+    | Aritmetic ARITIMETIC {printf("%s",$2); } Aritmetic
+;
+Parenthesis:
+    LEFT_PARENTHESIS {printf("(");}Operations RIGHT_PARENTHESIS {printf(")"); }
 ;
 Operations:
-    LEFT_PARENTHESIS { printf("(\n"); } Operations RIGHT_PARENTHESIS { printf(")\n"); }
-    | LEFT_PARENTHESIS { printf("(\n"); } Operations RIGHT_PARENTHESIS { printf(")\n"); } ARITIMETIC { printf("%s" ,$3); } Operations
-    | Aritmetic 
-    | Aritmetic Operations 
-    | NAMEVAR { printf("%s",$1); }
-    | ValuesNumber {printf("%s",$1); }
+    Aritmetic 
+    | Parenthesis
+    | Aritmetic ARITIMETIC {printf("%s",$2);} Operations
+    | Parenthesis ARITIMETIC {printf("%s",$2);} Operations
 ;
-
 AttribuitionVariables:
     NAMEVAR ATTRIBUTION Operations SEMICOLON 
     | NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
