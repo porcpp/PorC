@@ -9,6 +9,7 @@ início
 
     se asd > '#' ou asd = '}' então
         asd := 'f';
+	asd := 'd';
     fim-se
 
 fim

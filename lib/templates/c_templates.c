@@ -58,10 +58,9 @@ void write_body_end(FILE* file) {
 
 
 void write_condicional_sentece(FILE* file, char* content, char* content01, char* content02) {
-    if (file != NULL) {
-        fprintf(file, "(%s %s %s)", content, content01, content02);
-   } else {
-        printf("COULD NOT WRITE IN FILE !\n");
-        exit(0);
-    }
+    char string_to_file[60];
+    
+    sprintf(string_to_file,"(%s %s %s)",content,content01,content02);
+    write_to_file(file,string_to_file);
 }
+

@@ -175,16 +175,16 @@ Condition:
 ;
 
 ConditionalBegin:
-    IF_ { write_to_file(output_file, "\n\tif"); } Condition THAN_{ write_to_file(output_file, " {"); }
+    IF_ { write_to_file(output_file, "\tif"); } Condition THAN_{ write_to_file(output_file, " {"); }
 ;
 
 ConditionalEnd:
-    ELSE_ { write_to_file(output_file, "\t}\n\telse {"); } AlgorithmBody ConditionalEnd
-    | END_IF_ { write_to_file(output_file, "\t}"); }
+    ELSE_ { write_to_file(output_file, "}else {"); } AlgorithmBody ConditionalEnd
+    | END_IF_ { write_to_file(output_file, "}"); }
 ;
 
 ConditionalStruct:
-    ConditionalBegin AlgorithmBody ConditionalEnd
+    ConditionalBegin  AlgorithmBody {write_to_file(output_file,"\t");} ConditionalEnd
     | ConditionalBegin ConditionalStruct ConditionalEnd
 ;
 
@@ -199,8 +199,8 @@ Body:
         close_output_file();
     }
 ;
-AlgorithmBody:
-    AttribuitionVariables
+ AlgorithmBody:
+    AttribuitionVariables{write_to_file(output_file,"\t");}
     | ConditionalStruct
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody
