@@ -5,3 +5,4 @@
 *.out
 compiler
 execute_tests
+exemplo.c

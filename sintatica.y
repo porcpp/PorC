@@ -58,7 +58,9 @@ void close_output_file() {
 /* define tokens off operations */
 
 %token <strval> COMPARATOR
-%token <strval> ARITIMETIC
+%token <strval> BASIC_ARITIMETIC
+%token <strval> TIMES
+%token <strval> DIVIDER
 
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
@@ -79,6 +81,8 @@ void close_output_file() {
 %type <strval> Operations
 %type <strval> Aritmetic
 %type <strval> Parenthesis
+%type <strval> Operator
+
 %token COMMENT
 %token COLON
 %token COMMA
@@ -157,10 +161,19 @@ Values:
   | ValuesString COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
 ;
 
+Operator:
+    BASIC_ARITIMETIC
+    | TIMES
+    | DIVIDER 
+;
+
 Aritmetic:
     NAMEVAR {printf("%s",$1); }
     | ValuesNumber {printf("%s",$1); }
-    | Aritmetic ARITIMETIC {printf("%s",$2); } Aritmetic
+    | BASIC_ARITIMETIC NAMEVAR { printf("%s %s",$1,$2);}
+    | BASIC_ARITIMETIC ValuesNumber { printf("%s %s",$1,$2);}
+    | Aritmetic Operator {printf("%s",$2); } Aritmetic
+    | Aritmetic Operator {printf("%s",$2); } Parenthesis
 ;
 Parenthesis:
     LEFT_PARENTHESIS {printf("(");}Operations RIGHT_PARENTHESIS {printf(")"); }
@@ -168,8 +181,7 @@ Parenthesis:
 Operations:
     Aritmetic 
     | Parenthesis
-    | Aritmetic ARITIMETIC {printf("%s",$2);} Operations
-    | Parenthesis ARITIMETIC {printf("%s",$2);} Operations
+    | Parenthesis Operator {printf("%s",$2);} Operations
 ;
 AttribuitionVariables:
     NAMEVAR ATTRIBUTION Operations SEMICOLON 

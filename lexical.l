@@ -32,7 +32,11 @@ string_value ("\"")((\w+)(\W+))("\"")|("\"")((\W+)(\w+))("\"")|("\"")((\W+)|(\w+
 namevar {letter}({integer}|{letter}|"_")*
 
 comparator ("="|"<"|">"|"<="|">="|"<>")
-aritimetic ("+"|"-"|"*"|"/")
+plus "+"
+minus "-"
+basic_aritimetic ({plus}|{minus})
+times "*"
+divider "/"
 
 %%
 {all_reserved}        { return(RESERVED_WORD_C); }
@@ -83,7 +87,9 @@ aritimetic ("+"|"-"|"*"|"/")
 
 {comparator}          { yylval.strval = strdup(yytext);     return(COMPARATOR); }
 
-{aritimetic}          { yylval.strval = strdup(yytext);     return(ARITIMETIC); }
+{basic_aritimetic}    { yylval.strval = strdup(yytext);     return(BASIC_ARITIMETIC); }
+{times}               { yylval.strval = strdup(yytext);     return(TIMES); }
+{divider}             { yylval.strval = strdup(yytext);     return(DIVIDER); }
 
 
 %%
