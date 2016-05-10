@@ -267,6 +267,7 @@ ConditionalEnd:
     ELSE_ {
         counter_codicional--;
         write_tabulation(output_file,counter_codicional);
+        counter_codicional++;
         write_to_file(output_file, "}else{\n");
     } AlgorithmBody ConditionalEnd
     | END_IF_ {
