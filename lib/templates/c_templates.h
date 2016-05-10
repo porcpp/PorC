@@ -17,6 +17,7 @@ void write_body_begin(FILE* file);
 
 void write_body_end(FILE* file);
 
+void write_tabulation(FILE* file,int counter);
 
 //Conditional senteces
 void write_condicional_sentece(FILE* file, char* content, char* content01, char* content02);

@@ -3,6 +3,7 @@
 #include <string.h>
 #include "c_templates.h"
 
+int i;
 
 void write_to_file(FILE* file, char* content) {
     if (file != NULL) {
@@ -30,8 +31,14 @@ void write_declares_variable(FILE* file, char* content, char* content01) {
 void write_atribute_variable(FILE* file, char* content, char* content01) {
     char string_to_file[60];
 
-    sprintf(string_to_file, "\n\t%s = %s;\n", content, content01);
+    sprintf(string_to_file, "%s = %s;\n", content, content01);
     write_to_file(file,string_to_file);
+}
+
+void write_tabulation(FILE* file,int counter){
+    for(i=0;i<counter;i++){
+        write_to_file(file,"\t");
+    }
 }
 
 void write_default_header(FILE* file) {
