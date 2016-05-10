@@ -185,19 +185,30 @@ Condition:
 ;
 
 ConditionalBegin:
-    IF_ { write_to_file(output_file, "\tif"); } Condition THAN_{
-        write_to_file(output_file, " {\n");
+    IF_ {
+        write_tabulation(output_file,counter_codicional);
+        write_to_file(output_file, "if");
+    } Condition THAN_{
+        write_to_file(output_file, "{\n");
         counter_codicional++;
     }
 ;
 
 ConditionalEnd:
-    ELSE_ { write_to_file(output_file, "}else {"); } AlgorithmBody ConditionalEnd
-    | END_IF_ { write_to_file(output_file, "}"); }
+    ELSE_ {
+        counter_codicional--;
+        write_tabulation(output_file,counter_codicional);
+        write_to_file(output_file, "}else{\n");
+    } AlgorithmBody ConditionalEnd
+    | END_IF_ {
+        counter_codicional--;
+        write_tabulation(output_file,counter_codicional);
+        write_to_file(output_file, "}\n");
+    }
 ;
 
 ConditionalStruct:
-    ConditionalBegin  AlgorithmBody {write_to_file(output_file,"\t");} ConditionalEnd
+    ConditionalBegin  AlgorithmBody  ConditionalEnd
     | ConditionalBegin ConditionalStruct ConditionalEnd
 ;
 
