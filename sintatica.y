@@ -10,7 +10,7 @@
 FILE* output_file = NULL;
 char* tipo = NULL;
 char* value = NULL;
-
+int counter_codicional=1;
 SimbolTable* simbols = NULL;
 
 void open_output_file(char* algorithm_name) {
@@ -153,6 +153,29 @@ Type:
     |T_BOOLEAN
 ;
 
+AttribuitionVariables:
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON {
+        write_tabulation(output_file,counter_codicional);
+        verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
+        write_atribute_variable(output_file, $1, value);
+    }
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON {
+        write_tabulation(output_file,counter_codicional);
+        verify_type(simbols,$1,"double"); value = transform_double_string(value,$3);
+        write_atribute_variable(output_file, $1, value);
+    }
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON {
+        write_tabulation(output_file,counter_codicional);
+        verify_type(simbols,$1,"string");
+        write_atribute_variable(output_file, $1, $3);
+    }
+    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON {
+        write_tabulation(output_file,counter_codicional);
+        verify_type(simbols,$1,"char");
+        write_atribute_variable(output_file, $1, $3);
+    }
+;
+
 ValuesNumber:
   VALUE_INT { $$ = transform_int_string(value,$1); }
   | VALUE_DOUBLE { $$ = transform_double_string(value,$1); }
@@ -207,17 +230,10 @@ Operations:
     | Parenthesis
     | Parenthesis Operator {write_to_file(output_file,$2);} Operations
 ;
+
 AttribuitionVariables:
 
-    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
-write_atribute_variable(output_file, $1, value); }
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3);
-write_atribute_variable(output_file, $1, value); }
-    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string");
-write_atribute_variable(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char");
-write_atribute_variable(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION {
+     NAMEVAR ATTRIBUTION {
         char string_to_file[1000];
         sprintf(string_to_file,"%s =",$1);
         write_to_file(output_file,string_to_file);
@@ -238,7 +254,10 @@ Condition:
 ;
 
 ConditionalBegin:
-    IF_ { write_to_file(output_file, "\tif"); } Condition THAN_{ write_to_file(output_file, " {"); }
+    IF_ { write_to_file(output_file, "\tif"); } Condition THAN_{
+        write_to_file(output_file, " {\n");
+        counter_codicional++;
+    }
 ;
 
 ConditionalEnd:
@@ -259,11 +278,11 @@ Body:
     }
     | BEGIN_BODY AlgorithmBody END_BODY {
        write_body_end(output_file);
-        close_output_file();
+       close_output_file();
     }
 ;
  AlgorithmBody:
-    AttribuitionVariables{write_to_file(output_file,"\t");}
+     AttribuitionVariables
     | ConditionalStruct
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody

@@ -3,13 +3,16 @@ algoritmo exemplo;
 
 variáveis
     asd:caractere;
+    a:inteiro;
+    b:real;
 fim-variáveis
 início
     asd := '#';
 
     se asd > '#' ou asd = '}' então
         asd := 'f';
-	asd := 'd';
+    	asd := 'd';
+        a := 2;
     fim-se
 
 fim

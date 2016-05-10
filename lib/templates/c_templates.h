@@ -21,6 +21,8 @@ void write_body_end(FILE* file);
 
 void write_condicional_sentece(FILE* file, const char* content, const char* content01, const char* content02);
 
+void write_tabulation(FILE* file,int counter);
+
 void write_declares_vector(FILE* file, const char* content, const char* content01);
 
 void write_declares_matrix(FILE* file, const char* content, const char* content01, const char* content02);
