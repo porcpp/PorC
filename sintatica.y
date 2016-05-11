@@ -44,6 +44,9 @@ void close_output_file() {
 %token <strval> VALUE_STRING
 %token <strval> VALUE_CHARACTER
 
+%token MATRIX
+%token DE
+
 %token <strval> TEST_INT 
 
 
@@ -65,9 +68,10 @@ void close_output_file() {
 
 %token LEFT_PARENTHESIS
 %token RIGHT_PARENTHESIS
-
 %token LEFT_COL
 %token RIGHT_COL
+%token LEFT_BRACKET
+%token RIGHT_BRACKET
 
 /* define tokens type */
 %token <strval> T_INT
@@ -83,6 +87,7 @@ void close_output_file() {
 %type <strval> Aritmetic
 %type <strval> Parenthesis
 %type <strval> Operator
+%type <strval> DimensionMatrix
 
 %token COMMENT
 %token COLON
@@ -133,7 +138,12 @@ MultiVariables:
 ;
 Variables:
     NAMEVAR COMMA Variables { SimbolTable_insert(simbols,$1,tipo); write_declares_variable_with_comma(output_file, $1); printf(", %s, ",$1);}
-    | NAMEVAR COLON Type {tipo=$3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
+    | NAMEVAR COLON Type {tipo = $3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
+    | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$6);} {write_declares_vector(output_file, $6 , $1, $4);}
+    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$7);} {write_declares_matrix(output_file, $7 , $1, $4, $5);}
+;
+DimensionMatrix:
+    LEFT_BRACKET VALUE_INT RIGHT_BRACKET{ $$ = transform_int_string(value,$2); }
 ;
 Type:
     T_INT
@@ -153,7 +163,6 @@ ValuesString:
 
 Values:
   NAMEVAR COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
-
   | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
   | NAMEVAR COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }

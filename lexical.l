@@ -11,7 +11,7 @@ all_reserved (other_reserved|decision_reserved|type_reserved)
 
 portugol_header (algoritmo|variáveis|fim-variáveis|início|fim)
 portugol_types (inteiro|real|caractere|literal|lógico)
-portugol_statements (não|enquanto|fim-enquanto|para|de|até|faça|fim-para|verdadeiro|falso)
+portugol_statements (não|enquanto|fim-enquanto|para|até|faça|fim-para|verdadeiro|falso)
 
 digit [0-9]
 integer {digit}+
@@ -63,6 +63,13 @@ divider "/"
 "logico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
 "caractere"           { yylval.strval = "char"; return(T_CHAR);}
 
+"inteiros"      	  { yylval.strval = "int"; return(T_INT);}
+"reais"               { yylval.strval = "double"; return(T_DOUBLE);}
+"lógicos"             { yylval.strval = "bool"; return(T_BOOLEAN);}
+"caracteres"          { yylval.strval = "char"; return(T_CHAR);}
+"matriz"			  { return(MATRIX);}
+"de"			 	  { return(DE);}
+
 ":="				  { return(ATTRIBUTION); }
 
 "//"          	 	  { return(COMMENT); }
@@ -74,9 +81,12 @@ divider "/"
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }
-
 "{" 				  { return(LEFT_COL); }
 "}" 				  { return(RIGHT_COL); }
+"["					  { return(LEFT_BRACKET);}
+"]"					  { return(RIGHT_BRACKET);}
+
+
 
 
 {namevar} 			  { yylval.strval = strdup(yytext); 	return(NAMEVAR); }
@@ -84,9 +94,7 @@ divider "/"
 {real} 				  { yylval.dval = atof(yytext); 		return(VALUE_DOUBLE); }
 {char_value}          { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
 {string_value}		  { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
-
 {comparator}          { yylval.strval = strdup(yytext);     return(COMPARATOR); }
-
 {basic_aritimetic}    { yylval.strval = strdup(yytext);     return(BASIC_ARITIMETIC); }
 {times}               { yylval.strval = strdup(yytext);     return(TIMES); }
 {divider}             { yylval.strval = strdup(yytext);     return(DIVIDER); }
