@@ -17,10 +17,10 @@ void write_body_begin(FILE* file);
 
 void write_body_end(FILE* file);
 
-
-//Conditional senteces
 void write_condicional_sentece(FILE* file, char* content, char* content01, char* content02);
 
+void write_declares_vector(FILE* file, char* content, char* content01, char* content02);
 
+void write_declares_matrix(FILE* file, char* content, char* content01, char* content02, char* content03);
 
 #endif
