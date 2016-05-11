@@ -67,12 +67,16 @@ void close_output_file() {
 
 %token LEFT_COL
 %token RIGHT_COL
+%token LEFT_BRACKET
+%token RIGHT_BRACKET
 
 /* define tokens type */
 %token <strval> T_INT
 %token <strval> T_DOUBLE
 %token <strval> T_BOOLEAN
 %token <strval> T_CHAR
+%token MATRIX
+%token DE
 
 /* define function type */
 %type <strval> Type
@@ -82,6 +86,7 @@ void close_output_file() {
 %type <strval> Aritmetic
 %type <strval> Parenthesis
 %type <strval> Operator
+%type <strval> DimensionMatrix
 
 %token COMMENT
 %token COLON
@@ -133,6 +138,11 @@ MultiVariables:
 Variables:
     NAMEVAR COMMA Variables { SimbolTable_insert(simbols,$1,tipo); write_declares_variable_with_comma(output_file, $1); printf(", %s, ",$1);}
     | NAMEVAR COLON Type {tipo=$3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
+    | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {write_declares_vector(output_file, $4 , $1, $6);}
+    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {write_declares_matrix(output_file, $7 , $1, $4, $5);}
+;
+DimensionMatrix:
+    LEFT_BRACKET ValuesNumber RIGHT_BRACKET
 ;
 Type:
     T_INT

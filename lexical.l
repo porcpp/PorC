@@ -11,7 +11,7 @@ all_reserved (other_reserved|decision_reserved|type_reserved)
 
 portugol_header (algoritmo|variáveis|fim-variáveis|início|fim)
 portugol_types (inteiro|real|caractere|literal|lógico)
-portugol_statements (não|enquanto|fim-enquanto|para|de|até|faça|fim-para|verdadeiro|falso)
+portugol_statements (não|enquanto|fim-enquanto|para|até|faça|fim-para|verdadeiro|falso)
 
 digit [0-9]
 integer {digit}+
@@ -43,7 +43,7 @@ divider "/"
 {portugol_statements} { return(TO_IMPLEMENT); }
 
 
-"se"				  { return(IF_); }
+"se"		      { return(IF_); }
 "então"               { return(THAN_); }
 "senão"               { return(ELSE_); }
 "fim-se"              { return(END_IF_); }
@@ -60,10 +60,17 @@ divider "/"
 
 "inteiro"             { yylval.strval = "int"; return(T_INT);}
 "real"                { yylval.strval = "double"; return(T_DOUBLE);}
-"logico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
+"lógico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
 "caractere"           { yylval.strval = "char"; return(T_CHAR);}
+"matriz"		{return(MATRIX);}
+"de"			{return(DE);}
 
-":="				  { return(ATTRIBUTION); }
+"inteiros"             { yylval.strval = "int"; return(T_INT);}
+"reais"                 { yylval.strval = "double"; return(T_DOUBLE);}
+"lógicos"              { yylval.strval = "bool"; return(T_BOOLEAN);}
+"caracteres"           { yylval.strval = "char"; return(T_CHAR);}
+
+":="		      { return(ATTRIBUTION); }
 
 "//"          	 	  { return(COMMENT); }
 ":"             	  { return(COLON); }
@@ -77,6 +84,9 @@ divider "/"
 
 "{" 				  { return(LEFT_COL); }
 "}" 				  { return(RIGHT_COL); }
+
+"["				{return(LEFT_BRACKET);}
+"]"				{return(RIGHT_BRACKET);}
 
 
 {namevar} 			  { yylval.strval = strdup(yytext); 	return(NAMEVAR); }

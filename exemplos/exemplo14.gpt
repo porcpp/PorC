@@ -1,0 +1,9 @@
+algoritmo exemplo;
+
+
+variáveis
+    dfs: matriz[10] de inteiros;
+    fdsa: matriz[15][12] de reais;
+fim-variáveis
+início
+fim
