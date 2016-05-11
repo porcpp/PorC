@@ -5,6 +5,7 @@
 #include "lib/templates/transform_types.h"
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
+#include <string.h>
 
 FILE* output_file = NULL;
 char * tipo=NULL; 
@@ -143,7 +144,7 @@ Type:
 
 ValuesNumber:
   VALUE_INT { $$ = transform_int_string(value,$1); }
-  | VALUE_DOUBLE { $$ = transform_double_string(value,$1); } 
+  | VALUE_DOUBLE { $$ = transform_double_string(value,$1); }
 ;
 ValuesString:
   VALUE_STRING 
@@ -168,24 +169,34 @@ Operator:
 ;
 
 Aritmetic:
-    NAMEVAR {printf("%s",$1); }
-    | ValuesNumber {printf("%s",$1); }
-    | BASIC_ARITIMETIC NAMEVAR { printf("%s %s",$1,$2);}
-    | BASIC_ARITIMETIC ValuesNumber { printf("%s %s",$1,$2);}
-    | Aritmetic Operator {printf("%s",$2); } Aritmetic
-    | Aritmetic Operator {printf("%s",$2); } Parenthesis
+    NAMEVAR {  write_to_file(output_file,$1); }
+    | ValuesNumber { write_to_file(output_file,$1); }
+    | BASIC_ARITIMETIC NAMEVAR { 
+        char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));
+        sprintf(string_to_file,"%s %s",$1,$2);
+        write_to_file(output_file,string_to_file); 
+        free(string_to_file);
+        }
+
+    | BASIC_ARITIMETIC ValuesNumber {
+        char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));
+        sprintf(string_to_file,"%s %s",$1,$2);
+        write_to_file(output_file,string_to_file); 
+        free(string_to_file); }
+    | Aritmetic Operator {write_to_file(output_file,$2); } Aritmetic
+    | Aritmetic Operator {write_to_file(output_file,$2); } Parenthesis
 ;
 Parenthesis:
-    LEFT_PARENTHESIS {printf("(");}Operations RIGHT_PARENTHESIS {printf(")"); }
+    LEFT_PARENTHESIS {write_to_file(output_file,"(");}Operations RIGHT_PARENTHESIS {write_to_file(output_file,")"); }
 ;
 Operations:
     Aritmetic 
     | Parenthesis
-    | Parenthesis Operator {printf("%s",$2);} Operations
+    | Parenthesis Operator {write_to_file(output_file,$2);} Operations
 ;
 AttribuitionVariables:
-    NAMEVAR ATTRIBUTION Operations SEMICOLON 
-    | NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
+
+    NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
 write_atribute_variable(output_file, $1, value); }
     | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3); 
 write_atribute_variable(output_file, $1, value); }
@@ -193,6 +204,12 @@ write_atribute_variable(output_file, $1, value); }
 write_atribute_variable(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
 write_atribute_variable(output_file, $1, $3); }
+    | NAMEVAR ATTRIBUTION {
+        char string_to_file[1000];
+        sprintf(string_to_file,"%s =",$1); 
+        write_to_file(output_file,string_to_file);
+        
+    } Operations SEMICOLON 
     ;
 
 

@@ -10,5 +10,8 @@
 //const char[] CHAR = "caractere";
 //const char[] STRING = "literal";
 
+//const int NOT_FOUND = 0;
+//const int INVALID_TYPE = 1;
+//const int VALID_TYPE = 2;
 int verify_type(SimbolTable * simbols,char * name, char * type);
 #endif
