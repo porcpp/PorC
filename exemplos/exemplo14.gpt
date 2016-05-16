@@ -3,8 +3,13 @@ algoritmo exemplo;
 variáveis
     dfs: matriz[10] de inteiros;
     fd: matriz[12][21] de reais;
+    a:inteiro;
+    b:caractere;
 fim-variáveis
 início
     dfs[2] := 12;
     fd[12][1] := 12.9;
+    a:=  +2+1.2;
+    b:= 'v';
+    a:= a+b;
 fim

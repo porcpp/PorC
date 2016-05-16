@@ -11,5 +11,10 @@
 //const int NOT_FOUND = 0;
 //const int INVALID_TYPE = 1;
 //const int VALID_TYPE = 2;
-int verify_type(SimbolTable* simbols, char* name, char* type);
+
+int verify_type(SimbolTable * simbols,char * name, char * type);
+
+unsigned short is_number(SimbolTable* simbols, char* name);
+
+static unsigned short valid_types(char* type);
 #endif

@@ -206,12 +206,12 @@ Operator:
 ;
 
 Aritmetic:
-    NAMEVAR {  write_to_file(output_file,$1); }
-    | ValuesNumber { write_to_file(output_file,$1); }
-    | BASIC_ARITIMETIC NAMEVAR {
+    NAMEVAR {  if(is_number(simbols, $1)) { write_to_file(output_file, $1); } else { printf("\nDEBUG: invalid aritmetic %s is not int nor double", $1); exit(0); } }
+    | ValuesNumber { write_to_file(output_file, $1); }
+    | BASIC_ARITIMETIC NAMEVAR { 
         char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));
-        sprintf(string_to_file,"%s %s",$1,$2);
-        write_to_file(output_file,string_to_file);
+        sprintf(string_to_file,"%s %s", $1, $2);
+        write_to_file(output_file,string_to_file); 
         free(string_to_file);
         }
 
