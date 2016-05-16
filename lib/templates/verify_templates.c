@@ -11,6 +11,17 @@
 char valid_types_list[4][10] = {
     "int", "double", "string", "char"
 };
+void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable){
+    Variable* variable_already_added = SimbolTable_find(simbol_table, variable->name);
+
+    if(variable_already_added != NULL){
+        yyerror("Variable %s already declared", variable->name);
+    }else{
+        printf("DEBUG - Variable %s is permited\n", variable->name);
+    }
+}
+
+
 
 int verify_type(SimbolTable* simbols, char* name, char* type) {
     printf("\nDEBUG - Params of input %s %s\n", name, type);

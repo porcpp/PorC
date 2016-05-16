@@ -22,4 +22,5 @@ unsigned short is_number(SimbolTable* simbols, char* name);
 static unsigned short valid_types(char* type);
 
 void write_variable_if_valid(FILE* file, SimbolTable* simbols, char* name);
+void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable);
 #endif

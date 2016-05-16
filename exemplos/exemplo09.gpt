@@ -12,7 +12,7 @@ início
     se asd > '#' ou asd = '}' então
         asd := 'f';
     	asd := 'd';
-        a := 2;
+        s := 2;
     fim-se
 
 fim

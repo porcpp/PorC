@@ -5,6 +5,7 @@
 #include "variable.h"
 #include "node.h"
 #include "simbol_table.h"
+#include "../templates/verify_templates.h"
 
 
 SimbolTable* SimbolTable_new() {
@@ -63,42 +64,38 @@ int SimbolTable_insert_variable(SimbolTable* simbol_table, Variable* variable) {
   * FIXME: Is the SimbleTable work to alert the user that a variable was already decladed or
   * the compiler should verify it before addind a new varibale ?
   */
-  if (variable_already_added != NULL) {
-    printf("ERROR: Variable %s already declared !\n", variable->name);
-    SimbolTable_destroy(simbol_table);
-    exit(0);
-  } else {
-    Node* actual_node = simbol_table->root;
-    Node* node = Node_new(variable);
 
-    if (actual_node == NULL) {
-      simbol_table->root = node;
-      simbol_table->size = 1;
-      node_added = 1;
-    } else {
-      do {
-        int test = strcmp(variable->name, actual_node->variable->name);
+Node* actual_node = simbol_table->root;
+Node* node = Node_new(variable);
 
-        if (test < 0) { // Its to the left
-          if (actual_node->node_left == NULL) {
-            actual_node->node_left = node;
-            node_added = 1;
-          } else {
-            actual_node = actual_node->node_left;
-          }
-        } else { // Its to the right
-          if (actual_node->node_right == NULL) {
-            actual_node->node_right = node;
-            node_added = 1;
-          } else {
-            actual_node = actual_node->node_right;
-          }
-        }
-      } while(!node_added);
+if (actual_node == NULL) {
+  simbol_table->root = node;
+  simbol_table->size = 1;
+  node_added = 1;
+} else {
+  do {
+    int test = strcmp(variable->name, actual_node->variable->name);
 
-      simbol_table->size += 1;
+    if (test < 0) { // Its to the left
+      if (actual_node->node_left == NULL) {
+        actual_node->node_left = node;
+        node_added = 1;
+      } else {
+        actual_node = actual_node->node_left;
+      }
+    } else { // Its to the right
+      if (actual_node->node_right == NULL) {
+        actual_node->node_right = node;
+        node_added = 1;
+      } else {
+        actual_node = actual_node->node_right;
+      }
     }
-  }
+  } while(!node_added);
+
+  simbol_table->size += 1;
+}
+
 
   return node_added;
 }
