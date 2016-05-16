@@ -18,14 +18,14 @@ int verify_type(SimbolTable* simbols, char* name, char* type) {
         if(strcmp(type, variable->type) == 0) {
             printf("\nDEBUG - Type is equals");
             // Verify if the type os value is the same of variable
-            valid = VALID_TYPE;
-        } else {
-            printf("DEBUG - Type of variable is different of value\n");
+            valid = 1;
+        }else{
+            yyerror("Type of variable is different of value");
             exit(0);
            //valid = INVALID_TYPE;
         }
-    } else {
-        printf("DEBUG - Variable name not found\n");
+    }else{
+        yyerror("Variable name not found");
         exit(0);
         //valid = NOT_FOUND;
         //Variable not found
