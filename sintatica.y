@@ -206,7 +206,7 @@ Operator:
 ;
 
 Aritmetic:
-    NAMEVAR {  if(is_number(simbols, $1)) { write_to_file(output_file, $1); } else { printf("\nDEBUG: invalid aritmetic %s is not int nor double", $1); exit(0); } }
+    NAMEVAR { write_variable_if_valid(output_file, simbols, $1); }
     | ValuesNumber { write_to_file(output_file, $1); }
     | BASIC_ARITIMETIC NAMEVAR { 
         char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));

@@ -1,6 +1,9 @@
+#include "../simbol_table/simbol_table.h"
+#include <stdio.h>
+
+
 #ifndef VERIFY_TEMPLATES
 #define VERIFY_TEMPLATES
-#include "../simbol_table/simbol_table.h"
 
 #define VALID_TYPE 2
 //const char[] INT = "inteiro";
@@ -17,4 +20,6 @@ int verify_type(SimbolTable * simbols,char * name, char * type);
 unsigned short is_number(SimbolTable* simbols, char* name);
 
 static unsigned short valid_types(char* type);
+
+void write_variable_if_valid(FILE* file, SimbolTable* simbols, char* name);
 #endif

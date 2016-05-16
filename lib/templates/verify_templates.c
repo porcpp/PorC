@@ -1,4 +1,5 @@
 #include "verify_templates.h"
+#include "c_templates.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -69,4 +70,17 @@ static unsigned short valid_types(char* type) {
     }
 
     return is_a_valid_type;
+}
+
+
+void write_variable_if_valid(FILE* file, SimbolTable* simbols, char* name) {
+    assert(file != NULL);
+    assert(simbols != NULL);
+
+    if(is_number(simbols, name)) {
+        write_to_file(file, name);
+    } else {
+        printf("\nDEBUG: invalid aritmetic %s is not int nor double", name);
+        exit(0);
+    }
 }
