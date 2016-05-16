@@ -5,32 +5,32 @@
 
 //const int NOT_FOUND = 0;
 //const int INVALID_TYPE = 1;
-const int VALID_TYPE = 2;
 
-int verify_type(SimbolTable * simbols,char * name, char * type){
-    printf("\nDEBUG - Params of input %s %s\n",name,type);
+int verify_type(SimbolTable* simbols, char* name, char* type) {
+    printf("\nDEBUG - Params of input %s %s\n", name, type);
 
-    Variable * variable = SimbolTable_find(simbols,name); // Get the variable if exist in simbol table
+    Variable* variable = SimbolTable_find(simbols, name); // Get the variable if exist in simbol table
     int valid = 0;
-    
-    if( variable != NULL){
-        printf("\nDEBUG - Value of type %s \n",variable->type);
 
-        if( !strcmp(type,variable->type) ){
+    if(variable != NULL) {
+        printf("\nDEBUG - Value of type %s\n", variable->type);
+
+        if(strcmp(type, variable->type) == 0) {
             printf("\nDEBUG - Type is equals");
             // Verify if the type os value is the same of variable
-            valid = VALID_TYPE; 
-        }else{
+            valid = VALID_TYPE;
+        } else {
             printf("DEBUG - Type of variable is different of value\n");
             exit(0);
-//            valid = INVALID_TYPE;
+           //valid = INVALID_TYPE;
         }
-    }else{
+    } else {
         printf("DEBUG - Variable name not found\n");
         exit(0);
-//        valid = NOT_FOUND;
-        // Variable not found
+        //valid = NOT_FOUND;
+        //Variable not found
     }
-    return valid;   
+
+    return valid;
 }
 

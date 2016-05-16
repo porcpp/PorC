@@ -8,10 +8,11 @@
 #include <string.h>
 
 FILE* output_file = NULL;
-char * tipo=NULL; 
-char * value=NULL; 
+char* tipo = NULL;
+char* value = NULL;
 
-SimbolTable * simbols =NULL;
+SimbolTable* simbols = NULL;
+
 void open_output_file(char* algorithm_name) {
     if (!output_file) {
         char file_name[60];
@@ -47,7 +48,7 @@ void close_output_file() {
 %token MATRIX
 %token DE
 
-%token <strval> TEST_INT 
+%token <strval> TEST_INT
 
 
 %token RESERVED_WORD_C
@@ -109,13 +110,14 @@ void close_output_file() {
 
 Compile:
     Header Body {
-        Variable * variables = SimbolTable_get_variables_as_array(simbols);
-        int i=0;
+        Variable* variables = SimbolTable_get_variables_as_array(simbols);
+        int i = 0;
         printf("\nDEBUG - Variables insert in simbol table\n");
         for(i =0; i< simbols->size; i++){
             printf("%s %s\n",variables[i].type,variables[i].name);
         }
         SimbolTable_destroy(simbols);
+        free(variables);
     }
 ;
 Header:
@@ -157,8 +159,8 @@ ValuesNumber:
   | VALUE_DOUBLE { $$ = transform_double_string(value,$1); }
 ;
 ValuesString:
-  VALUE_STRING 
-  | VALUE_CHARACTER  
+  VALUE_STRING
+  | VALUE_CHARACTER
 ;
 
 Values:
@@ -174,23 +176,23 @@ Values:
 Operator:
     BASIC_ARITIMETIC
     | TIMES
-    | DIVIDER 
+    | DIVIDER
 ;
 
 Aritmetic:
     NAMEVAR {  write_to_file(output_file,$1); }
     | ValuesNumber { write_to_file(output_file,$1); }
-    | BASIC_ARITIMETIC NAMEVAR { 
+    | BASIC_ARITIMETIC NAMEVAR {
         char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));
         sprintf(string_to_file,"%s %s",$1,$2);
-        write_to_file(output_file,string_to_file); 
+        write_to_file(output_file,string_to_file);
         free(string_to_file);
         }
 
     | BASIC_ARITIMETIC ValuesNumber {
         char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));
         sprintf(string_to_file,"%s %s",$1,$2);
-        write_to_file(output_file,string_to_file); 
+        write_to_file(output_file,string_to_file);
         free(string_to_file); }
     | Aritmetic Operator {write_to_file(output_file,$2); } Aritmetic
     | Aritmetic Operator {write_to_file(output_file,$2); } Parenthesis
@@ -199,7 +201,7 @@ Parenthesis:
     LEFT_PARENTHESIS {write_to_file(output_file,"(");}Operations RIGHT_PARENTHESIS {write_to_file(output_file,")"); }
 ;
 Operations:
-    Aritmetic 
+    Aritmetic
     | Parenthesis
     | Parenthesis Operator {write_to_file(output_file,$2);} Operations
 ;
@@ -207,18 +209,17 @@ AttribuitionVariables:
 
     NAMEVAR ATTRIBUTION VALUE_INT SEMICOLON { verify_type(simbols,$1,"int"); value = transform_int_string(value,$3);
 write_atribute_variable(output_file, $1, value); }
-    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3); 
+    | NAMEVAR ATTRIBUTION VALUE_DOUBLE SEMICOLON { verify_type(simbols,$1,"double"); value = transform_double_string(value,$3);
 write_atribute_variable(output_file, $1, value); }
-    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string"); 
+    | NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON { verify_type(simbols,$1,"string");
 write_atribute_variable(output_file, $1, $3); }
-    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char"); 
+    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON { verify_type(simbols,$1,"char");
 write_atribute_variable(output_file, $1, $3); }
     | NAMEVAR ATTRIBUTION {
         char string_to_file[1000];
-        sprintf(string_to_file,"%s =",$1); 
+        sprintf(string_to_file,"%s =",$1);
         write_to_file(output_file,string_to_file);
-        
-    } Operations SEMICOLON 
+    } Operations SEMICOLON
     ;
 
 
@@ -236,7 +237,7 @@ ConditionalBegin:
 ;
 
 ConditionalEnd:
-    ELSE_ { write_to_file(output_file, "}else {"); } AlgorithmBody ConditionalEnd
+    ELSE_ { write_to_file(output_file, "} else {"); } AlgorithmBody ConditionalEnd
     | END_IF_ { write_to_file(output_file, "}"); }
 ;
 
