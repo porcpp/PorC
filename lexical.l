@@ -1,7 +1,7 @@
 %{
     #include "sintatica.tab.h"
     #define YYSTYPE char *
-    int lines = 0;
+    int quantity_lines = 0;
 %}
 
 other_reserved (asm|auto|extern|register|return|union|void|volatile)
@@ -76,7 +76,7 @@ divider "/"
 ":"             	  { return(COLON); }
 ";"			 		  { return(SEMICOLON); }
 ","             	  { return(COMMA); }
-"\n"				  { lines+=1; }
+"\n"				  { quantity_lines+=1; }
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }

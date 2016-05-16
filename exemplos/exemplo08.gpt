@@ -9,7 +9,7 @@ início
     se asd <= 123 então
     	se 13 < 123 então
             asd:=1;
-        senão
+        seão
             asd:=2;
         fim-se
     fim-se
