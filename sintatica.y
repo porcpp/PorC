@@ -9,6 +9,7 @@
 FILE* output_file = NULL;
 char* type=NULL;
 char* value=NULL;
+extern int quantity_lines;
 int counter_codicional=1;
 
 SimbolTable * simbols =NULL;
@@ -234,7 +235,7 @@ Body:
 %%
 
 int yyerror(char* errmsg) {
-    printf("\n*** Erro: %s\n", errmsg);
+    printf("\nErro: %s line: %d\n", errmsg, quantity_lines);
     return 0;
 }
 
