@@ -8,7 +8,7 @@ int verify_type(SimbolTable * simbols,char * name, char * type){
 
     Variable * variable = SimbolTable_find(simbols,name); // Get the variable if exist in simbol table
     int valid = 0;
-    
+
     if( variable != NULL){
         printf("\nDEBUG - Value of type %s \n",variable->type);
 
@@ -17,15 +17,15 @@ int verify_type(SimbolTable * simbols,char * name, char * type){
             // Verify if the type os value is the same of variable
             valid = 1;
         }else{
-            printf("DEBUG - Type of variable is different of value\n");
+            yyerror("Type of variable is different of value");
             exit(0);
         }
     }else{
-        printf("DEBUG - Variable name not found\n");
+        yyerror("Variable name not found");
         exit(0);
         // Variable not found
     }
-    return valid;   
+    return valid;
 }
 
 
