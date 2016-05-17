@@ -65,12 +65,14 @@ divider "/"
 "matriz"		{return(MATRIX);}
 "de"			{return(DE);}
 
-"inteiros"             { yylval.strval = "int"; return(T_INT);}
-"reais"                 { yylval.strval = "double"; return(T_DOUBLE);}
-"lógicos"              { yylval.strval = "bool"; return(T_BOOLEAN);}
-"caracteres"           { yylval.strval = "char"; return(T_CHAR);}
+"inteiros"     	  { yylval.strval = "int"; return(T_INT);}
+"reais"               { yylval.strval = "double"; return(T_DOUBLE);}
+"lógicos"             { yylval.strval = "bool"; return(T_BOOLEAN);}
+"caracteres"          { yylval.strval = "char"; return(T_CHAR);}
+"matriz"			  { return(MATRIX);}
+"de"			 	  { return(DE);}
 
-":="		      { return(ATTRIBUTION); }
+":="				  { return(ATTRIBUTION); }
 
 "//"          	 	  { return(COMMENT); }
 ":"             	  { return(COLON); }
@@ -81,9 +83,12 @@ divider "/"
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }
-
 "{" 				  { return(LEFT_COL); }
 "}" 				  { return(RIGHT_COL); }
+"["					  { return(LEFT_BRACKET);}
+"]"					  { return(RIGHT_BRACKET);}
+
+
 
 "["				{return(LEFT_BRACKET);}
 "]"				{return(RIGHT_BRACKET);}
@@ -94,9 +99,7 @@ divider "/"
 {real} 				  { yylval.dval = atof(yytext); 		return(VALUE_DOUBLE); }
 {char_value}          { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
 {string_value}		  { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
-
 {comparator}          { yylval.strval = strdup(yytext);     return(COMPARATOR); }
-
 {basic_aritimetic}    { yylval.strval = strdup(yytext);     return(BASIC_ARITIMETIC); }
 {times}               { yylval.strval = strdup(yytext);     return(TIMES); }
 {divider}             { yylval.strval = strdup(yytext);     return(DIVIDER); }
