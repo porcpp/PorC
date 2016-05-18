@@ -109,3 +109,15 @@ void write_operator_variable_valid(FILE* file, SimbolTable* simbols,
         exit(0);
     }
 }
+void write_valid_aritmetic(FILE* file, SimbolTable* simbols, char* name){
+    assert(file != NULL);
+    assert(simbols != NULL);
+    assert(name != NULL);
+
+    if(is_number(simbols,name)){
+        write_aritmetic(file,name, "= ");
+    } else {
+        printf("ERROR: can't make aritmetic attributions to %s with types: char or string",name);
+        exit(0);
+    }
+}

@@ -25,5 +25,5 @@ static unsigned short valid_types(char* type);
 void write_variable_if_valid(FILE* file, SimbolTable* simbols, char* name);
 void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable);
 void write_operator_variable_valid(FILE* file, SimbolTable* simbols, char* operator, char* variable);
-
+void write_valid_aritmetic(FILE* file, SimbolTable* simbols, char* name);
 #endif

@@ -228,11 +228,9 @@ Operations:
 
 AttribuitionVariables:
 
-     NAMEVAR ATTRIBUTION {
-        char string_to_file[1000];
-        sprintf(string_to_file,"%s =",$1);
-        write_to_file(output_file,string_to_file);
-    } Operations SEMICOLON { write_to_file(output_file," ;"); }
+    NAMEVAR ATTRIBUTION {
+        write_valid_aritmetic(output_file,simbols,$1);
+    } Operations SEMICOLON { write_to_file(output_file,";\n"); }
     | NAMEVAR DimensionMatrix { write_declares_vector(output_file, $1, $2);} ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
     | NAMEVAR DimensionMatrix DimensionMatrix { write_declares_matrix(output_file, $1, $2,$3);}  ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
 
