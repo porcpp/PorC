@@ -69,8 +69,6 @@ divider "/"
 "reais"               { yylval.strval = "double"; return(T_DOUBLE);}
 "lógicos"             { yylval.strval = "bool"; return(T_BOOLEAN);}
 "caracteres"          { yylval.strval = "char"; return(T_CHAR);}
-"matriz"			  { return(MATRIX);}
-"de"			 	  { return(DE);}
 
 ":="				  { return(ATTRIBUTION); }
 
@@ -80,17 +78,12 @@ divider "/"
 ","             	  { return(COMMA); }
 "\n"				  { lines+=1; }
 
-
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }
 "{" 				  { return(LEFT_COL); }
 "}" 				  { return(RIGHT_COL); }
 "["					  { return(LEFT_BRACKET);}
 "]"					  { return(RIGHT_BRACKET);}
-
-"["				{return(LEFT_BRACKET);}
-"]"				{return(RIGHT_BRACKET);}
-
 
 {namevar} 			  { yylval.strval = strdup(yytext); 	return(NAMEVAR); }
 {integer}			  { yylval.ival = atoi(yytext); 		return(VALUE_INT); }
