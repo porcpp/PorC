@@ -221,9 +221,9 @@ write_atribute_variable(output_file, $1, $3); }
         sprintf(string_to_file,"%s =",$1);
         write_to_file(output_file,string_to_file);
     } Operations SEMICOLON
-    | NAMEVAR DimensionMatrix ATTRIBUTION Operations SEMICOLON {printf("%s[%s] = %s;", $1,$2,$4);} { write_declares_vector(output_file, $1, $2); write_atribute_variable(output_file, "=", $4);}
+    | NAMEVAR DimensionMatrix ATTRIBUTION Operations SEMICOLON{ write_declares_vector(output_file, $1, $2); write_to_file(output_file," = ");write_to_file(output_file, $4); write_to_file(output_file,";\n"); }
  
-    | NAMEVAR DimensionMatrix DimensionMatrix ATTRIBUTION Operations SEMICOLON { printf("%s[%s][%s] = %s;", $1,$2,$3,$5);} { write_declares_matrix(output_file, $1, $2,$3); write_to_file(output_file, $5);}
+    | NAMEVAR DimensionMatrix DimensionMatrix ATTRIBUTION Operations SEMICOLON { write_declares_matrix(output_file, $1, $2,$3); write_to_file(output_file," = "); write_to_file(output_file, $5);write_to_file(output_file,";\n"); }
    ;
 
 
