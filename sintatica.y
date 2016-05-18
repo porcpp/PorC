@@ -208,18 +208,12 @@ Operator:
 Aritmetic:
     NAMEVAR { write_variable_if_valid(output_file, simbols, $1); }
     | ValuesNumber { write_to_file(output_file, $1); }
-    | BASIC_ARITIMETIC NAMEVAR { 
-        char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));
-        sprintf(string_to_file,"%s %s", $1, $2);
-        write_to_file(output_file,string_to_file); 
-        free(string_to_file);
-        }
-
+    | BASIC_ARITIMETIC NAMEVAR {
+        write_operator_variable_valid(output_file,simbols,$1,$2); 
+    }
     | BASIC_ARITIMETIC ValuesNumber {
-        char * string_to_file = (char *) malloc(sizeof(char)*(1+ strlen($1)+ strlen($2)));
-        sprintf(string_to_file,"%s %s",$1,$2);
-        write_to_file(output_file,string_to_file);
-        free(string_to_file); }
+        write_aritmetic(output_file,$1,$2);
+    }
     | Aritmetic Operator {write_to_file(output_file,$2); } Aritmetic
     | Aritmetic Operator {write_to_file(output_file,$2); } Parenthesis
 ;
@@ -238,7 +232,7 @@ AttribuitionVariables:
         char string_to_file[1000];
         sprintf(string_to_file,"%s =",$1);
         write_to_file(output_file,string_to_file);
-    } Operations SEMICOLON
+    } Operations SEMICOLON { write_to_file(output_file," ;"); }
     | NAMEVAR DimensionMatrix { write_declares_vector(output_file, $1, $2);} ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
     | NAMEVAR DimensionMatrix DimensionMatrix { write_declares_matrix(output_file, $1, $2,$3);}  ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
 

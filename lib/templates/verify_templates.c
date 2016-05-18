@@ -91,7 +91,21 @@ void write_variable_if_valid(FILE* file, SimbolTable* simbols, char* name) {
     if(is_number(simbols, name)) {
         write_to_file(file, name);
     } else {
-        printf("\nDEBUG: invalid aritmetic %s is not int nor double", name);
+        printf("\nDEBUG: invalid aritmetic %s is not int or double", name);
+        exit(0);
+    }
+}
+
+void write_operator_variable_valid(FILE* file, SimbolTable* simbols,
+    char* operator, char* name){
+    assert(file != NULL);
+    assert(simbols != NULL);
+    assert(name != NULL);
+    
+    if(is_number(simbols, name)){
+        write_aritmetic(file, operator, name);
+    } else {
+        printf("\nERROR: invalid operation with variable, %s is not int or double",name);
         exit(0);
     }
 }

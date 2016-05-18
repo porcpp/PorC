@@ -82,3 +82,8 @@ void write_declares_matrix(FILE* file, const char* content, const char* content0
     sprintf(string_to_file," %s[%s][%s]", content, content01, content02);
     write_to_file(file,string_to_file);
 }
+void write_aritmetic(FILE* file, char* operator, char* variable_number){
+    char string_to_file[MAX_STRING_SIZE];
+    sprintf(string_to_file,"%s %s",operator, variable_number);
+    write_to_file(file,string_to_file);
+}
