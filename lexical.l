@@ -88,8 +88,6 @@ divider "/"
 "["					  { return(LEFT_BRACKET);}
 "]"					  { return(RIGHT_BRACKET);}
 
-
-
 "["				{return(LEFT_BRACKET);}
 "]"				{return(RIGHT_BRACKET);}
 

@@ -62,27 +62,16 @@ void write_condicional_sentece(FILE* file, const char* content, const char* cont
 }
 
 
-void write_declares_vector(FILE* file, const char* content, const char* content01, const char* content02) {
+void write_declares_vector(FILE* file, const char* content, const char* content01) {
     char string_to_file[MAX_STRING_SIZE];
 
-    sprintf(string_to_file,"%s %s[%s]", content, content01, content02);
-    write_to_file(file,string_to_file);
-}
-void write_declares_vector(FILE* file, char* content, char* content01, char* content02){
-    char string_to_file[60];
-    sprintf(string_to_file,"%s %s[%s]",content,content01,content02);
-    write_to_file(file,string_to_file);
-}
-void write_declares_matrix(FILE* file, char* content, char* content01, char* content02, char* content03){
-    char string_to_file[60];
-    sprintf(string_to_file,"%s %s[%s][%s]",content,content01,content02,content03);
+    sprintf(string_to_file," %s[%s]", content, content01);
     write_to_file(file,string_to_file);
 }
 
-
-void write_declares_matrix(FILE* file, const char* content, const char* content01, const char* content02, const char* content03) {
+void write_declares_matrix(FILE* file, const char* content, const char* content01, const char* content02) {
     char string_to_file[MAX_STRING_SIZE];
 
-    sprintf(string_to_file,"%s %s[%s][%s]", content, content01, content02, content03);
+    sprintf(string_to_file," %s[%s][%s]", content, content01, content02);
     write_to_file(file,string_to_file);
 }
