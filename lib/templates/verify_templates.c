@@ -1,9 +1,11 @@
-#include "verify_templates.h"
+#include "../simbol_table/simbol_table.h"
+#include "../simbol_table/variable.h"
 #include "c_templates.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include "verify_templates.h"
 #include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 //const int NOT_FOUND = 0;
 //const int INVALID_TYPE = 1;
@@ -15,7 +17,11 @@ void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable
     Variable* variable_already_added = SimbolTable_find(simbol_table, variable->name);
 
     if(variable_already_added != NULL){
-        yyerror("Variable %s already declared", variable->name);
+        char string_to_file[60];
+
+        sprintf(string_to_file,"Variable {%s} already declared", variable->name);
+        yyerror(string_to_file);
+        exit(0);
     }else{
         printf("DEBUG - Variable %s is permited\n", variable->name);
     }
@@ -120,4 +126,10 @@ void write_valid_aritmetic(FILE* file, SimbolTable* simbols, char* name){
         printf("ERROR: can't make aritmetic attributions to %s with types: char or string",name);
         exit(0);
     }
+void verify_before_insert(SimbolTable* simbol_table, char* name, char* type) {
+    Variable* variable = Variable_new(name, type);
+
+    verify_variable_already_added(simbol_table, variable);
+    SimbolTable_insert(simbol_table, name,type);
+    free(variable);
 }

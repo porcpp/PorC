@@ -141,7 +141,7 @@ Variables:
     NAMEVAR COMMA Variables { SimbolTable_insert(simbols,$1,type); write_declares_variable_with_comma(output_file, $1); printf(", %s, ",$1);}
     | NAMEVAR COLON Type {type = $3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
     | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$6);} {write_to_file(output_file,$6); write_declares_vector(output_file, $1, $4);}
-| NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$7);} {write_to_file(output_file,$7); write_declares_matrix(output_file, $1, $4, $5);}
+    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$7);} {write_to_file(output_file,$7); write_declares_matrix(output_file, $1, $4, $5);}
 
 ;
 DimensionMatrix:

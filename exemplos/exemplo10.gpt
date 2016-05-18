@@ -1,8 +1,18 @@
 algoritmo exemplo;
 
 variáveis
+    asd:caractere;
     a:inteiro;
+    b:real;
 fim-variáveis
 início
+    asd := '#';
+
     a:=  ((a*2)/(a  + 1));
+    se asd > '#' ou asd = '}' então
+        asd := 'f';
+    	asd := 'd';
+        asd := 2;
+    fim-se
+
 fim
