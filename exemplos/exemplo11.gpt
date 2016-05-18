@@ -1,0 +1,18 @@
+algoritmo exemplo;
+
+
+variáveis
+    asd:caractere;
+    a:inteiro;
+    a:inteiro;
+    b:real;
+fim-variáveis
+início
+    asd := '#';
+
+    se asd > '#' ou asd = '}' então
+        asd := 'f';
+    	asd := 'd';
+    fim-se
+
+fim

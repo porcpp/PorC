@@ -12,4 +12,5 @@
 
 int verify_type(SimbolTable * simbols,char * name, char * type);
 void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable);
+void verify_before_insert(SimbolTable* simbol_table, char* name, char* type);
 #endif

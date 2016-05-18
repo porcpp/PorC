@@ -1,13 +1,20 @@
-#include "verify_templates.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../simbol_table/variable.h"
+#include "../simbol_table/simbol_table.h"
+#include "verify_templates.h"
+
 
 void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable){
     Variable* variable_already_added = SimbolTable_find(simbol_table, variable->name);
 
     if(variable_already_added != NULL){
-        yyerror("Variable %s already declared", variable->name);
+        char string_to_file[60];
+
+        sprintf(string_to_file,"Variable {%s} already declared", variable->name);
+        yyerror(string_to_file);
+        exit(0);
     }else{
         printf("DEBUG - Variable %s is permited\n", variable->name);
     }
@@ -39,3 +46,10 @@ int verify_type(SimbolTable * simbols,char * name, char * type){
 }
 
 
+void verify_before_insert(SimbolTable* simbol_table, char* name, char* type) {
+    Variable* variable = Variable_new(name, type);
+
+    verify_variable_already_added(simbol_table, variable);
+    SimbolTable_insert(simbol_table, name,type);
+    free(variable);
+}
