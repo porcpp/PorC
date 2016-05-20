@@ -138,8 +138,9 @@ MultiVariables:
     | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
-    NAMEVAR COMMA Variables { SimbolTable_insert(simbols,$1,type); write_declares_variable_with_comma(output_file, $1); printf(", %s, ",$1);}
-    | NAMEVAR COLON Type {type = $3;} SEMICOLON {SimbolTable_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
+<<<<<<< 473107d1de62e7ad5a503b78a645d3654811abb5
+    NAMEVAR COMMA Variables { verify_before_insert(simbols,$1,type); write_declares_variable_with_comma(output_file, $1); }
+    | NAMEVAR COLON Type {type=$3;} SEMICOLON {verify_before_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); }
     | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$6);} {write_to_file(output_file,$6); write_declares_vector(output_file, $1, $4);}
     | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$7);} {write_to_file(output_file,$7); write_declares_matrix(output_file, $1, $4, $5);}
 
@@ -296,7 +297,7 @@ Body:
 %%
 
 int yyerror(char* errmsg) {
-    printf("\nErro: {%s} na linha: %d\n", errmsg, quantity_lines);
+    printf("\nErro: '%s' na linha: %d\n", errmsg, quantity_lines);
     return 0;
 }
 
