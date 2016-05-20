@@ -1,3 +1,4 @@
+#include <stdio.h>
 #ifndef C_TEMPLATES
 #define C_TEMPLATES
 

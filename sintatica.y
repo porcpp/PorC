@@ -296,7 +296,7 @@ Body:
 %%
 
 int yyerror(char* errmsg) {
-    printf("\nErro: %s line: %d\n", errmsg, quantity_lines);
+    printf("\nErro: {%s} na linha: %d\n", errmsg, quantity_lines);
     return 0;
 }
 

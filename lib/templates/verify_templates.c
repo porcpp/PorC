@@ -19,36 +19,34 @@ void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable
     if(variable_already_added != NULL){
         char string_to_file[60];
 
-        sprintf(string_to_file,"Variable {%s} already declared", variable->name);
+        sprintf(string_to_file,"Variavel {%s} ja foi declarada", variable->name);
         yyerror(string_to_file);
         exit(0);
     }else{
-        printf("DEBUG - Variable %s is permited\n", variable->name);
+        printf("DEBUG - Variavel %s e permitida\n", variable->name);
     }
 }
 
-
-
-int verify_type(SimbolTable* simbols, char* name, char* type) {
-    printf("\nDEBUG - Params of input %s %s\n", name, type);
+int verify_type(SimbolTable * simbols,char * name, char * type){
+    printf("\nDEBUG - Parametro da entrada %s %s\n",name,type);
 
     Variable* variable = SimbolTable_find(simbols, name); // Get the variable if exist in simbol table
     int valid = 0;
 
-    if(variable != NULL) {
-        printf("\nDEBUG - Value of type %s\n", variable->type);
+    if( variable != NULL){
+        printf("\nDEBUG - Valor do tipo %s \n",variable->type);
 
-        if(strcmp(type, variable->type) == 0) {
-            printf("\nDEBUG - Type is equals");
+        if( !strcmp(type,variable->type) ){
+            printf("\nDEBUG - Tipo e igual");
             // Verify if the type os value is the same of variable
             valid = 1;
         }else{
-            yyerror("Type of variable is different of value");
+            yyerror("Tipo da variavel e diferente do valor");
             exit(0);
            //valid = INVALID_TYPE;
         }
     }else{
-        yyerror("Variable name not found");
+        yyerror("O nome da variavel nao for encontrada");
         exit(0);
         //valid = NOT_FOUND;
         //Variable not found
@@ -126,6 +124,7 @@ void write_valid_aritmetic(FILE* file, SimbolTable* simbols, char* name){
         printf("ERROR: can't make aritmetic attributions to %s with types: char or string",name);
         exit(0);
     }
+}
 void verify_before_insert(SimbolTable* simbol_table, char* name, char* type) {
     Variable* variable = Variable_new(name, type);
 
