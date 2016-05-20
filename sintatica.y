@@ -126,7 +126,7 @@ MultiVariables:
 ;
 Variables:
     NAMEVAR COMMA Variables { verify_before_insert(simbols,$1,type); write_declares_variable_with_comma(output_file, $1); }
-    | NAMEVAR COLON Type {type=$3;} SEMICOLON {verify_before_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); printf("%s %s",$3,$1);}
+    | NAMEVAR COLON Type {type=$3;} SEMICOLON {verify_before_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); }
 ;
 Type:
     T_INT
@@ -235,7 +235,7 @@ Body:
 %%
 
 int yyerror(char* errmsg) {
-    printf("\nErro: {%s} na linha: %d\n", errmsg, quantity_lines);
+    printf("\nErro: '%s' na linha: %d\n", errmsg, quantity_lines);
     return 0;
 }
 

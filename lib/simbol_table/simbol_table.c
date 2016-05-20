@@ -65,8 +65,6 @@ int SimbolTable_insert_variable(SimbolTable* simbol_table, Variable* variable) {
      * the compiler should verify it before addind a new varibale ?
      */
 
-    verify_variable_already_added(simbol_table,variable);
-
     Node* actual_node = simbol_table->root;
     Node* node = Node_new(variable);
 
