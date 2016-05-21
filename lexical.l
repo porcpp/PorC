@@ -1,7 +1,7 @@
 %{
     #include "sintatica.tab.h"
     #define YYSTYPE char *
-    int lines = 0;
+    int quantity_lines = 0;
 %}
 
 other_reserved (asm|auto|extern|register|return|union|void|volatile)
@@ -11,7 +11,7 @@ all_reserved (other_reserved|decision_reserved|type_reserved)
 
 portugol_header (algoritmo|variáveis|fim-variáveis|início|fim)
 portugol_types (inteiro|real|caractere|literal|lógico)
-portugol_statements (não|enquanto|fim-enquanto|para|de|até|faça|fim-para|verdadeiro|falso)
+portugol_statements (não|enquanto|fim-enquanto|para|até|faça|fim-para|verdadeiro|falso)
 
 digit [0-9]
 integer {digit}+
@@ -26,19 +26,24 @@ string {letter}+
 
 char_value ("\'"{any_char}"\'")
 
-string_value ("\""({any_char}+)"\"")
-semicolon [";"]+
+this_is_a_commit "não estamos tratando strings por enquanto então essa parte embaixo é inutil"
+string_value ("\"")((\w+)(\W+))("\"")|("\"")((\W+)(\w+))("\"")|("\"")((\W+)|(\w+))("\"")
 
 namevar {letter}({integer}|{letter}|"_")*
 
 comparator ("="|"<"|">"|"<="|">="|"<>")
+plus "+"
+minus "-"
+basic_aritimetic ({plus}|{minus})
+times "*"
+divider "/"
 
 %%
 {all_reserved}        { return(RESERVED_WORD_C); }
 {portugol_statements} { return(TO_IMPLEMENT); }
 
 
-"se"				  { return(IF_); }
+"se"		      { return(IF_); }
 "então"               { return(THAN_); }
 "senão"               { return(ELSE_); }
 "fim-se"              { return(END_IF_); }
@@ -53,31 +58,42 @@ comparator ("="|"<"|">"|"<="|">="|"<>")
 "início"              { return(BEGIN_BODY); }
 "fim"                 { return(END_BODY); }
 
-"inteiro"             { yylval.strings = "int"; return(T_INT);}
-"real"                { yylval.strings = "double"; return(T_DOUBLE);}
-"logico"              { yylval.strings = "bool"; return(T_BOOLEAN);}
-"caractere"           { yylval.strings = "char"; return(T_CHAR);}
+"inteiro"             { yylval.strval = "int"; return(T_INT);}
+"real"                { yylval.strval = "double"; return(T_DOUBLE);}
+"lógico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
+"caractere"           { yylval.strval = "char"; return(T_CHAR);}
+"matriz"		{return(MATRIX);}
+"de"			{return(DE);}
+
+"inteiros"     	  { yylval.strval = "int"; return(T_INT);}
+"reais"               { yylval.strval = "double"; return(T_DOUBLE);}
+"lógicos"             { yylval.strval = "bool"; return(T_BOOLEAN);}
+"caracteres"          { yylval.strval = "char"; return(T_CHAR);}
 
 ":="				  { return(ATTRIBUTION); }
 
 "//"          	 	  { return(COMMENT); }
 ":"             	  { return(COLON); }
-{semicolon} 		  { return(SEMICOLON); }
+";"			 		  { return(SEMICOLON); }
 ","             	  { return(COMMA); }
-"\n"				  { lines+=1; }
-
-{comparator}        { yylval.strings = strdup(yytext); return(COMPARATOR); }
+"\n"				  { quantity_lines+=1; }
 
 "(" 				  { return(LEFT_PARENTHESIS); }
 ")" 				  { return(RIGHT_PARENTHESIS); }
 "{" 				  { return(LEFT_COL); }
 "}" 				  { return(RIGHT_COL); }
+"["					  { return(LEFT_BRACKET);}
+"]"					  { return(RIGHT_BRACKET);}
 
+{namevar} 			  { yylval.strval = strdup(yytext); 	return(NAMEVAR); }
+{integer}			  { yylval.ival = atoi(yytext); 		return(VALUE_INT); }
+{real} 				  { yylval.dval = atof(yytext); 		return(VALUE_DOUBLE); }
+{char_value}          { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
+{string_value}		  { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
+{comparator}          { yylval.strval = strdup(yytext);     return(COMPARATOR); }
+{basic_aritimetic}    { yylval.strval = strdup(yytext);     return(BASIC_ARITIMETIC); }
+{times}               { yylval.strval = strdup(yytext);     return(TIMES); }
+{divider}             { yylval.strval = strdup(yytext);     return(DIVIDER); }
 
-{namevar} 			  { yylval.strings = strdup(yytext); return(NAMEVAR); }
-{integer}			  { yylval.num_int = atoi(yytext); return(VALUE_INT); }
-{real} 				  { yylval.num_double = atof(yytext); return(VALUE_DOUBLE); }
-{char_value}          { yylval.strings = strdup(yytext); return(VALUE_CHARACTER); }
-{string_value}		  { yylval.strings = strdup(yytext); return(VALUE_STRING); }
 
 %%

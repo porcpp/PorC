@@ -1,0 +1,8 @@
+algoritmo exemplo;
+
+variáveis
+    a:inteiro;
+fim-variáveis
+início
+    a:=  a/(a  + 1) * 2;
+fim
