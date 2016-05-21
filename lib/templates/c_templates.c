@@ -34,14 +34,14 @@ void write_declares_variable(FILE* file, const char* content, const char* conten
 void write_atribute_variable(FILE* file, const char* content, const char* content01) {
     char data[MAX_STRING_SIZE];
 
-    sprintf(data, "\n\t%s = %s;\n", content, content01);
+    sprintf(data, "%s = %s;\n", content, content01);
     write_to_file(file, data);
 }
 
 
 void write_tabulation(FILE* file,int counter){
     for(i=0;i<counter;i++){
-        write_to_file(file,"\t");
+        write_to_file(file,"    ");
     }
 }
 
