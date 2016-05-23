@@ -101,6 +101,10 @@ void close_output_file() {
 %token AND_
 %token OR_
 
+%token WHILE
+%token END_WHILE
+%token DO
+
 %start Compile
 
 %error-verbose
@@ -267,6 +271,10 @@ ConditionalStruct:
     | ConditionalBegin ConditionalStruct ConditionalEnd
 ;
 
+RepetionStruct:
+        /* Comparar se os tipos sao os mesmos */
+        WHILE {write_to_file(output_file,"while");} Values DO{write_to_file(output_file,"{");} AlgorithmBody END_WHILE{write_to_file(output_file,"}");} 
+;
 Body:
     BEGIN_BODY END_BODY {
         write_body_end(output_file);
@@ -281,8 +289,10 @@ Body:
 AlgorithmBody:
     AttribuitionVariables
     | ConditionalStruct
+    | RepetionStruct
     | AttribuitionVariables AlgorithmBody
-    | ConditionalStruct AlgorithmBody
+    | ConditionalStruct AlgorithmBody 
+    | RepetionStruct AlgorithmBody
 ;
 
 %%

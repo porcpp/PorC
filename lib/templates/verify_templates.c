@@ -79,8 +79,9 @@ unsigned short is_number(SimbolTable* simbols, char* name) {
 static unsigned short valid_types(char* type) {
     assert(type != NULL);
     unsigned short is_a_valid_type = 0;
-
-    for (int i = 0; i < 4; ++i) {
+	
+    int i;
+    for (i = 0; i < 4; ++i) {
         if (strcmp(type, valid_types_list[i]) == 0) {
             is_a_valid_type = 1;
             break;

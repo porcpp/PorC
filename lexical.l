@@ -11,7 +11,7 @@ all_reserved (other_reserved|decision_reserved|type_reserved)
 
 portugol_header (algoritmo|variáveis|fim-variáveis|início|fim)
 portugol_types (inteiro|real|caractere|literal|lógico)
-portugol_statements (não|enquanto|fim-enquanto|para|até|faça|fim-para|verdadeiro|falso)
+portugol_statements (não|para|até|fim-para|verdadeiro|falso)
 
 digit [0-9]
 integer {digit}+
@@ -49,6 +49,10 @@ divider "/"
 "fim-se"              { return(END_IF_); }
 "e"                   { return(AND_); }
 "ou"                  { return(OR_); }
+
+"enquanto"            { return(WHILE); }
+"faça"                { return(DO); }
+"fim-enquanto"        { return(END_WHILE); }
 
 "algoritmo"           { return(ALGORITHM); }
 "fim-algoritmo"       { return(END_ALGORITHM); }
@@ -88,7 +92,7 @@ divider "/"
 {namevar} 			  { yylval.strval = strdup(yytext); 	return(NAMEVAR); }
 {integer}			  { yylval.ival = atoi(yytext); 		return(VALUE_INT); }
 {real} 				  { yylval.dval = atof(yytext); 		return(VALUE_DOUBLE); }
-{char_value}          { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
+{char_value}      		    { yylval.strval = strdup(yytext); 	return(VALUE_CHARACTER); }
 {string_value}		  { yylval.strval = strdup(yytext);		return(VALUE_STRING); }
 {comparator}          { yylval.strval = strdup(yytext);     return(COMPARATOR); }
 {basic_aritimetic}    { yylval.strval = strdup(yytext);     return(BASIC_ARITIMETIC); }

@@ -1,0 +1,14 @@
+algoritmo exemplo;
+
+variáveis
+    asd:caractere;
+    a:inteiro;
+fim-variáveis
+início
+    asd := '#';
+
+    enquanto asd <> a faça
+        asd := 'f';
+    fim-enquanto
+
+fim
