@@ -142,11 +142,24 @@ MultiVariables:
     | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
-    NAMEVAR COMMA Variables { verify_before_insert(simbols,$1,type); write_declares_variable_with_comma(output_file, $1); }
-    | NAMEVAR COLON Type {type=$3;} SEMICOLON {verify_before_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); }
-    | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$6);} {write_to_file(output_file,$6); write_declares_vector(output_file, $1, $4);}
-    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$7);} {write_to_file(output_file,$7); write_declares_matrix(output_file, $1, $4, $5);}
-
+    NAMEVAR COMMA Variables { 
+	verify_before_insert(simbols,$1,type); 
+	write_declares_variable_with_comma(output_file, $1); 
+    }
+    | NAMEVAR COLON Type {type=$3;} SEMICOLON {
+	verify_before_insert(simbols,$1,$3); 
+	write_declares_variable(output_file, $3 , $1); 
+    }
+    | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {
+	SimbolTable_insert(simbols,$1,$6); 
+	write_to_file(output_file,$6); 
+	write_declares_vector(output_file, $1, $4);
+    }
+    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {
+	SimbolTable_insert(simbols,$1,$7);
+	write_to_file(output_file,$7); 
+	write_declares_matrix(output_file, $1, $4, $5);
+    }
 ;
 DimensionMatrix:
     LEFT_BRACKET VALUE_INT RIGHT_BRACKET{ $$ = transform_int_string(value,$2); }
@@ -165,21 +178,31 @@ AttribuitionVariables:
         verify_type(simbols,$1,"string");
         write_atribute_variable(output_file, $1, $3);
     }
+    
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON {
         write_tabulation(output_file,counter_codicional);
         verify_type(simbols,$1,"char");
         write_atribute_variable(output_file, $1, $3);
     }
+    
     | NAMEVAR ATTRIBUTION {
        write_tabulation(output_file,counter_codicional);
        write_valid_aritmetic(output_file,simbols,$1);
     } Operations SEMICOLON { write_to_file(output_file,";\n"); }
+    
     | NAMEVAR DimensionMatrix { 
         write_tabulation(output_file,counter_codicional);
-        write_declares_vector(output_file, $1, $2);} ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
+        write_declares_vector(output_file, $1, $2);
+    } ATTRIBUTION {
+	write_to_file(output_file, " = ");
+    } Operations SEMICOLON { write_to_file(output_file,";"); } 
+   
     | NAMEVAR DimensionMatrix DimensionMatrix { 
         write_tabulation(output_file,counter_codicional);
-        write_declares_matrix(output_file, $1, $2,$3);}  ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
+        write_declares_matrix(output_file, $1, $2,$3);
+    } ATTRIBUTION {
+    	write_to_file(output_file, " = ");
+    } Operations SEMICOLON{write_to_file(output_file,";");} 
 ;
 
 ValuesNumber:
@@ -193,7 +216,10 @@ ValuesString:
 
 
 Values:
-  NAMEVAR COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
+  NAMEVAR COMPARATOR NAMEVAR {
+	transform_simbol_comparator($2); 
+	write_condicional_sentece(output_file, $1, $2, $3); 
+  }
   | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
   | NAMEVAR COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
@@ -224,7 +250,9 @@ Aritmetic:
 ;
 
 Parenthesis:
-    LEFT_PARENTHESIS {write_to_file(output_file,"(");}Operations RIGHT_PARENTHESIS {write_to_file(output_file,")"); }
+    LEFT_PARENTHESIS {
+	write_to_file(output_file,"(");
+    } Operations RIGHT_PARENTHESIS { write_to_file(output_file,")"); }
 ;
 Operations:
     Aritmetic
@@ -245,9 +273,9 @@ Condition:
 ConditionalBegin:
     IF_ {
         write_tabulation(output_file,counter_codicional);
-        write_to_file(output_file, "if");
+        write_to_file(output_file, "if (");
     } Condition THAN_{
-        write_to_file(output_file, "{\n");
+        write_to_file(output_file, ") {\n");
         counter_codicional++;
     }
 ;
@@ -271,9 +299,20 @@ ConditionalStruct:
     | ConditionalBegin ConditionalStruct ConditionalEnd
 ;
 
-RepetionStruct:
-        /* Comparar se os tipos sao os mesmos */
-        WHILE {write_to_file(output_file,"while");} Values DO{write_to_file(output_file,"{");} AlgorithmBody END_WHILE{write_to_file(output_file,"}");} 
+LoopStruct:
+    WHILE {
+	write_tabulation(output_file,counter_codicional);
+	write_to_file(output_file,"while (");
+    }
+     Values DO {
+	counter_codicional++;
+	write_to_file(output_file,") {\n");
+     } 
+     AlgorithmBody END_WHILE {
+	counter_codicional--;
+	write_tabulation(output_file,counter_codicional);
+	write_to_file(output_file,"}\n");
+     } 
 ;
 Body:
     BEGIN_BODY END_BODY {
@@ -289,10 +328,10 @@ Body:
 AlgorithmBody:
     AttribuitionVariables
     | ConditionalStruct
-    | RepetionStruct
+    | LoopStruct
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody 
-    | RepetionStruct AlgorithmBody
+    | LoopStruct AlgorithmBody
 ;
 
 %%

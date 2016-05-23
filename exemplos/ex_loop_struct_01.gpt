@@ -11,4 +11,24 @@ início
         asd := 'f';
     fim-enquanto
 
+    enquanto asd = a faça
+        asd := 'f';
+    fim-enquanto
+
+    enquanto asd >= a faça
+        asd := 'f';
+    fim-enquanto
+
+    enquanto asd <= a faça
+        asd := 'f';
+    fim-enquanto
+
+    enquanto asd < a faça
+        asd := 'f';
+    fim-enquanto
+
+    enquanto asd > a faça
+        asd := 'f';
+    fim-enquanto
+
 fim
