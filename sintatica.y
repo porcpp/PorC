@@ -12,6 +12,7 @@ char* type=NULL;
 char* value=NULL;
 extern int quantity_lines;
 int counter_codicional=1;
+int counter_loop=1;
 SimbolTable* simbols = NULL;
 
 void open_output_file(char* algorithm_name) {
@@ -144,25 +145,29 @@ MultiVariables:
 Variables:
     NAMEVAR COMMA Variables { 
 	verify_before_insert(simbols,$1,type); 
+	write_tabulation(output_file,counter_codicional);
 	write_declares_variable_with_comma(output_file, $1); 
     }
     | NAMEVAR COLON Type {type=$3;} SEMICOLON {
 	verify_before_insert(simbols,$1,$3); 
+	write_tabulation(output_file,counter_codicional);
 	write_declares_variable(output_file, $3 , $1); 
     }
     | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$6); 
 	write_to_file(output_file,$6); 
+	write_tabulation(output_file,counter_codicional);
 	write_declares_vector(output_file, $1, $4);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$7);
 	write_to_file(output_file,$7); 
+	write_tabulation(output_file,counter_codicional);
 	write_declares_matrix(output_file, $1, $4, $5);
     }
 ;
 DimensionMatrix:
-    LEFT_BRACKET VALUE_INT RIGHT_BRACKET{ $$ = transform_int_string(value,$2); }
+    LEFT_BRACKET VALUE_INT RIGHT_BRACKET { $$ = transform_int_string(value,$2); }
 ;
 Type:
     T_INT
@@ -285,7 +290,7 @@ ConditionalEnd:
         counter_codicional--;
         write_tabulation(output_file,counter_codicional);
         counter_codicional++;
-        write_to_file(output_file, "}else{\n");
+        write_to_file(output_file, "} else{\n");
     } AlgorithmBody ConditionalEnd
     | END_IF_ {
         counter_codicional--;
@@ -301,16 +306,17 @@ ConditionalStruct:
 
 LoopStruct:
     WHILE {
-	write_tabulation(output_file,counter_codicional);
+	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"while (");
     }
      Values DO {
-	counter_codicional++;
-	write_to_file(output_file,") {\n");
-     } 
+	counter_loop++;
+	write_to_file(output_file,") {\n");     
+ 	write_tabulation(output_file,counter_loop);
+     }        
      AlgorithmBody END_WHILE {
-	counter_codicional--;
-	write_tabulation(output_file,counter_codicional);
+	counter_loop--;
+	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"}\n");
      } 
 ;

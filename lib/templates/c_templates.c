@@ -25,7 +25,7 @@ void write_declares_variable_with_comma(FILE* file, const char* content) {
 void write_declares_variable(FILE* file, const char* content, const char* content01) {
     char data[MAX_STRING_SIZE];
 
-    sprintf(data, "\t%s %s",content, content01);
+    sprintf(data, "%s %s",content, content01);
     write_to_file(file, data);
 }
 
