@@ -1,0 +1,30 @@
+algoritmo potencia;
+
+variáveis
+  i : inteiro;
+  resultado : real;
+  base: real;
+  exp: inteiro;
+fim-variáveis
+
+início
+
+  resultado := 1;
+
+  para i de 1 até exp faça
+    resultado := resultado * base;
+  fim-para
+
+  para i de exp até exp faça
+    resultado := resultado * base;
+  fim-para
+
+  para i de exp até 2 faça
+    resultado := resultado * base;
+  fim-para
+
+  para i de 1 até 6 faça
+    resultado := resultado * base;
+  fim-para
+
+fim

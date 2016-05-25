@@ -1,0 +1,18 @@
+algoritmo potencia;
+
+variáveis
+  i : inteiro;
+  resultado : real;
+  base: real;
+  exp: inteiro;
+fim-variáveis
+
+início
+
+  resultado := 1;
+
+  para i de 1 até exp passo 10 faça
+    resultado := resultado * base;
+  fim-para
+
+fim
