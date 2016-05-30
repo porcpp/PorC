@@ -39,7 +39,7 @@ void Debug_write(const char* text) {
 
   sprintf(message, "%s %s\n", "DEBUG: ", text);
 
-  if (!debug->output_file) {
+  if (debug->output_file != NULL) {
     fprintf(debug->output_file, "%s", message);
   } else {
     printf("\n\t\tERROR ! COULD NOT OPEN THE DEBUG FILE !\n");

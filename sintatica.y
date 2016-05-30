@@ -5,6 +5,7 @@
 #include "lib/templates/transform_types.h"
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
+#include "lib/util/debug.h"
 #include <string.h>
 
 FILE* output_file = NULL;
@@ -120,11 +121,12 @@ Compile:
     Header Body {
         Variable* variables = SimbolTable_get_variables_as_array(simbols);
         int i = 0;
-        printf("\nDEBUG - Variables insert in simbol table\n");
+        Debug_write("Variables insert in simbol table");
         for(i =0; i< simbols->size; i++){
             printf("%s %s\n",variables[i].type,variables[i].name);
         }
         SimbolTable_destroy(simbols);
+        Debug_destroy();
         free(variables);
     }
 ;
