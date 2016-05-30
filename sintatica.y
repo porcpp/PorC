@@ -78,7 +78,6 @@ void close_output_file() {
 %token <strval> T_BOOLEAN
 %token <strval> T_CHAR
 %token MATRIX
-%token DE
 
 /* define function type */
 %type <strval> Type
@@ -105,6 +104,11 @@ void close_output_file() {
 %token WHILE
 %token END_WHILE
 %token DO
+%token END_FOR
+%token FOR
+%token FROM
+%token TO
+%token STEP
 
 %start Compile
 
@@ -143,6 +147,7 @@ MultiVariables:
     | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
+<<<<<<< HEAD
     NAMEVAR COMMA Variables { 
 	verify_before_insert(simbols,$1,type); 
 	write_tabulation(output_file,counter_codicional);
@@ -159,7 +164,7 @@ Variables:
 	write_tabulation(output_file,counter_codicional);
 	write_declares_vector(output_file, $1, $4);
     }
-    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {
+    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix FROM Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$7);
 	write_to_file(output_file,$7); 
 	write_tabulation(output_file,counter_codicional);
@@ -177,37 +182,37 @@ Type:
 ;
 
 AttribuitionVariables:
-    
+
     NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON {
         write_tabulation(output_file,counter_codicional);
         verify_type(simbols,$1,"string");
         write_atribute_variable(output_file, $1, $3);
     }
-    
+
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON {
         write_tabulation(output_file,counter_codicional);
         verify_type(simbols,$1,"char");
         write_atribute_variable(output_file, $1, $3);
     }
-    
+
     | NAMEVAR ATTRIBUTION {
        write_tabulation(output_file,counter_codicional);
        write_valid_aritmetic(output_file,simbols,$1);
     } Operations SEMICOLON { write_to_file(output_file,";\n"); }
-    
-    | NAMEVAR DimensionMatrix { 
+
+    | NAMEVAR DimensionMatrix {
         write_tabulation(output_file,counter_codicional);
         write_declares_vector(output_file, $1, $2);
     } ATTRIBUTION {
 	write_to_file(output_file, " = ");
-    } Operations SEMICOLON { write_to_file(output_file,";"); } 
-   
-    | NAMEVAR DimensionMatrix DimensionMatrix { 
+    } Operations SEMICOLON { write_to_file(output_file,";"); }
+
+    | NAMEVAR DimensionMatrix DimensionMatrix {
         write_tabulation(output_file,counter_codicional);
         write_declares_matrix(output_file, $1, $2,$3);
     } ATTRIBUTION {
     	write_to_file(output_file, " = ");
-    } Operations SEMICOLON{write_to_file(output_file,";");} 
+    } Operations SEMICOLON{write_to_file(output_file,";");}
 ;
 
 ValuesNumber:
@@ -222,8 +227,8 @@ ValuesString:
 
 Values:
   NAMEVAR COMPARATOR NAMEVAR {
-	transform_simbol_comparator($2); 
-	write_condicional_sentece(output_file, $1, $2, $3); 
+	transform_simbol_comparator($2);
+	write_condicional_sentece(output_file, $1, $2, $3);
   }
   | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
@@ -245,7 +250,7 @@ Aritmetic:
     NAMEVAR { write_variable_if_valid(output_file, simbols, $1); }
     | ValuesNumber { write_to_file(output_file, $1); }
     | BASIC_ARITIMETIC NAMEVAR {
-        write_operator_variable_valid(output_file,simbols,$1,$2); 
+        write_operator_variable_valid(output_file,simbols,$1,$2);
     }
     | BASIC_ARITIMETIC ValuesNumber {
         write_aritmetic(output_file,$1,$2);
@@ -318,8 +323,24 @@ LoopStruct:
 	counter_loop--;
 	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"}\n");
-     } 
+     }
+    | FOR NAMEVAR FROM ForStep DO
+    AlgorithmBody
+    END_FOR
 ;
+
+ForStatement:
+    VALUE_INT TO VALUE_INT
+    | VALUE_INT TO NAMEVAR
+    | NAMEVAR TO VALUE_INT
+    | NAMEVAR TO NAMEVAR
+;
+
+ForStep:
+    ForStatement
+    | ForStatement STEP VALUE_INT
+;
+
 Body:
     BEGIN_BODY END_BODY {
         write_body_end(output_file);
@@ -336,13 +357,14 @@ AlgorithmBody:
     | ConditionalStruct
     | LoopStruct
     | AttribuitionVariables AlgorithmBody
-    | ConditionalStruct AlgorithmBody 
+    | ConditionalStruct AlgorithmBody
     | LoopStruct AlgorithmBody
 ;
 
 %%
 
 int yyerror(char* errmsg) {
+
     printf("\nErro: '%s' na linha: %d\n", errmsg, quantity_lines);
     return 0;
 }

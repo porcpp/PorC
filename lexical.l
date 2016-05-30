@@ -11,7 +11,7 @@ all_reserved (other_reserved|decision_reserved|type_reserved)
 
 portugol_header (algoritmo|variáveis|fim-variáveis|início|fim)
 portugol_types (inteiro|real|caractere|literal|lógico)
-portugol_statements (não|para|até|fim-para|verdadeiro|falso)
+portugol_statements (não|verdadeiro|falso)
 
 digit [0-9]
 integer {digit}+
@@ -53,6 +53,11 @@ divider "/"
 "enquanto"            { return(WHILE); }
 "faça"                { return(DO); }
 "fim-enquanto"        { return(END_WHILE); }
+"para"                { return(FOR); }
+"fim-para"            { return(END_FOR); }
+"de"                  { return(FROM); }
+"até"                 { return(TO); }
+"passo"               { return(STEP);  }
 
 "algoritmo"           { return(ALGORITHM); }
 "fim-algoritmo"       { return(END_ALGORITHM); }
@@ -66,10 +71,9 @@ divider "/"
 "real"                { yylval.strval = "double"; return(T_DOUBLE);}
 "lógico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
 "caractere"           { yylval.strval = "char"; return(T_CHAR);}
-"matriz"		{return(MATRIX);}
-"de"			{return(DE);}
+"matriz"		      {return(MATRIX);}
 
-"inteiros"     	  { yylval.strval = "int"; return(T_INT);}
+"inteiros"     	    { yylval.strval = "int"; return(T_INT);}
 "reais"               { yylval.strval = "double"; return(T_DOUBLE);}
 "lógicos"             { yylval.strval = "bool"; return(T_BOOLEAN);}
 "caracteres"          { yylval.strval = "char"; return(T_CHAR);}
