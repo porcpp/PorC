@@ -147,7 +147,6 @@ MultiVariables:
     | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
-<<<<<<< HEAD
     NAMEVAR COMMA Variables { 
 	verify_before_insert(simbols,$1,type); 
 	write_tabulation(output_file,counter_codicional);
@@ -158,7 +157,7 @@ Variables:
 	write_tabulation(output_file,counter_codicional);
 	write_declares_variable(output_file, $3 , $1); 
     }
-    | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {
+    | NAMEVAR COLON MATRIX DimensionMatrix FROM Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$6); 
 	write_to_file(output_file,$6); 
 	write_tabulation(output_file,counter_codicional);
@@ -204,7 +203,7 @@ AttribuitionVariables:
         write_tabulation(output_file,counter_codicional);
         write_declares_vector(output_file, $1, $2);
     } ATTRIBUTION {
-	write_to_file(output_file, " = ");
+		write_to_file(output_file, " = ");
     } Operations SEMICOLON { write_to_file(output_file,";"); }
 
     | NAMEVAR DimensionMatrix DimensionMatrix {
@@ -212,7 +211,7 @@ AttribuitionVariables:
         write_declares_matrix(output_file, $1, $2,$3);
     } ATTRIBUTION {
     	write_to_file(output_file, " = ");
-    } Operations SEMICOLON{write_to_file(output_file,";");}
+    } Operations SEMICOLON{ write_to_file(output_file,";");}
 ;
 
 ValuesNumber:
@@ -271,13 +270,13 @@ Operations:
 ;
 
 AndOr:
-  AND_ { write_to_file(output_file, ") && "); } Condition
-  | OR_ { write_to_file(output_file, ") || "); } Condition
+  AND_ { write_to_file(output_file, " && "); } Condition
+  | OR_ { write_to_file(output_file, " || "); } Condition
 ;
 
 Condition:
   Values
-  | Values AndOr { write_to_file(output_file,")");}
+  | Values AndOr
 
 ;
 

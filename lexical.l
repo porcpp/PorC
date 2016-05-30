@@ -72,7 +72,7 @@ divider "/"
 "lógico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
 "caractere"           { yylval.strval = "char"; return(T_CHAR);}
 "matriz"	      { return(MATRIX);}
-"de"  		      { return(DE);}
+
 
 "inteiros"    	      { yylval.strval = "int"; return(T_INT);}
 "reais"               { yylval.strval = "double"; return(T_DOUBLE);}
