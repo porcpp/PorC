@@ -63,7 +63,7 @@ void write_body_end(FILE* file) {
 void write_condicional_sentece(FILE* file, const char* content, const char* content01, const char* content02) {
     char string_to_file[MAX_STRING_SIZE];
 
-    sprintf(string_to_file,"(%s %s %s)", content, content01, content02);
+    sprintf(string_to_file,"%s %s %s", content, content01, content02);
     write_to_file(file,string_to_file);
 }
 

@@ -31,4 +31,8 @@ início
         asd := 'f';
     fim-enquanto
 
+    enquanto asd > a e a > asd faça
+	a := 4;
+    fim-enquanto
+
 fim

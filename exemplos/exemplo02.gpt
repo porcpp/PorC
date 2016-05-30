@@ -1,5 +1,4 @@
-algoritmo exemplo;
-
+algoritmo exemplos;
 
 variáveis
     werd,a,sa,fds,dfs: caractere;

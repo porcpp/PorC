@@ -267,17 +267,18 @@ Parenthesis:
 Operations:
     Aritmetic
     | Parenthesis
-    | Parenthesis Operator {write_to_file(output_file,$2);} Operations
+    | Parenthesis Operator { write_to_file(output_file,$2); } Operations
 ;
 
 AndOr:
-  AND_ { write_to_file(output_file, " && "); } Condition
-  | OR_ { write_to_file(output_file, " || "); } Condition
+  AND_ { write_to_file(output_file, ") && "); } Condition
+  | OR_ { write_to_file(output_file, ") || "); } Condition
 ;
 
 Condition:
   Values
-  | Values AndOr
+  | Values AndOr { write_to_file(output_file,")");}
+
 ;
 
 ConditionalBegin:
@@ -314,7 +315,7 @@ LoopStruct:
 	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"while (");
     }
-     Values DO {
+     Condition DO{
 	counter_loop++;
 	write_to_file(output_file,") {\n");     
  	write_tabulation(output_file,counter_loop);
@@ -324,9 +325,7 @@ LoopStruct:
 	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"}\n");
      }
-    | FOR NAMEVAR FROM ForStep DO
-    AlgorithmBody
-    END_FOR
+    | FOR NAMEVAR FROM ForStep DO AlgorithmBody END_FOR
 ;
 
 ForStatement:
