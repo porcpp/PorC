@@ -328,7 +328,13 @@ LoopStruct:
 	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"}\n");
      }
-    | FOR NAMEVAR FROM ForStep DO AlgorithmBody END_FOR
+    | FOR NAMEVAR FROM{
+    variableToFor = $2;
+	write_tabulation(output_file,counter_codicional);
+    write_to_file(output_file,"for(");
+    } ForStep DO
+    AlgorithmBody
+    END_FOR
 ;
 
 ForStatement:

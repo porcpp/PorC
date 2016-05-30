@@ -1,10 +1,11 @@
-algoritmo potencia;
+algoritmo exemplo;
 
 variáveis
   i : inteiro;
   resultado : real;
   base: real;
   exp: inteiro;
+  exp2: inteiro;
 fim-variáveis
 
 início
@@ -15,7 +16,7 @@ início
     resultado := resultado * base;
   fim-para
 
-  para i de exp até exp faça
+  para i de exp até exp2  faça
     resultado := resultado * base;
   fim-para
 
