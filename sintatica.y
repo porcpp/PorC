@@ -11,6 +11,7 @@
 FILE* output_file = NULL;
 char* type=NULL;
 char* value=NULL;
+char* variableToFor=NULL;
 extern int quantity_lines;
 int counter_codicional=1;
 int counter_loop=1;
@@ -150,26 +151,26 @@ MultiVariables:
     | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
-    NAMEVAR COMMA Variables { 
-	verify_before_insert(simbols,$1,type); 
-	write_tabulation(output_file,counter_codicional);
-	write_declares_variable_with_comma(output_file, $1); 
+    NAMEVAR COMMA Variables {
+	verify_before_insert(simbols,$1,type);
+    write_tabulation(output_file,counter_codicional);
+	write_declares_variable_with_comma(output_file, $1);
     }
     | NAMEVAR COLON Type {type=$3;} SEMICOLON {
-	verify_before_insert(simbols,$1,$3); 
-	write_tabulation(output_file,counter_codicional);
-	write_declares_variable(output_file, $3 , $1); 
+	verify_before_insert(simbols,$1,$3);
+    write_tabulation(output_file,counter_codicional);
+	write_declares_variable(output_file, $3 , $1);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix FROM Type SEMICOLON {
-	SimbolTable_insert(simbols,$1,$6); 
-	write_to_file(output_file,$6); 
-	write_tabulation(output_file,counter_codicional);
+	SimbolTable_insert(simbols,$1,$6);
+    write_tabulation(output_file,counter_codicional);
+	write_to_file(output_file,$6);
 	write_declares_vector(output_file, $1, $4);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix FROM Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$7);
-	write_to_file(output_file,$7); 
-	write_tabulation(output_file,counter_codicional);
+    write_tabulation(output_file,counter_codicional);
+	write_to_file(output_file,$7);
 	write_declares_matrix(output_file, $1, $4, $5);
     }
 ;
@@ -319,9 +320,9 @@ LoopStruct:
     }
      Condition DO{
 	counter_loop++;
-	write_to_file(output_file,") {\n");     
+	write_to_file(output_file,") {\n");
  	write_tabulation(output_file,counter_loop);
-     }        
+     }
      AlgorithmBody END_WHILE {
 	counter_loop--;
 	write_tabulation(output_file,counter_loop);
@@ -331,14 +332,32 @@ LoopStruct:
 ;
 
 ForStatement:
-    VALUE_INT TO VALUE_INT
-    | VALUE_INT TO NAMEVAR
-    | NAMEVAR TO VALUE_INT
-    | NAMEVAR TO NAMEVAR
+    VALUE_INT TO VALUE_INT{
+    char *aux;
+    value = transform_int_string(value,$3);
+    aux = transform_int_string(aux,$1);
+    write_for_statement(output_file,aux,value,variableToFor);
+    free(aux);
+    }
+    | VALUE_INT TO NAMEVAR{
+    value = transform_int_string(value,$1);
+    write_for_statement(output_file,value,$3,variableToFor);
+    }
+    | NAMEVAR TO VALUE_INT{
+    value = transform_int_string(value,$3);
+    write_for_statement(output_file,$1,value,variableToFor);
+    }
+    | NAMEVAR TO NAMEVAR{
+    write_for_statement(output_file,$1,$3,variableToFor);
+    }
 ;
 
 ForStep:
-    ForStatement
+    | FOR NAMEVAR FROM{
+    variableToFor = $2;
+    write_tabulation(output_file,counter_codicional);
+    write_to_file(output_file,"for(");
+    } ForStep DO
     | ForStatement STEP VALUE_INT
 ;
 
