@@ -140,7 +140,8 @@ HeaderAlgorithm:
     }
 ;
 HeaderVariables:
-    VARIABLES MultiVariables VARIABLES_END{write_to_file(output_file,";\n");}
+    VARIABLES VARIABLES_END
+    | VARIABLES MultiVariables VARIABLES_END{write_to_file(output_file,";\n");}
 ;
 MultiVariables:
     Variables
