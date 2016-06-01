@@ -33,6 +33,6 @@ void write_aritmetic(FILE* file, char* operator, char* name_variable);
 
 void write_for_statement(FILE* file, const char* content, const char* content01,const char* content02);
 
-void write_for_statement_end(FILE* file, const char* content);
+void write_for_statement_end(FILE* file, const char* content, int step);
 #endif
 

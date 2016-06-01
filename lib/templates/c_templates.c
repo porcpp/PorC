@@ -92,9 +92,9 @@ void write_for_statement(FILE* file, const char* content, const char* content01,
     sprintf(data, "%s=%s;%s<%s;",content02,content,content02,content01);
     write_to_file(file, data);
 }
-void write_for_statement_end(FILE* file, const char* content){
+void write_for_statement_end(FILE* file, const char* content, int step){
     char data[MAX_STRING_SIZE];
 
-    sprintf(data,"%s++){\n",content);
+    sprintf(data,"%s+=%d){\n",content,step);
     write_to_file(file,data);
 }

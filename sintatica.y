@@ -362,10 +362,13 @@ ForStatement:
 
 ForStep:
     ForStatement{
-        write_for_statement_end(output_file,variableToFor);
+        write_for_statement_end(output_file,variableToFor,1);
         write_tabulation(output_file,counter_tabulation);
     }
-    | ForStatement STEP VALUE_INT
+    | ForStatement STEP VALUE_INT{
+        write_for_statement_end(output_file,variableToFor,$3);
+        write_tabulation(output_file,counter_tabulation);
+    }
 ;
 
 Body:
