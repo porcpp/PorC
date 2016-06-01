@@ -333,7 +333,10 @@ LoopStruct:
     write_to_file(output_file,"for(");
     } ForStep DO
     AlgorithmBody
-    END_FOR
+    END_FOR{
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file,"}\n");
+    }
 ;
 
 ForStatement:
@@ -358,11 +361,10 @@ ForStatement:
 ;
 
 ForStep:
-    | FOR NAMEVAR FROM{
-    variableToFor = $2;
-    write_tabulation(output_file,counter_tabulation);
-    write_to_file(output_file,"for(");
-    } ForStep DO
+    ForStatement{
+        write_for_statement_end(output_file,variableToFor);
+        write_tabulation(output_file,counter_tabulation);
+    }
     | ForStatement STEP VALUE_INT
 ;
 
