@@ -317,22 +317,22 @@ LoopStruct:
 	write_tabulation(output_file,counter_tabulation);
 	write_to_file(output_file,"while (");
     }
-     Condition DO{
+    Condition DO{
 	counter_tabulation++;
 	write_to_file(output_file,") {\n");
  	write_tabulation(output_file,counter_tabulation);
-     }
-     AlgorithmBody END_WHILE {
+    }
+    AlgorithmBody END_WHILE {
 	counter_tabulation--;
 	write_tabulation(output_file,counter_tabulation);
 	write_to_file(output_file,"}\n");
-     }
+    }
     | FOR NAMEVAR FROM{
     variableToFor = $2;
 	write_tabulation(output_file,counter_tabulation);
     write_to_file(output_file,"for(");
-    } ForStep DO
-    AlgorithmBody
+    } ForStep DO{counter_tabulation++;}
+    AlgorithmBody{counter_tabulation--;}
     END_FOR{
         write_tabulation(output_file,counter_tabulation);
         write_to_file(output_file,"}\n");
@@ -363,11 +363,9 @@ ForStatement:
 ForStep:
     ForStatement{
         write_for_statement_end(output_file,variableToFor,1);
-        write_tabulation(output_file,counter_tabulation);
     }
     | ForStatement STEP VALUE_INT{
         write_for_statement_end(output_file,variableToFor,$3);
-        write_tabulation(output_file,counter_tabulation);
     }
 ;
 
