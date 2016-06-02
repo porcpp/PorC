@@ -367,6 +367,9 @@ ForStep:
     | ForStatement STEP VALUE_INT{
         write_for_statement_end(output_file,variableToFor,$3);
     }
+    |ForStatement STEP BASIC_ARITIMETIC VALUE_INT {
+        write_for_statement_end(output_file,variableToFor,-$4);
+    }
 ;
 
 Body:
