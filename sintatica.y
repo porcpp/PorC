@@ -153,24 +153,24 @@ MultiVariables:
 Variables:
     NAMEVAR COMMA Variables {
 	verify_before_insert(simbols,$1,type);
-	write_tabulation(output_file,counter_codicional);
+	write_tabulation(output_file,counter_tabulation);
 	write_declares_variable_with_comma(output_file, $1);
     }
     | NAMEVAR COLON Type {type=$3;} SEMICOLON {
 	verify_before_insert(simbols,$1,$3);
-	write_tabulation(output_file,counter_codicional);
+	write_tabulation(output_file,counter_tabulation);
 	write_declares_variable(output_file, $3 , $1);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix FROM Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$6);
 	write_to_file(output_file,$6);
-	write_tabulation(output_file,counter_codicional);
+	write_tabulation(output_file,counter_tabulation);
 	write_declares_vector(output_file, $1, $4);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix FROM Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$7);
 	write_to_file(output_file,$7);
-	write_tabulation(output_file,counter_codicional);
+	write_tabulation(output_file,counter_tabulation);
 	write_declares_matrix(output_file, $1, $4, $5);
     }
 ;
