@@ -1,5 +1,6 @@
 #include "../simbol_table/simbol_table.h"
 #include "../simbol_table/variable.h"
+#include "../util/debug.h"
 #include "c_templates.h"
 #include "verify_templates.h"
 #include <assert.h>
@@ -25,22 +26,29 @@ void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable
         sprintf(string_to_file,"Variavel '%s' ja foi declarada", variable->name);
         yyerror(string_to_file);
         exit(0);
-    }else{
-        printf("DEBUG DECLARACAO DE VARIAVEL - Variavel '%s' na linha:'%d' e permitida\n", variable->name,quantity_lines);
+    } else {
+        char debug_text[140];
+        sprintf(debug_text, "DECLARACAO DE VARIAVEL - Variavel '%s' na linha:'%d' e permitida", variable->name, quantity_lines);
+
+        Debug_write(debug_text);
     }
 }
 
 int verify_type(SimbolTable * simbols,char * name, char * type){
-    printf("\nDEBUG ATRIBUICAO - Parametro da entrada '%s %s' na linha:'%d' \n",type,name,quantity_lines);
+    char debug_text[140];
+    sprintf(debug_text, "ATRIBUICAO - Parametro da entrada '%s %s' na linha:'%d'", type, name, quantity_lines);
+    Debug_write(debug_text);
 
     Variable* variable = SimbolTable_find(simbols, name); // Get the variable if exist in simbol table
     int valid = 0;
 
     if( variable != NULL){
-        printf("DEBUG ATRIBUICAO - Valor do tipo '%s' na linha:'%d' \n",variable->type,quantity_lines);
+        sprintf(debug_text, "ATRIBUICAO - Valor do tipo '%s' na linha: '%d'", variable->type, quantity_lines);
+        Debug_write(debug_text);
 
         if( !strcmp(type,variable->type) ){
-            printf("DEBUG ATRIBUICAO - Tipo e igual na linha:'%d' \n",quantity_lines);
+            sprintf(debug_text, "ATRIBUICAO - Tipo e igual na linha:'%d'", quantity_lines);
+            Debug_write(debug_text);
             // Verify if the type os value is the same of variable
             valid = 1;
         }else{
@@ -79,8 +87,8 @@ unsigned short is_number(SimbolTable* simbols, char* name) {
 static unsigned short valid_types(char* type) {
     assert(type != NULL);
     unsigned short is_a_valid_type = 0;
-	
     int i;
+
     for (i = 0; i < 4; ++i) {
         if (strcmp(type, valid_types_list[i]) == 0) {
             is_a_valid_type = 1;
@@ -99,7 +107,10 @@ void write_variable_if_valid(FILE* file, SimbolTable* simbols, char* name) {
     if(is_number(simbols, name)) {
         write_to_file(file, name);
     } else {
-        printf("\nDEBUG: invalid aritmetic %s is not int or double", name);
+        char debug_text[140];
+        sprintf(debug_text, "invalid aritmetic %s is not int or double", name);
+        Debug_write(debug_text);
+        yyerror(debug_text);
         exit(0);
     }
 }
@@ -109,11 +120,14 @@ void write_operator_variable_valid(FILE* file, SimbolTable* simbols,
     assert(file != NULL);
     assert(simbols != NULL);
     assert(name != NULL);
-    
+
     if(is_number(simbols, name)){
         write_aritmetic(file, operator, name);
     } else {
-        printf("\nERROR: invalid operation with variable, %s is not int or double",name);
+        char debug_text[140];
+        sprintf(debug_text, "invalid operation with variable, %s is not int or double", name);
+        Debug_write(debug_text);
+        yyerror(debug_text);
         exit(0);
     }
 }
@@ -125,7 +139,10 @@ void write_valid_aritmetic(FILE* file, SimbolTable* simbols, char* name){
     if(is_number(simbols,name)){
         write_aritmetic(file,name, "= ");
     } else {
-        printf("ERROR: can't make aritmetic attributions to %s with types: char or string",name);
+        char debug_text[140];
+        sprintf(debug_text, "can't make aritmetic attributions to %s with types: char or string", name);
+        Debug_write(debug_text);
+        yyerror(debug_text);
         exit(0);
     }
 }

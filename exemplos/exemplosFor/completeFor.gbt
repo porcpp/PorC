@@ -14,18 +14,13 @@ início
 
   para i de 1 até exp faça
     resultado := resultado * base;
-  fim-para
 
-  para i de exp até exp2  faça
-    resultado := resultado * base;
-  fim-para
+    para i de exp até exp2 passo 2 faça
+        resultado := 1;
+        resultado := resultado * base;
+        resultado := 1;
+    fim-para
 
-  para i de exp até 2 faça
-    resultado := resultado * base;
-  fim-para
-
-  para i de 1 até 6 faça
-    resultado := resultado * base;
   fim-para
 
 fim

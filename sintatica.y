@@ -5,13 +5,15 @@
 #include "lib/templates/transform_types.h"
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
+#include "lib/util/debug.h"
 #include <string.h>
 
 FILE* output_file = NULL;
 char* type=NULL;
 char* value=NULL;
+char* variableToFor=NULL;
 extern int quantity_lines;
-int counter_codicional=1;
+int counter_tabulation=1;
 int counter_loop=1;
 SimbolTable* simbols = NULL;
 
@@ -120,16 +122,18 @@ Compile:
     Header Body {
         Variable* variables = SimbolTable_get_variables_as_array(simbols);
         int i = 0;
-        printf("\nDEBUG - Variables insert in simbol table\n");
+        Debug_write("Variables insert in simbol table");
         for(i =0; i< simbols->size; i++){
             printf("%s %s\n",variables[i].type,variables[i].name);
         }
         SimbolTable_destroy(simbols);
+        Debug_destroy();
         free(variables);
     }
 ;
 Header:
-    HeaderAlgorithm HeaderVariables
+    HeaderAlgorithm
+    | HeaderAlgorithm HeaderVariables
 ;
 HeaderAlgorithm:
     ALGORITHM NAMEVAR SEMICOLON {
@@ -140,33 +144,34 @@ HeaderAlgorithm:
     }
 ;
 HeaderVariables:
-    VARIABLES MultiVariables VARIABLES_END{write_to_file(output_file,";\n");}
+    VARIABLES VARIABLES_END
+    | VARIABLES MultiVariables VARIABLES_END{write_to_file(output_file,";\n");}
 ;
 MultiVariables:
     Variables
     | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
-    NAMEVAR COMMA Variables { 
-	verify_before_insert(simbols,$1,type); 
-	write_tabulation(output_file,counter_codicional);
-	write_declares_variable_with_comma(output_file, $1); 
+    NAMEVAR COMMA Variables {
+	verify_before_insert(simbols,$1,type);
+	write_tabulation(output_file,counter_tabulation);
+	write_declares_variable_with_comma(output_file, $1);
     }
     | NAMEVAR COLON Type {type=$3;} SEMICOLON {
-	verify_before_insert(simbols,$1,$3); 
-	write_tabulation(output_file,counter_codicional);
-	write_declares_variable(output_file, $3 , $1); 
+	verify_before_insert(simbols,$1,$3);
+	write_tabulation(output_file,counter_tabulation);
+	write_declares_variable(output_file, $3 , $1);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix FROM Type SEMICOLON {
-	SimbolTable_insert(simbols,$1,$6); 
-	write_to_file(output_file,$6); 
-	write_tabulation(output_file,counter_codicional);
+	SimbolTable_insert(simbols,$1,$6);
+	write_to_file(output_file,$6);
+	write_tabulation(output_file,counter_tabulation);
 	write_declares_vector(output_file, $1, $4);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix FROM Type SEMICOLON {
 	SimbolTable_insert(simbols,$1,$7);
-	write_to_file(output_file,$7); 
-	write_tabulation(output_file,counter_codicional);
+	write_to_file(output_file,$7);
+	write_tabulation(output_file,counter_tabulation);
 	write_declares_matrix(output_file, $1, $4, $5);
     }
 ;
@@ -183,31 +188,31 @@ Type:
 AttribuitionVariables:
 
     NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON {
-        write_tabulation(output_file,counter_codicional);
+        write_tabulation(output_file,counter_tabulation);
         verify_type(simbols,$1,"string");
         write_atribute_variable(output_file, $1, $3);
     }
 
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON {
-        write_tabulation(output_file,counter_codicional);
+        write_tabulation(output_file,counter_tabulation);
         verify_type(simbols,$1,"char");
         write_atribute_variable(output_file, $1, $3);
     }
 
     | NAMEVAR ATTRIBUTION {
-       write_tabulation(output_file,counter_codicional);
+       write_tabulation(output_file,counter_tabulation);
        write_valid_aritmetic(output_file,simbols,$1);
     } Operations SEMICOLON { write_to_file(output_file,";\n"); }
 
     | NAMEVAR DimensionMatrix {
-        write_tabulation(output_file,counter_codicional);
+        write_tabulation(output_file,counter_tabulation);
         write_declares_vector(output_file, $1, $2);
     } ATTRIBUTION {
 		write_to_file(output_file, " = ");
     } Operations SEMICOLON { write_to_file(output_file,";"); }
 
     | NAMEVAR DimensionMatrix DimensionMatrix {
-        write_tabulation(output_file,counter_codicional);
+        write_tabulation(output_file,counter_tabulation);
         write_declares_matrix(output_file, $1, $2,$3);
     } ATTRIBUTION {
     	write_to_file(output_file, " = ");
@@ -254,10 +259,6 @@ Values:
   | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber { 
 	write_declares_matrix(output_file, $1,$2,$3);
 	write_condicional_sentece(output_file," ",$4,$5);
-  }
-  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber {
-        write_declares_matrix(output_file, $1,$2,$3);
-        write_condicional_sentece(output_file," ",$4,$5);
   }
   | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesString {
         write_declares_matrix(output_file, $1,$2,$3);
@@ -316,24 +317,24 @@ Condition:
 
 ConditionalBegin:
     IF_ {
-        write_tabulation(output_file,counter_codicional);
+        write_tabulation(output_file,counter_tabulation);
         write_to_file(output_file, "if (");
     } Condition THAN_{
         write_to_file(output_file, ") {\n");
-        counter_codicional++;
+        counter_tabulation++;
     }
 ;
 
 ConditionalEnd:
     ELSE_ {
-        counter_codicional--;
-        write_tabulation(output_file,counter_codicional);
-        counter_codicional++;
+        counter_tabulation--;
+        write_tabulation(output_file,counter_tabulation);
+        counter_tabulation++;
         write_to_file(output_file, "} else{\n");
     } AlgorithmBody ConditionalEnd
     | END_IF_ {
-        counter_codicional--;
-        write_tabulation(output_file,counter_codicional);
+        counter_tabulation--;
+        write_tabulation(output_file,counter_tabulation);
         write_to_file(output_file, "}\n");
     }
 ;
@@ -345,7 +346,7 @@ ConditionalStruct:
 
 LoopStruct:
     WHILE {
-	write_tabulation(output_file,counter_loop);
+	write_tabulation(output_file,counter_tabulation);
 	write_to_file(output_file,"while (");
     }
     Condition DO{
@@ -357,20 +358,50 @@ LoopStruct:
 	counter_loop--;
 	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"}\n");
-     }
-    | FOR NAMEVAR FROM ForStep DO AlgorithmBody END_FOR
+    }
+    | FOR NAMEVAR FROM{
+    variableToFor = $2;
+	write_tabulation(output_file,counter_tabulation);
+    write_to_file(output_file,"for(");
+    } ForStep DO{counter_tabulation++;}
+    AlgorithmBody{counter_tabulation--;}
+    END_FOR{
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file,"}\n");
+    }
 ;
 
 ForStatement:
-    VALUE_INT TO VALUE_INT
-    | VALUE_INT TO NAMEVAR
-    | NAMEVAR TO VALUE_INT
-    | NAMEVAR TO NAMEVAR
+    VALUE_INT TO VALUE_INT{
+    char *aux;
+    value = transform_int_string(value,$3);
+    aux = transform_int_string(aux,$1);
+    write_for_statement(output_file,aux,value,variableToFor);
+    free(aux);
+    }
+    | VALUE_INT TO NAMEVAR{
+    value = transform_int_string(value,$1);
+    write_for_statement(output_file,value,$3,variableToFor);
+    }
+    | NAMEVAR TO VALUE_INT{
+    value = transform_int_string(value,$3);
+    write_for_statement(output_file,$1,value,variableToFor);
+    }
+    | NAMEVAR TO NAMEVAR{
+    write_for_statement(output_file,$1,$3,variableToFor);
+    }
 ;
 
 ForStep:
-    ForStatement
-    | ForStatement STEP VALUE_INT
+    ForStatement{
+        write_for_statement_end(output_file,variableToFor,1);
+    }
+    | ForStatement STEP VALUE_INT{
+        write_for_statement_end(output_file,variableToFor,$3);
+    }
+    |ForStatement STEP BASIC_ARITIMETIC VALUE_INT {
+        write_for_statement_end(output_file,variableToFor,-$4);
+    }
 ;
 
 Body:

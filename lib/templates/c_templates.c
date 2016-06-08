@@ -70,7 +70,7 @@ void write_condicional_sentece(FILE* file, const char* content, const char* cont
 
 void write_declares_vector(FILE* file, const char* content, const char* content01) {
     char string_to_file[MAX_STRING_SIZE];
-    
+   
     sprintf(string_to_file,"%s[%s]", content, content01);
     write_to_file(file,string_to_file);
 }
@@ -85,4 +85,16 @@ void write_aritmetic(FILE* file, char* operator, char* variable_number){
     char string_to_file[MAX_STRING_SIZE];
     sprintf(string_to_file,"%s %s",operator, variable_number);
     write_to_file(file,string_to_file);
+}
+void write_for_statement(FILE* file, const char* content, const char* content01,const char* content02) {
+    char data[MAX_STRING_SIZE];
+
+    sprintf(data, "%s=%s;%s<%s;",content02,content,content02,content01);
+    write_to_file(file, data);
+}
+void write_for_statement_end(FILE* file, const char* content, int step){
+    char data[MAX_STRING_SIZE];
+
+    sprintf(data,"%s+=%d){\n",content,step);
+    write_to_file(file,data);
 }
