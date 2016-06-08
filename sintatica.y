@@ -235,8 +235,42 @@ Values:
   | ValuesString COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesString COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
-  | NAMEVAR DimensionMatrix COMPARATOR ValuesNumber {printf("%s[%s] %s %s", $1, $2,$3,$4);}
-  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber {printf("%s[%s][%s] %s %s", $1, $2,$3,$4,$5);}
+  | NAMEVAR DimensionMatrix COMPARATOR ValuesNumber { 
+	write_declares_vector(output_file, $1,$2); 
+	write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | ValuesNumber COMPARATOR NAMEVAR DimensionMatrix { 
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | NAMEVAR DimensionMatrix COMPARATOR ValuesString { 
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | ValuesString COMPARATOR NAMEVAR DimensionMatrix { 
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber { 
+	write_declares_matrix(output_file, $1,$2,$3);
+	write_condicional_sentece(output_file," ",$4,$5);
+  }
+  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
+  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesString {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
+  | ValuesNumber COMPARATOR  NAMEVAR DimensionMatrix DimensionMatrix {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
+  | ValuesString COMPARATOR  NAMEVAR DimensionMatrix DimensionMatrix {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
 ;
 
 Operator:
@@ -314,7 +348,7 @@ LoopStruct:
 	write_tabulation(output_file,counter_loop);
 	write_to_file(output_file,"while (");
     }
-     Condition DO{
+    Condition DO{
 	counter_loop++;
 	write_to_file(output_file,") {\n");     
  	write_tabulation(output_file,counter_loop);
