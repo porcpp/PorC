@@ -186,7 +186,6 @@ Type:
 ;
 
 AttribuitionVariables:
-
     NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON {
         write_tabulation(output_file,counter_tabulation);
         verify_type(simbols,$1,"string");
@@ -352,7 +351,9 @@ LoopStruct:
     Condition DO{
 	counter_loop++;
 	write_to_file(output_file,") {\n");     
+	counter_loop--;
  	write_tabulation(output_file,counter_loop);
+     	counter_loop++;
      }        
      AlgorithmBody END_WHILE {
 	counter_loop--;
