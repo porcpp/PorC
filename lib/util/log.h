@@ -8,7 +8,6 @@
 #define LOG_INFO_FILE "info.log"
 #define LOG_WARMING_FILE "warming.log"
 
-#define MAX_MESSAGE_SIZE 200
 
 typedef struct _log_ {
   FILE* file_error;

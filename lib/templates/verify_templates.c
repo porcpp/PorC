@@ -1,6 +1,6 @@
 #include "../simbol_table/simbol_table.h"
 #include "../simbol_table/variable.h"
-#include "../util/debug.h"
+#include "../util/log.h"
 #include "c_templates.h"
 #include "verify_templates.h"
 #include <assert.h>
@@ -14,8 +14,10 @@
 char valid_types_list[4][10] = {
     "int", "double", "string", "char"
 };
+
 extern int quantity_lines;
 
+extern unsigned short MAX_LOG_MESSAGE_SIZE;
 
 void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable){
     Variable* variable_already_added = SimbolTable_find(simbol_table, variable->name);
@@ -24,39 +26,42 @@ void verify_variable_already_added(SimbolTable* simbol_table, Variable* variable
         char string_to_file[60];
 
         sprintf(string_to_file,"Variavel '%s' ja foi declarada", variable->name);
+        Log_error(string_to_file);
         yyerror(string_to_file);
         exit(0);
     } else {
-        char debug_text[140];
+        char debug_text[MAX_LOG_MESSAGE_SIZE];
         sprintf(debug_text, "DECLARACAO DE VARIAVEL - Variavel '%s' na linha:'%d' e permitida", variable->name, quantity_lines);
 
-        Debug_write(debug_text);
+        Log_info(debug_text);
     }
 }
 
 int verify_type(SimbolTable * simbols,char * name, char * type){
-    char debug_text[140];
+    char debug_text[MAX_LOG_MESSAGE_SIZE];
     sprintf(debug_text, "ATRIBUICAO - Parametro da entrada '%s %s' na linha:'%d'", type, name, quantity_lines);
-    Debug_write(debug_text);
+    Log_info(debug_text);
 
     Variable* variable = SimbolTable_find(simbols, name); // Get the variable if exist in simbol table
     int valid = 0;
 
     if( variable != NULL){
         sprintf(debug_text, "ATRIBUICAO - Valor do tipo '%s' na linha: '%d'", variable->type, quantity_lines);
-        Debug_write(debug_text);
+        Log_info(debug_text);
 
         if( !strcmp(type,variable->type) ){
             sprintf(debug_text, "ATRIBUICAO - Tipo e igual na linha:'%d'", quantity_lines);
-            Debug_write(debug_text);
+            Log_info(debug_text);
             // Verify if the type os value is the same of variable
             valid = 1;
         }else{
+            Log_error("Tipo da variavel e diferente do valor");
             yyerror("Tipo da variavel e diferente do valor");
             exit(0);
            //valid = INVALID_TYPE;
         }
     }else{
+        Log_error("O nome da variavel nao for encontrada");
         yyerror("O nome da variavel nao for encontrada");
         exit(0);
         //valid = NOT_FOUND;
@@ -107,9 +112,9 @@ void write_variable_if_valid(FILE* file, SimbolTable* simbols, char* name) {
     if(is_number(simbols, name)) {
         write_to_file(file, name);
     } else {
-        char debug_text[140];
+        char debug_text[MAX_LOG_MESSAGE_SIZE];
         sprintf(debug_text, "invalid aritmetic %s is not int or double", name);
-        Debug_write(debug_text);
+        Log_warning(debug_text);
         yyerror(debug_text);
         exit(0);
     }
@@ -124,13 +129,14 @@ void write_operator_variable_valid(FILE* file, SimbolTable* simbols,
     if(is_number(simbols, name)){
         write_aritmetic(file, operator, name);
     } else {
-        char debug_text[140];
+        char debug_text[MAX_LOG_MESSAGE_SIZE];
         sprintf(debug_text, "invalid operation with variable, %s is not int or double", name);
-        Debug_write(debug_text);
+        Log_warning(debug_text);
         yyerror(debug_text);
         exit(0);
     }
 }
+
 void write_valid_aritmetic(FILE* file, SimbolTable* simbols, char* name){
     assert(file != NULL);
     assert(simbols != NULL);
@@ -139,13 +145,14 @@ void write_valid_aritmetic(FILE* file, SimbolTable* simbols, char* name){
     if(is_number(simbols,name)){
         write_aritmetic(file,name, "= ");
     } else {
-        char debug_text[140];
+        char debug_text[MAX_LOG_MESSAGE_SIZE];
         sprintf(debug_text, "can't make aritmetic attributions to %s with types: char or string", name);
-        Debug_write(debug_text);
+        Log_error(debug_text);
         yyerror(debug_text);
         exit(0);
     }
 }
+
 void verify_before_insert(SimbolTable* simbol_table, char* name, char* type) {
     Variable* variable = Variable_new(name, type);
 

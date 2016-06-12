@@ -5,7 +5,7 @@
 #include "lib/templates/transform_types.h"
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
-#include "lib/util/debug.h"
+#include "lib/util/log.h"
 #include <string.h>
 
 FILE* output_file = NULL;
@@ -13,6 +13,7 @@ char* type=NULL;
 char* value=NULL;
 char* variableToFor=NULL;
 extern int quantity_lines;
+extern unsigned short MAX_LOG_MESSAGE_SIZE;
 int counter_tabulation=1;
 SimbolTable* simbols = NULL;
 
@@ -121,12 +122,17 @@ Compile:
     Header Body {
         Variable* variables = SimbolTable_get_variables_as_array(simbols);
         int i = 0;
-        Debug_write("Variables insert in simbol table");
-        for(i =0; i< simbols->size; i++){
-            printf("%s %s\n",variables[i].type,variables[i].name);
+        char log_message[MAX_LOG_MESSAGE_SIZE];
+
+        Log_info("Variables insert in simbol table");
+
+        for(i =0; i< simbols->size; i++) {
+            sprintf(log_message, "Variable: %s %s", variables[i].type, variables[i].name);
+            Log_info(log_message);
         }
+
         SimbolTable_destroy(simbols);
-        Debug_destroy();
+        Log_destroy();
         free(variables);
     }
 ;

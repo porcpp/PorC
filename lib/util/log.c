@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "log.h"
 
+const unsigned short MAX_LOG_MESSAGE_SIZE = 200;
 
 static Log* __log_instance = NULL;
 
@@ -42,7 +43,7 @@ Log* Log_get_instance() {
 static void Log_write(const log_type type, const char* text) {
   Log* log = Log_get_instance();
 
-  char message[MAX_MESSAGE_SIZE];
+  char message[MAX_LOG_MESSAGE_SIZE];
 
   sprintf(message, "%s %s\n\n", "Log: ", text);
 
@@ -53,11 +54,11 @@ static void Log_write(const log_type type, const char* text) {
       output_file = log->file_error;
     break;
 
-    case ERROR:
+    case INFO:
       output_file = log->file_info;
     break;
 
-    case ERROR:
+    case WARMING:
       output_file = log->file_warning;
     break;
   }
@@ -81,7 +82,7 @@ void Log_warning(const char* text) {
 }
 
 
-void Log_error(const char* text);
+void Log_error(const char* text) {
   Log_write(ERROR, text);
 }
 
