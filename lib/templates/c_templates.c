@@ -108,3 +108,9 @@ void write_input_file(FILE* file, const char* name, const char* type){
     sprintf(data, "scanf(\" %s\", \&%s);\n");
     write_to_file(file,data);
 }
+
+void write_print(FILE* file, const char* content){
+    char data[MAX_STRING_SIZE];
+
+    sprintf(data,"printf(%s);\n",content);
+}

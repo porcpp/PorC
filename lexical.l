@@ -27,9 +27,6 @@ any_string ("\""{any_char}+"\"")
 
 char_value ("\'"{any_char}"\'")
 
-this_is_a_commit "não estamos tratando strings por enquanto então essa parte embaixo é inutil"
-string_value ("\"{letter}\"")
-
 namevar {letter}({integer}|{letter}|"_")*
 
 comparator ("="|"<"|">"|"<="|">="|"<>")
@@ -40,7 +37,6 @@ times "*"
 divider "/"
 
 %%
-{any_string}          { return(STRING);}
 {all_reserved}        { return(RESERVED_WORD_C); }
 {portugol_statements} { return(TO_IMPLEMENT); }
 
@@ -103,7 +99,7 @@ divider "/"
 {integer}             { yylval.ival = atoi(yytext); return(VALUE_INT); }
 {real}                { yylval.dval = atof(yytext); return(VALUE_DOUBLE); }
 {char_value}          { yylval.strval = strdup(yytext); return(VALUE_CHARACTER); }
-{string_value}        { yylval.strval = strdup(yytext); return(VALUE_STRING); }
+{any_string}          { yylval.strval = strdup(yytext);	return(VALUE_STRING); }
 {comparator}          { yylval.strval = strdup(yytext); return(COMPARATOR); }
 {basic_aritimetic}    { yylval.strval = strdup(yytext); return(BASIC_ARITIMETIC); }
 {times}               { yylval.strval = strdup(yytext); return(TIMES); }

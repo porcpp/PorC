@@ -427,7 +427,10 @@ InputFunction:
 ;
 
 PrintStep:
-    IMPRIMA LEFT_PARENTHESIS STRING RIGHT_PARENTHESIS SEMICOLON
+    IMPRIMA LEFT_PARENTHESIS VALUE_STRING RIGHT_PARENTHESIS SEMICOLON{
+        write_tabulation(output_file,counter_tabulation);
+        write_print(output_file,$3);
+    }
 ;
 
 Body:

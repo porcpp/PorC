@@ -36,5 +36,8 @@ void write_for_statement(FILE* file, const char* content, const char* content01,
 void write_for_statement_end(FILE* file, const char* content, int step);
 
 void write_input_file(FILE* file, const char* name, const char* type);
+
+void write_print(FILE* file, const char* content);
+
 #endif
 
