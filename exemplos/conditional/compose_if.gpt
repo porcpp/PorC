@@ -14,17 +14,15 @@ início
         fim-se
     fim-se
 
-se asd<= 23 então
-	asd:=23;
-fim-se
-se asd <= 123 então
-	se asd > '#' ou asd = '}' então
+    se asd<= 23 então
+        asd:=23;
+    fim-se
+    se asd <= 123 então
+        se asd > '#' ou asd = '}' então
             asd:=1;
         senão
             asd:=2;
         fim-se
     fim-se
-
-
 
 fim

@@ -1,6 +1,5 @@
 algoritmo exemplo;
 
-
 variáveis
     asd:caractere;
     a:inteiro;
@@ -9,10 +8,10 @@ fim-variáveis
 início
     asd := '#';
 
-    a:=  (-1)*a;
-    se asd > '#' ou asd = '}' então
+    se asd > '#' e asd <> '}' então
         asd := 'f';
     	asd := 'd';
+        asd := 2;
     fim-se
 
 fim
