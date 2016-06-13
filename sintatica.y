@@ -114,6 +114,8 @@ void close_output_file() {
 %token STEP
 
 %token LEIA
+%token IMPRIMA
+%token STRING
 
 %start Compile
 
@@ -424,6 +426,10 @@ InputFunction:
     }
 ;
 
+PrintStep:
+    IMPRIMA LEFT_PARENTHESIS STRING RIGHT_PARENTHESIS SEMICOLON
+;
+
 Body:
     BEGIN_BODY END_BODY {
         write_body_end(output_file);
@@ -441,9 +447,11 @@ AlgorithmBody:
     | ConditionalStruct
     | LoopStruct
     | InputFunction AlgorithmBody
+    | PrintStep
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody
     | LoopStruct AlgorithmBody
+    | PrintStep AlgorithmBody
 ;
 
 %%

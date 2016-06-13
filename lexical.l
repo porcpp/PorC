@@ -23,11 +23,12 @@ letter_mai [A-Z]
 letter ({letter_min}|{letter_mai})
 any_char .
 string {letter}+
+any_string ("\""{any_char}+"\"")
 
 char_value ("\'"{any_char}"\'")
 
 this_is_a_commit "não estamos tratando strings por enquanto então essa parte embaixo é inutil"
-string_value ("\"")((\w+)(\W+))("\"")|("\"")((\W+)(\w+))("\"")|("\"")((\W+)|(\w+))("\"")
+string_value ("\"{letter}\"")
 
 namevar {letter}({integer}|{letter}|"_")*
 
@@ -39,6 +40,7 @@ times "*"
 divider "/"
 
 %%
+{any_string}          { return(STRING);}
 {all_reserved}        { return(RESERVED_WORD_C); }
 {portugol_statements} { return(TO_IMPLEMENT); }
 
@@ -68,6 +70,8 @@ divider "/"
 "fim-variáveis"       { return(VARIABLES_END); }
 "início"              { return(BEGIN_BODY); }
 "fim"                 { return(END_BODY); }
+
+"imprima"             { return(IMPRIMA);}
 
 "inteiro"             { yylval.strval = "int"; return(T_INT);}
 "real"                { yylval.strval = "double"; return(T_DOUBLE);}
