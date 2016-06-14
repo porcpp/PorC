@@ -14,18 +14,18 @@ void write_to_file(FILE* file, const char* content) {
     }
 }
 
-void write_declares_variable_with_comma(FILE* file, const char* content) {
-    char data[MAX_STRING_SIZE];
+void write_declares_variable_with_comma(FILE* file, const char* content, const char* initial_value) {
+    char data[MAX_STRING_SIZE] = "";
 
-    sprintf(data, ", %s", content);
+    sprintf(data, ", %s = %s", content,initial_value);
     write_to_file(file, data);
 }
 
 
-void write_declares_variable(FILE* file, const char* content, const char* content01) {
+void write_declares_variable(FILE* file, const char* content, const char* content01, const char* initial_value) {
     char data[MAX_STRING_SIZE];
 
-    sprintf(data, "%s %s",content, content01);
+    sprintf(data, "%s %s = %s",content, content01,initial_value);
     write_to_file(file, data);
 }
 

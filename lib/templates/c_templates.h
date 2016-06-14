@@ -6,11 +6,11 @@
 
 void write_to_file(FILE* file, const char* content);
 
-void write_declares_variable(FILE* file, const char* content, const char* content01);
+void write_declares_variable(FILE* file, const char* content, const char* content01, const char* initial_value);
 
 void write_atribute_variable(FILE* file, const char* content, const char* content01);
 
-void write_declares_variable_with_comma(FILE* file, const char* content);
+void write_declares_variable_with_comma(FILE* file, const char* content, const char* initial_value);
 
 void write_end_line(FILE* file);
 
