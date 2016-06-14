@@ -55,8 +55,9 @@ int verify_type(SimbolTable * simbols,char * name, char * type){
             // Verify if the type os value is the same of variable
             valid = 1;
         }else{
-            Log_error("Tipo da variavel e diferente do valor");
-            yyerror("Tipo da variavel e diferente do valor");
+            sprintf(debug_text,"Tipo da variável (%s) é diferente do esperado (%s)", name,type);
+            Log_error(debug_text);
+            yyerror(debug_text);
             exit(0);
            //valid = INVALID_TYPE;
         }

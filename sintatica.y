@@ -351,28 +351,28 @@ ConditionalStruct:
 
 LoopStruct:
     WHILE {
-	write_tabulation(output_file,counter_tabulation);
-	write_to_file(output_file,"while (");
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file,"while (");
     }
-    Condition DO{
-	counter_loop++;
-	write_to_file(output_file,") {\n");     
-	counter_loop--;
- 	write_tabulation(output_file,counter_loop);
+    Condition DO {
+        counter_loop++;
+        write_to_file(output_file,") {\n");     
+        counter_loop--;
+        write_tabulation(output_file,counter_loop);
      	counter_loop++;
-     }        
-     AlgorithmBody END_WHILE {
-	counter_loop--;
-	write_tabulation(output_file,counter_loop);
-	write_to_file(output_file,"}\n");
+     } AlgorithmBody END_WHILE {
+        counter_loop--;
+        write_tabulation(output_file,counter_loop);
+        write_to_file(output_file,"}\n");
     }
-    | FOR NAMEVAR FROM{
-    variableToFor = $2;
-	write_tabulation(output_file,counter_tabulation);
-    write_to_file(output_file,"for(");
-    } ForStep DO{counter_tabulation++;}
-    AlgorithmBody{counter_tabulation--;}
-    END_FOR{
+    | FOR NAMEVAR FROM {
+        verify_type(simbols,$2,"int");
+        variableToFor = $2;
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file,"for(");
+    } ForStep DO { counter_tabulation++; }
+    AlgorithmBody { counter_tabulation--; }
+    END_FOR {
         write_tabulation(output_file,counter_tabulation);
         write_to_file(output_file,"}\n");
     }
@@ -380,22 +380,26 @@ LoopStruct:
 
 ForStatement:
     VALUE_INT TO VALUE_INT{
-    char *aux;
-    value = transform_int_string(value,$3);
-    aux = transform_int_string(aux,$1);
-    write_for_statement(output_file,aux,value,variableToFor);
-    free(aux);
+        char *aux;
+        value = transform_int_string(value,$3);
+        aux = transform_int_string(aux,$1);
+        write_for_statement(output_file,aux,value,variableToFor);
+        free(aux);
     }
     | VALUE_INT TO NAMEVAR{
-    value = transform_int_string(value,$1);
-    write_for_statement(output_file,value,$3,variableToFor);
+        verify_type(simbols,$3,"int");
+        value = transform_int_string(value,$1);
+        write_for_statement(output_file,value,$3,variableToFor);
     }
     | NAMEVAR TO VALUE_INT{
-    value = transform_int_string(value,$3);
-    write_for_statement(output_file,$1,value,variableToFor);
+        verify_type(simbols,$1,"int");
+        value = transform_int_string(value,$3);
+        write_for_statement(output_file,$1,value,variableToFor);
     }
     | NAMEVAR TO NAMEVAR{
-    write_for_statement(output_file,$1,$3,variableToFor);
+        verify_type(simbols,$1,"int");
+        verify_type(simbols,$3,"int");
+        write_for_statement(output_file,$1,$3,variableToFor);
     }
 ;
 
