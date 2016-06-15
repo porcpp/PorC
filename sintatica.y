@@ -113,6 +113,8 @@ void close_output_file() {
 %token TO
 %token STEP
 
+%token LEIA
+
 %start Compile
 
 %error-verbose
@@ -415,6 +417,10 @@ ForStep:
     }
 ;
 
+ReadFunction:
+    NAMEVAR ATTRIBUTION LEIA LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMICOLON { printf("read"); }
+;
+
 Body:
     BEGIN_BODY END_BODY {
         write_body_end(output_file);
@@ -428,8 +434,10 @@ Body:
 
 AlgorithmBody:
     AttribuitionVariables
+    | ReadFunction
     | ConditionalStruct
     | LoopStruct
+    | ReadFunction AlgorithmBody
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody
     | LoopStruct AlgorithmBody

@@ -59,6 +59,8 @@ divider "/"
 "até"                 { return(TO); }
 "passo"               { return(STEP);  }
 
+"leia"                { return(LEIA); }
+
 "algoritmo"           { return(ALGORITHM); }
 "fim-algoritmo"       { return(END_ALGORITHM); }
 "constantes"          { return(CONSTANTS); }
@@ -71,8 +73,7 @@ divider "/"
 "real"                { yylval.strval = "double"; return(T_DOUBLE);}
 "lógico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
 "caractere"           { yylval.strval = "char"; return(T_CHAR);}
-"matriz"	      { return(MATRIX);}
-
+"matriz"	          { return(MATRIX);}
 
 "inteiros"    	      { yylval.strval = "int"; return(T_INT);}
 "reais"               { yylval.strval = "double"; return(T_DOUBLE);}
