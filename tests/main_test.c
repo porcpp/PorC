@@ -2,6 +2,7 @@
 #include "variable_test.h"
 #include "node_test.h"
 #include "simbol_table_test.h"
+#include "transform_types_test.h"
 
 
 int main() {
@@ -15,6 +16,9 @@ int main() {
 
   printf("Testing simbol_table\n");
   execute_all_simbol_table_tests();
+
+  printf("Testing transform types\n");
+  execute_all_transform_types_tests();
 
   printf("\nTests ended\n");
 

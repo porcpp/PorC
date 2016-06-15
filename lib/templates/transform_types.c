@@ -1,14 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #include "transform_types.h"
 #include "../util/log.h"
 
 extern int yyerror(char* errmsg);
 
 
-char* transform_int_string(char* destiny_pointer, int value_tobe_converted) {
-    destiny_pointer = malloc(MAX_NUMBER_OF_CARACTERS*sizeof (char));
+char* transform_int_string(int value_tobe_converted) {
+    char* destiny_pointer = malloc(MAX_NUMBER_OF_CARACTERS*sizeof (char));
 
     if (destiny_pointer != NULL) {
         sprintf(destiny_pointer, "%d", value_tobe_converted);
@@ -22,8 +23,8 @@ char* transform_int_string(char* destiny_pointer, int value_tobe_converted) {
 }
 
 
-char* transform_double_string(char* destiny_pointer, double value_tobe_converted) {
-    destiny_pointer = malloc(MAX_NUMBER_OF_CARACTERS*sizeof (char));
+char* transform_double_string(double value_tobe_converted) {
+    char* destiny_pointer = malloc(MAX_NUMBER_OF_CARACTERS*sizeof (char));
 
     if (destiny_pointer != NULL) {
         sprintf(destiny_pointer, "%lf", value_tobe_converted);
@@ -38,6 +39,8 @@ char* transform_double_string(char* destiny_pointer, double value_tobe_converted
 
 
 char* transform_simbol_comparator(char* simbol_comparator) {
+    assert(simbol_comparator != NULL);
+
     if (simbol_comparator != NULL) {
         if(strcmp(simbol_comparator, "<>") == 0) {
             strcpy(simbol_comparator, "!=");
@@ -54,6 +57,8 @@ char* transform_simbol_comparator(char* simbol_comparator) {
 
     return simbol_comparator;
 }
+
+
 char* transform_type_inital_value(char* type){
     // Only uses cut circuit to not use malloc function
     if (!strcmp(type,"int")){

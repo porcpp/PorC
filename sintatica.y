@@ -182,7 +182,7 @@ Variables:
     }
 ;
 DimensionMatrix:
-    LEFT_BRACKET VALUE_INT RIGHT_BRACKET { $$ = transform_int_string(value,$2); }
+    LEFT_BRACKET VALUE_INT RIGHT_BRACKET { $$ = transform_int_string($2); }
 ;
 Type:
     T_INT
@@ -225,8 +225,8 @@ AttribuitionVariables:
 ;
 
 ValuesNumber:
-  VALUE_INT { $$ = transform_int_string(value,$1); }
-  | VALUE_DOUBLE { $$ = transform_double_string(value,$1); }
+  VALUE_INT { $$ = transform_int_string($1); }
+  | VALUE_DOUBLE { $$ = transform_double_string($1); }
 ;
 ValuesString:
   VALUE_STRING
@@ -380,21 +380,19 @@ LoopStruct:
 
 ForStatement:
     VALUE_INT TO VALUE_INT{
-        char *aux;
-        value = transform_int_string(value,$3);
-        aux = transform_int_string(aux,$1);
-        write_for_statement(output_file,aux,value,variableToFor);
-        free(aux);
+    char *aux;
+    value = transform_int_string($3);
+    aux = transform_int_string($1);
+    write_for_statement(output_file,aux,value,variableToFor);
+    free(aux);
     }
     | VALUE_INT TO NAMEVAR{
-        verify_type(simbols,$3,"int");
-        value = transform_int_string(value,$1);
-        write_for_statement(output_file,value,$3,variableToFor);
+    value = transform_int_string($1);
+    write_for_statement(output_file,value,$3,variableToFor);
     }
     | NAMEVAR TO VALUE_INT{
-        verify_type(simbols,$1,"int");
-        value = transform_int_string(value,$3);
-        write_for_statement(output_file,$1,value,variableToFor);
+    value = transform_int_string($3);
+    write_for_statement(output_file,$1,value,variableToFor);
     }
     | NAMEVAR TO NAMEVAR{
         verify_type(simbols,$1,"int");
