@@ -205,22 +205,22 @@ AttribuitionVariables:
     }
 
     | NAMEVAR ATTRIBUTION {
-       write_tabulation(output_file,counter_tabulation);
-       write_valid_aritmetic(output_file,simbols,$1);
+        write_tabulation(output_file,counter_tabulation);
+        write_valid_aritmetic(output_file,simbols,$1);
     } Operations SEMICOLON { write_to_file(output_file,";\n"); }
 
     | NAMEVAR DimensionMatrix {
         write_tabulation(output_file,counter_tabulation);
         write_declares_vector(output_file, $1, $2);
     } ATTRIBUTION {
-		write_to_file(output_file, " = ");
+        write_to_file(output_file, " = ");
     } Operations SEMICOLON { write_to_file(output_file,";"); }
 
     | NAMEVAR DimensionMatrix DimensionMatrix {
         write_tabulation(output_file,counter_tabulation);
         write_declares_matrix(output_file, $1, $2,$3);
     } ATTRIBUTION {
-    	write_to_file(output_file, " = ");
+        write_to_file(output_file, " = ");
     } Operations SEMICOLON{ write_to_file(output_file,";");}
 ;
 
@@ -236,8 +236,8 @@ ValuesString:
 
 Values:
   NAMEVAR COMPARATOR NAMEVAR {
-	transform_simbol_comparator($2);
-	write_condicional_sentece(output_file, $1, $2, $3);
+       transform_simbol_comparator($2);
+       write_condicional_sentece(output_file, $1, $2, $3);
   }
   | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
@@ -245,25 +245,25 @@ Values:
   | ValuesString COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesNumber COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
   | ValuesString COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
-  | NAMEVAR DimensionMatrix COMPARATOR ValuesNumber { 
-	write_declares_vector(output_file, $1,$2); 
-	write_condicional_sentece(output_file," ",$3,$4);
-  }
-  | ValuesNumber COMPARATOR NAMEVAR DimensionMatrix { 
+  | NAMEVAR DimensionMatrix COMPARATOR ValuesNumber {
         write_declares_vector(output_file, $1,$2);
         write_condicional_sentece(output_file," ",$3,$4);
   }
-  | NAMEVAR DimensionMatrix COMPARATOR ValuesString { 
+  | ValuesNumber COMPARATOR NAMEVAR DimensionMatrix {
         write_declares_vector(output_file, $1,$2);
         write_condicional_sentece(output_file," ",$3,$4);
   }
-  | ValuesString COMPARATOR NAMEVAR DimensionMatrix { 
+  | NAMEVAR DimensionMatrix COMPARATOR ValuesString {
         write_declares_vector(output_file, $1,$2);
         write_condicional_sentece(output_file," ",$3,$4);
   }
-  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber { 
-	write_declares_matrix(output_file, $1,$2,$3);
-	write_condicional_sentece(output_file," ",$4,$5);
+  | ValuesString COMPARATOR NAMEVAR DimensionMatrix {
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
   }
   | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesString {
         write_declares_matrix(output_file, $1,$2,$3);
@@ -300,7 +300,7 @@ Aritmetic:
 
 Parenthesis:
     LEFT_PARENTHESIS {
-	write_to_file(output_file,"(");
+      write_to_file(output_file,"(");
     } Operations RIGHT_PARENTHESIS { write_to_file(output_file,")"); }
 ;
 Operations:
@@ -356,10 +356,10 @@ LoopStruct:
     }
     Condition DO {
         counter_loop++;
-        write_to_file(output_file,") {\n");     
+        write_to_file(output_file,") {\n");
         counter_loop--;
         write_tabulation(output_file,counter_loop);
-     	counter_loop++;
+        counter_loop++;
      } AlgorithmBody END_WHILE {
         counter_loop--;
         write_tabulation(output_file,counter_loop);
@@ -380,19 +380,19 @@ LoopStruct:
 
 ForStatement:
     VALUE_INT TO VALUE_INT{
-    char *aux;
-    value = transform_int_string($3);
-    aux = transform_int_string($1);
-    write_for_statement(output_file,aux,value,variableToFor);
-    free(aux);
+        char *aux;
+        value = transform_int_string($3);
+        aux = transform_int_string($1);
+        write_for_statement(output_file,aux,value,variableToFor);
+        free(aux);
     }
     | VALUE_INT TO NAMEVAR{
-    value = transform_int_string($1);
-    write_for_statement(output_file,value,$3,variableToFor);
+        value = transform_int_string($1);
+        write_for_statement(output_file,value,$3,variableToFor);
     }
     | NAMEVAR TO VALUE_INT{
-    value = transform_int_string($3);
-    write_for_statement(output_file,$1,value,variableToFor);
+        value = transform_int_string($3);
+        write_for_statement(output_file,$1,value,variableToFor);
     }
     | NAMEVAR TO NAMEVAR{
         verify_type(simbols,$1,"int");
@@ -419,8 +419,8 @@ Body:
         close_output_file();
     }
     | BEGIN_BODY AlgorithmBody END_BODY {
-       write_body_end(output_file);
-       close_output_file();
+        write_body_end(output_file);
+        close_output_file();
     }
 ;
 
@@ -436,7 +436,6 @@ AlgorithmBody:
 %%
 
 int yyerror(char* errmsg) {
-
     printf("\nErro: '%s' na linha: %d\n", errmsg, quantity_lines);
     return 0;
 }
