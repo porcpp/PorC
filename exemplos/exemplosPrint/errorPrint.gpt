@@ -5,5 +5,5 @@ variáveis
     a:inteiro;
 fim-variáveis
 início
-    imprima("Olá mundo!");
+    imprima("Olá " mundo!");
 fim

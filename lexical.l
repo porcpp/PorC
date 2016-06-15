@@ -21,9 +21,9 @@ letter_min [a-z]
 letter_mai [A-Z]
 
 letter ({letter_min}|{letter_mai})
-any_char .
+any_char [^"]+
 string {letter}+
-any_string ("\""{any_char}+"\"")
+any_string ("\""{any_char}*"\"")
 
 char_value ("\'"{any_char}"\'")
 
