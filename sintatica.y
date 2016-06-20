@@ -419,6 +419,7 @@ ForStep:
 
 InputFunction:
     NAMEVAR ATTRIBUTION LEIA LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMICOLON { 
+        write_tabulation(output_file,counter_tabulation);
         char* type = NULL;
         type = transform_type_input(simbols,type,$1);
         write_input_file(output_file,$1,type);
