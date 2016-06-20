@@ -113,6 +113,8 @@ void close_output_file() {
 %token TO
 %token STEP
 
+%token LEIA
+
 %start Compile
 
 %error-verbose
@@ -413,6 +415,15 @@ ForStep:
     }
 ;
 
+InputFunction:
+    NAMEVAR ATTRIBUTION LEIA LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMICOLON { 
+        write_tabulation(output_file,counter_tabulation);
+        char* type = NULL;
+        type = transform_type_input(simbols,type,$1);
+        write_input_file(output_file,$1,type);
+    }
+;
+
 Body:
     BEGIN_BODY END_BODY {
         write_body_end(output_file);
@@ -426,8 +437,10 @@ Body:
 
 AlgorithmBody:
     AttribuitionVariables
+    | InputFunction
     | ConditionalStruct
     | LoopStruct
+    | InputFunction AlgorithmBody
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody
     | LoopStruct AlgorithmBody

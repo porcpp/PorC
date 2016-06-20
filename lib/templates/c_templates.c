@@ -101,3 +101,10 @@ void write_for_statement_end(FILE* file, const char* content, int step){
     sprintf(data,"%s+=%d){\n",content,step);
     write_to_file(file,data);
 }
+
+void write_input_file(FILE* file, const char* name, const char* type){
+    char data[MAX_STRING_SIZE];
+
+    sprintf(data, "scanf(\" %s\", \&%s);\n");
+    write_to_file(file,data);
+}

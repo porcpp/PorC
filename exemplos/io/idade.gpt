@@ -1,4 +1,4 @@
-algoritmo idade;
+algoritmo exemplo;
 
 variáveis
   idade: inteiro;
