@@ -1,14 +1,14 @@
 CC=gcc
-SIMBLE_TABLE_FILES=lib/simbol_table/variable.c lib/simbol_table/node.c lib/simbol_table/simbol_table.c
+SIMBOL_TABLE_FILES=lib/simbol_table/variable.c lib/simbol_table/node.c lib/simbol_table/simbol_table.c
 TEMPLATE_FILES=lib/templates/c_templates.c lib/templates/verify_templates.c lib/templates/transform_types.c
 UTIL_FILES=lib/util/log.c
-LIB=${TEMPLATE_FILES} ${SIMBLE_TABLE_FILES} ${UTIL_FILES}
+LIB=${TEMPLATE_FILES} ${SIMBOL_TABLE_FILES} ${UTIL_FILES}
 FILES=sintatica.tab.c lex.yy.c ${LIB}
 FLAGS=-ggdb
-TESTS=tests/variable_test.c tests/node_test.c tests/simbol_table_test.c tests/main_test.c
+TESTS=tests/simple_mocks.c tests/transform_types_test.c tests/variable_test.c tests/node_test.c tests/simbol_table_test.c tests/main_test.c
 
 
-porcpp:
+porc:
 	bison -d sintatica.y
 	flex lexical.l
 	${CC} ${FILES} ${FLAGS} -o compiler
