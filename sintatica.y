@@ -417,8 +417,12 @@ ForStep:
     }
 ;
 
-ReadFunction:
-    NAMEVAR ATTRIBUTION LEIA LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMICOLON { printf("read"); }
+InputFunction:
+    NAMEVAR ATTRIBUTION LEIA LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMICOLON { 
+        char* type = NULL;
+        type = transform_type_input(simbols,type,$1);
+        write_input_file(output_file,$1,type);
+    }
 ;
 
 Body:
@@ -434,10 +438,10 @@ Body:
 
 AlgorithmBody:
     AttribuitionVariables
-    | ReadFunction
+    | InputFunction
     | ConditionalStruct
     | LoopStruct
-    | ReadFunction AlgorithmBody
+    | InputFunction AlgorithmBody
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody
     | LoopStruct AlgorithmBody

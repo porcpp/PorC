@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "transform_types.h"
+#include "../simbol_table/simbol_table.h"
+
 #include "../util/log.h"
 
 char* transform_int_string(char* destiny_pointer, int value_tobe_converted) {
@@ -65,5 +67,23 @@ char* transform_type_inital_value(char* type){
         Log_error("Invalid type transformation");
         exit(0);
     }
+
 }
 
+char* transform_type_input(SimbolTable* simbols, char* type, char* variable){
+    type =  malloc(MAX_NUMBER_OF_CARACTERS*sizeof (char));
+    Variable* variable_type = SimbolTable_find(simbols,variable);
+    if(variable_type != NULL){
+        if(!strcmp(variable_type->type,"int") ){
+            type= "\%d";
+        } else if(!strcmp(variable_type->type,"char")){
+            strcpy(type,"\%c");
+        } else if(!strcmp(variable_type->type,"double")){
+            strcpy(type,"\%lf");
+        } else{
+            Log_error("Invalid type in variable");
+            exit(0);
+        }
+    }
+    return type;
+}
