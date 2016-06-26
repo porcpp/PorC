@@ -6,6 +6,7 @@
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
 #include "lib/util/log.h"
+#include "lib/util/string_builder.h"
 #include <string.h>
 
 FILE* output_file = NULL;
@@ -17,6 +18,7 @@ extern unsigned short MAX_LOG_MESSAGE_SIZE;
 int counter_tabulation=1;
 int counter_loop=1;
 SimbolTable* simbols = NULL;
+StrList* strList = NULL;
 
 void open_output_file(char* algorithm_name) {
     if (!output_file) {
@@ -91,6 +93,7 @@ void close_output_file() {
 %type <strval> Parenthesis
 %type <strval> Operator
 %type <strval> DimensionMatrix
+%type <strval> PrintBody
 
 %token COMMENT
 %token COLON
@@ -426,11 +429,22 @@ InputFunction:
     }
 ;
 
+PrintBody:
+    VALUE_STRING { StrList_add(strList, $1, "string"); }
+    | NAMEVAR { StrList_add(strList, $1, "variable"); }
+    | VALUE_STRING COMMA PrintBody {  StrList_add(strList, $1, "string"); }
+    | NAMEVAR COMMA PrintBody { StrList_add(strList, $1, "variable"); }
+;
+
 PrintStep:
-    IMPRIMA LEFT_PARENTHESIS VALUE_STRING RIGHT_PARENTHESIS SEMICOLON{
+    IMPRIMA LEFT_PARENTHESIS { strList = StrList_new(); } PrintBody RIGHT_PARENTHESIS SEMICOLON {
+        char* printfStr = StrList_makePrint(strList, simbols);
         write_tabulation(output_file,counter_tabulation);
-        write_print(output_file,$3);
+        write_print(output_file, printfStr);
+        StrList_destroy(strList);
+        free(printfStr);
     }
+
 ;
 
 Body:

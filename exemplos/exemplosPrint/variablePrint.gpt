@@ -1,10 +1,12 @@
 algoritmo exemplo;
 
 variáveis
-    asd:caractere;
-    a:inteiro;
+    idade: inteiro;
+    pi: real;
 fim-variáveis
 início
-    a:=2;
-    imprima("Olá",a," mundo");
+  idade := 123;
+  pi := 3.14;
+
+  imprima("Uma idade: ", idade, " e o valor de pi: ", pi, " e fim !");
 fim
