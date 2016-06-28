@@ -1,11 +1,12 @@
 algoritmo exemplo;
 
 variáveis
-    dfs: matriz[10] de inteiros;
-    fdsa: matriz[12] de reais;
-    asdf: matriz[14] de caracteres;
+    dfs: matriz[10][3] de reais;
+    fdsa: matriz[12][12] de inteiro;
+    asdf: matriz[14][19] de caracteres;
 fim-variáveis
 início
-    dfs[2] := 12;
-    fdsa[3] := 12.9;
+    dfs[2][12] := 12;
+    fdsa[3][0] := 12.9;
 fim
+
