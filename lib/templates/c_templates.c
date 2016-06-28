@@ -85,7 +85,7 @@ void write_declares_vector(FILE* file, const char* content, const char* content0
 
 void write_declares_matrix(FILE* file, const char* content, const char* content01, const char* content02) {
     char string_to_file[MAX_STRING_SIZE];
-
+	
     sprintf(string_to_file,"%s[%s][%s]", content, content01, content02);
     write_to_file(file,string_to_file);
 }
@@ -127,4 +127,21 @@ void write_print(FILE* file, const char* content){
 
     sprintf(data,"printf(%s);\n",content);
     write_to_file(file, data);
+}
+void write_declares_vector_type(FILE* file, const char* content, const char* size_vector, const char* type) {
+    char data[MAX_STRING_SIZE];
+
+    sprintf(data, "%s %s[%s];\n", type, content, size_vector);
+    write_to_file(file,data);
+}
+
+void write_initialize_matrix(FILE* file, const char* content, const char* size_vector, const char* type){
+    char data[MAX_STRING_SIZE];
+    
+    if(strcmp(type,"int") || strcmp(type,"double")){
+    	sprintf(data, "memset(%s, 0, %s*sizeof(%s))",content,size_vector,type);
+    } else {
+	sprintf(data, "memset(%s, 'a', %s*sizeof(%s))",content,size_vector,type);
+    }   
+    write_to_file(file,data); 
 }

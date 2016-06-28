@@ -177,10 +177,11 @@ Variables:
         write_declares_variable(output_file, $3 , $1,transform_type_inital_value(type));
     }
     | NAMEVAR COLON MATRIX DimensionMatrix FROM Type SEMICOLON {
-        SimbolTable_insert(simbols,$1,$6);
-        write_to_file(output_file,$6);
+	verify_before_insert(simbols,$1,$6);
         write_tabulation(output_file,counter_tabulation);
-        write_declares_vector(output_file, $1, $4);
+    	write_declares_vector_type(output_file,$1,$4,$6);    
+	write_tabulation(output_file,counter_tabulation);  	    	
+	write_initialize_matrix(output_file,$1,$4,$6);
     }
     | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix FROM Type SEMICOLON {
         SimbolTable_insert(simbols,$1,$7);
