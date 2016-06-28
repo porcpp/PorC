@@ -135,13 +135,34 @@ void write_declares_vector_type(FILE* file, const char* content, const char* siz
     write_to_file(file,data);
 }
 
-void write_initialize_matrix(FILE* file, const char* content, const char* size_vector, const char* type){
+void write_initialize_vector(FILE* file, const char* content, const char* size_vector, const char* type){
     char data[MAX_STRING_SIZE];
     
-    if(strcmp(type,"int") || strcmp(type,"double")){
+    if(strcmp(type,"int")==0 || strcmp(type,"double")==0){
     	sprintf(data, "memset(%s, 0, %s*sizeof(%s))",content,size_vector,type);
-    } else {
+    } 
+    else {
 	sprintf(data, "memset(%s, 'a', %s*sizeof(%s))",content,size_vector,type);
     }   
     write_to_file(file,data); 
 }
+
+void write_declares_matrix_type(FILE* file, const char* content, const char* size_vector_n,const char* size_vector_m, const char* type) {
+    char data[MAX_STRING_SIZE];
+
+    sprintf(data, "%s %s[%s][%s];\n", type, content, size_vector_n, size_vector_m);
+    write_to_file(file,data);
+}
+
+void write_initialize_matrix(FILE* file, const char* content, const char* size_vector_n, const char* size_vector_m, const char* type){
+    char data[MAX_STRING_SIZE];
+    
+    if(strcmp(type,"int")==0 || strcmp(type,"double")==0){
+    	sprintf(data, "memset(%s, 0, %s*%s*sizeof(%s))",content,size_vector_n,size_vector_m,type);
+    } 
+    else {
+	sprintf(data, "memset(%s, 'a', %s*%s*sizeof(%s))",content,size_vector_n,size_vector_m,type);
+    }   
+    write_to_file(file,data); 
+}
+
