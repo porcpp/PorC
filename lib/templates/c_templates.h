@@ -25,6 +25,9 @@ void write_condicional_sentece(FILE* file, const char* content, const char* cont
 void write_tabulation(FILE* file,int counter);
 
 void write_declares_vector(FILE* file, const char* content, const char* content01);
+void write_declares_vector_type(FILE* file, const char* content, const char* size_vector, const char* type);
+void write_initialize_matrix(FILE* file, const char* content, const char* size_vector, const char* type);
+    
 //Aritimetic sentenses
 
 void write_declares_matrix(FILE* file, const char* content, const char* content01, const char* content02);
