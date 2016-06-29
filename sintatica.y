@@ -220,21 +220,11 @@ AttribuitionVariables:
         write_valid_aritmetic(output_file,simbols,$1);
     } Operations SEMICOLON { write_to_file(output_file,";\n"); }
 
-    | NAMEVAR DimensionMatrix ATTRIBUTION VALUE_INT{
+    | NAMEVAR DimensionMatrix ATTRIBUTION{
         write_tabulation(output_file,counter_tabulation);
         write_declares_vector(output_file, $1, $2);
-	verify_type(simbols,$1,"int"); 
-        write_to_file(output_file, " = ");
-        write_to_file(output_file, transform_int_string($4));
-     } SEMICOLON { write_to_file(output_file,";\n"); }
-
-     | NAMEVAR DimensionMatrix ATTRIBUTION VALUE_DOUBLE{
-        write_tabulation(output_file,counter_tabulation);
-        write_declares_vector(output_file, $1, $2);
-	verify_type(simbols,$1,"double"); 
-        write_to_file(output_file, " = ");
-        write_to_file(output_file, transform_int_string($4));
-     } SEMICOLON { write_to_file(output_file,";\n"); }
+	write_to_file(output_file, " = ");
+     } Operations SEMICOLON { write_to_file(output_file,";\n"); }
      
      | NAMEVAR DimensionMatrix ATTRIBUTION VALUE_CHARACTER{
         write_tabulation(output_file,counter_tabulation);
@@ -244,13 +234,20 @@ AttribuitionVariables:
         write_to_file(output_file, $4);
      } SEMICOLON { write_to_file(output_file,";\n"); }
 
-
-    | NAMEVAR DimensionMatrix DimensionMatrix {
+    | NAMEVAR DimensionMatrix DimensionMatrix ATTRIBUTION {
         write_tabulation(output_file,counter_tabulation);
         write_declares_matrix(output_file, $1, $2,$3);
-    } ATTRIBUTION {
         write_to_file(output_file, " = ");
-    } Operations SEMICOLON{ write_to_file(output_file,";");}
+    } Operations SEMICOLON{ write_to_file(output_file,";\n"); }
+
+    | NAMEVAR DimensionMatrix DimensionMatrix ATTRIBUTION VALUE_CHARACTER{
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_matrix(output_file, $1, $2,$3);
+	verify_type(simbols,$1,"char"); 
+	write_to_file(output_file, " = ");    
+        write_to_file(output_file, $5); 
+     } SEMICOLON { write_to_file(output_file,";\n");}
+
 ;
 
 ValuesNumber:

@@ -6,7 +6,8 @@ variáveis
     asdf: matriz[14][19] de caracteres;
 fim-variáveis
 início
-    dfs[2][12] := 12;
-    fdsa[3][0] := 12.9;
+    dfs[2][12] := 12+fdsa;
+    fdsa[3][0] := 12.9+12;
+    asdf[3][4] := 'g';
 fim
 
