@@ -494,9 +494,11 @@ AlgorithmBody:
 %%
 
 int yyerror(char* errmsg) {
-    char* message = NULL;
-    printf("\nErro: '%s' na linha: %d\n", translate_message(errmsg,message),
-             quantity_lines);
+    char* message = (char*) malloc(sizeof(char)*1000);
+    sprintf(message,"\nErro: %s na linha: %d\n", translate_message(errmsg,message), quantity_lines);
+    printf("%s",message);
+    Log_error(message);
+    free(message);
     return 0;
 }
 
