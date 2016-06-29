@@ -57,7 +57,7 @@ void write_body_begin(FILE* file) {
 
 
 void write_body_end(FILE* file) {
-    write_to_file(file, "\nreturn 0;\n}");
+    write_to_file(file, "\n    return 0;\n}");
 }
 
 
