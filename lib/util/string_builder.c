@@ -70,7 +70,7 @@ char* StrList_percentage(char* type) {
      strcpy(percentage, "%f");
   } else if (strcmp(type, "char") == 0) {
      strcpy(percentage, "%c");
-  } else if (strcmp(type, "string") == 0) {
+  } else if (strcmp(type, "char*") == 0) {
      strcpy(percentage, "%s");
   } else {
      strcpy(percentage, "");

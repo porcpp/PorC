@@ -37,6 +37,13 @@ void write_atribute_variable(FILE* file, const char* content, const char* conten
     write_to_file(file, data);
 }
 
+void write_atribute_variable_string(FILE* file, const char* content, const char* content01) {
+    char data[MAX_STRING_SIZE];
+
+    sprintf(data, "strcpy(%s, %s);\n", content, content01);
+    write_to_file(file, data);
+}
+
 
 void write_tabulation(FILE* file,int counter){
     for(i=0;i<counter;i++){
@@ -47,6 +54,7 @@ void write_tabulation(FILE* file,int counter){
 void write_default_header(FILE* file) {
     write_to_file(file, "#include <stdlib.h>\n");
     write_to_file(file, "#include <stdio.h>\n");
+    write_to_file(file, "#include <string.h>\n");
 }
 
 
@@ -105,7 +113,12 @@ void write_for_statement_end(FILE* file, const char* content, int step){
 void write_input_file(FILE* file, const char* name, const char* type){
     char data[MAX_STRING_SIZE];
 
-    sprintf(data, "scanf(\" %s\", &%s);\n", type, name);
+    if (strcmp(type, "%s") != 0) {
+        sprintf(data, "scanf(\" %s\", &%s);\n", type, name);
+    } else {
+        sprintf(data, "scanf(\" %s\", %s);\n", type, name);
+    }
+
     write_to_file(file,data);
 }
 

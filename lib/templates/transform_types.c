@@ -71,6 +71,8 @@ char* transform_type_inital_value(char* type){
         return "0.0";
     }else if(!strcmp(type,"bool")){
         return "0";
+    }else if(!strcmp(type,"char*")){
+        return "(char*) malloc(sizeof(char)*200)";
     }else{
         Log_error("Invalid type transformation");
         exit(0);
@@ -88,6 +90,8 @@ char* transform_type_input(SimbolTable* simbols, char* type, char* variable){
             strcpy(type,"\%c");
         } else if(!strcmp(variable_type->type,"double")){
             strcpy(type,"\%lf");
+        } else if(!strcmp(variable_type->type,"char*")){
+            strcpy(type,"\%s");
         } else{
             Log_error("Invalid type in variable");
             exit(0);

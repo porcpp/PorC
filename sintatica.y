@@ -82,6 +82,7 @@ void close_output_file() {
 %token <strval> T_DOUBLE
 %token <strval> T_BOOLEAN
 %token <strval> T_CHAR
+%token <strval> T_STRING
 %token MATRIX
 
 /* define function type */
@@ -196,13 +197,14 @@ Type:
     |T_DOUBLE
     |T_CHAR
     |T_BOOLEAN
+    |T_STRING
 ;
 
 AttribuitionVariables:
     NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON {
         write_tabulation(output_file,counter_tabulation);
-        verify_type(simbols,$1,"string");
-        write_atribute_variable(output_file, $1, $3);
+        verify_type(simbols,$1,"char*");
+        write_atribute_variable_string(output_file, $1, $3);
     }
 
     | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON {

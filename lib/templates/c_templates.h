@@ -10,6 +10,8 @@ void write_declares_variable(FILE* file, const char* content, const char* conten
 
 void write_atribute_variable(FILE* file, const char* content, const char* content01);
 
+void write_atribute_variable_string(FILE* file, const char* content, const char* content01);
+
 void write_declares_variable_with_comma(FILE* file, const char* content, const char* initial_value);
 
 void write_end_line(FILE* file);
