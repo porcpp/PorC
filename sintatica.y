@@ -7,6 +7,7 @@
 #include "lib/templates/verify_templates.h"
 #include "lib/util/log.h"
 #include "lib/util/string_builder.h"
+#include "lib/util/translate.h"
 #include <string.h>
 
 FILE* output_file = NULL;
@@ -14,7 +15,7 @@ char* type=NULL;
 char* value=NULL;
 char* variableToFor=NULL;
 extern int quantity_lines;
-extern unsigned short MAX_LOG_MESSAGE_SIZE;
+const unsigned short MAX_LOG_MESSAGE_SIZE;
 int counter_tabulation=1;
 int counter_loop=1;
 SimbolTable* simbols = NULL;
@@ -493,7 +494,9 @@ AlgorithmBody:
 %%
 
 int yyerror(char* errmsg) {
-    printf("\nErro: '%s' na linha: %d\n", errmsg, quantity_lines);
+    char* message = NULL;
+    printf("\nErro: '%s' na linha: %d\n", translate_message(errmsg,message),
+             quantity_lines);
     return 0;
 }
 

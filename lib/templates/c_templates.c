@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "c_templates.h"
+#include "../util/log.h"
 
 int i;
 
@@ -9,7 +10,7 @@ void write_to_file(FILE* file, const char* content) {
     if (file != NULL) {
         fprintf(file, "%s", content);
     } else {
-        printf("COULD NOT WRITE IN FILE !\n");
+        Log_error("Não foi possível abrir o arquivo!\n");
         exit(0);
     }
 }
