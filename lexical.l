@@ -37,73 +37,73 @@ times "*"
 divider "/"
 
 %%
-{all_reserved}        { return(RESERVED_WORD_C); }
-{portugol_statements} { return(TO_IMPLEMENT); }
+{all_reserved}        { return(PALAVRA_RESERVADA_C); }
+{portugol_statements} { return(PARA_IMPLEMENTAR); }
 
 
-"se"                  { return(IF_); }
-"então"               { return(THAN_); }
-"senão"               { return(ELSE_); }
-"fim-se"              { return(END_IF_); }
-"e"                   { return(AND_); }
-"ou"                  { return(OR_); }
+"se"                  { return(SE_); }
+"então"               { return(ENTAO); }
+"senão"               { return(SENAO); }
+"fim-se"              { return(FIM_SE); }
+"e"                   { return(E_); }
+"ou"                  { return(OU_); }
 
-"enquanto"            { return(WHILE); }
-"faça"                { return(DO); }
-"fim-enquanto"        { return(END_WHILE); }
-"para"                { return(FOR); }
-"fim-para"            { return(END_FOR); }
-"de"                  { return(FROM); }
-"até"                 { return(TO); }
-"passo"               { return(STEP);  }
+"enquanto"            { return(ENQUANTO); }
+"faça"                { return(FACA); }
+"fim-enquanto"        { return(FIM_ENQUANTO); }
+"para"                { return(PARA); }
+"fim-para"            { return(FIM_PARA); }
+"de"                  { return(DE_); }
+"até"                 { return(ATE_); }
+"passo"               { return(PASSO);  }
 
 "leia"                { return(LEIA); }
 
-"algoritmo"           { return(ALGORITHM); }
-"fim-algoritmo"       { return(END_ALGORITHM); }
-"constantes"          { return(CONSTANTS); }
-"variáveis"           { return(VARIABLES); }
-"fim-variáveis"       { return(VARIABLES_END); }
-"início"              { return(BEGIN_BODY); }
-"fim"                 { return(END_BODY); }
+"algoritmo"           { return(ALGORITMO); }
+"fim-algoritmo"       { return(FIM_ALGORITMO); }
+"constantes"          { return(CONSTANTE); }
+"variáveis"           { return(VARIAVEIS); }
+"fim-variáveis"       { return(FIM_VARIAVEIS); }
+"início"              { return(INICIO_); }
+"fim"                 { return(FIM_); }
 
 "imprima"             { return(IMPRIMA);}
 
-"inteiro"             { yylval.strval = "int"; return(T_INT);}
-"real"                { yylval.strval = "double"; return(T_DOUBLE);}
-"lógico"              { yylval.strval = "bool"; return(T_BOOLEAN);}
-"caractere"           { yylval.strval = "char"; return(T_CHAR);}
-"literal"             { yylval.strval = "char*"; return(T_STRING);}
-"matriz"              { return(MATRIX);}
+"inteiro"             { yylval.strval = "int"; return(TIPO_INTEIRO);}
+"real"                { yylval.strval = "double"; return(TIPO_REAL);}
+"lógico"              { yylval.strval = "bool"; return(TIPO_BOOLEANO);}
+"caractere"           { yylval.strval = "char"; return(TIPO_CARACTERE);}
+"literal"             { yylval.strval = "char*"; return(TIPO_LITERAL);}
+"matriz"              { return(MATRIZ);}
 
-"inteiros"            { yylval.strval = "int"; return(T_INT);}
-"reais"               { yylval.strval = "double"; return(T_DOUBLE);}
-"lógicos"             { yylval.strval = "bool"; return(T_BOOLEAN);}
-"caracteres"          { yylval.strval = "char"; return(T_CHAR);}
+"inteiros"            { yylval.strval = "int"; return(TIPO_INTEIRO);}
+"reais"               { yylval.strval = "double"; return(TIPO_REAL);}
+"lógicos"             { yylval.strval = "bool"; return(TIPO_BOOLEANO);}
+"caracteres"          { yylval.strval = "char"; return(TIPO_CARACTERE);}
 
-":="                  { return(ATTRIBUTION); }
+":="                  { return(ATRIBUICAO); }
 
-"//"                  { return(COMMENT); }
-":"                   { return(COLON); }
-";"                   { return(SEMICOLON); }
-","                   { return(COMMA); }
+"//"                  { return(COMENTARIO); }
+":"                   { return(VIRGULA); }
+";"                   { return(PONTO_VIRGULA); }
+","                   { return(PONTO); }
 "\n"                  { quantity_lines+=1; }
 
-"("                   { return(LEFT_PARENTHESIS); }
-")"                   { return(RIGHT_PARENTHESIS); }
-"{"                   { return(LEFT_COL); }
-"}"                   { return(RIGHT_COL); }
-"["                   { return(LEFT_BRACKET);}
-"]"                   { return(RIGHT_BRACKET);}
+"("                   { return(PARENTESE_ESQUERDO); }
+")"                   { return(PARENTESE_DIREITO); }
+"{"                   { return(CHAVE_ESQUERDA); }
+"}"                   { return(CHAVE_DIREITA); }
+"["                   { return(COLCHETE_ESQUERDA);}
+"]"                   { return(COLCHETE_DIREITA);}
 
-{namevar}             { yylval.strval = strdup(yytext); return(NAMEVAR); }
-{integer}             { yylval.ival = atoi(yytext); return(VALUE_INT); }
-{real}                { yylval.dval = atof(yytext); return(VALUE_DOUBLE); }
-{char_value}          { yylval.strval = strdup(yytext); return(VALUE_CHARACTER); }
-{any_string}          { yylval.strval = strdup(yytext);	return(VALUE_STRING); }
-{comparator}          { yylval.strval = strdup(yytext); return(COMPARATOR); }
-{basic_aritimetic}    { yylval.strval = strdup(yytext); return(BASIC_ARITIMETIC); }
-{times}               { yylval.strval = strdup(yytext); return(TIMES); }
-{divider}             { yylval.strval = strdup(yytext); return(DIVIDER); }
+{namevar}             { yylval.strval = strdup(yytext); return(NOME_VARIAVEL); }
+{integer}             { yylval.ival = atoi(yytext); return(VALOR_INTEIRO); }
+{real}                { yylval.dval = atof(yytext); return(VALOR_REAL); }
+{char_value}          { yylval.strval = strdup(yytext); return(VALOR_CARACTERE); }
+{any_string}          { yylval.strval = strdup(yytext);	return(VALOR_LITERAL); }
+{comparator}          { yylval.strval = strdup(yytext); return(COMPARADOR); }
+{basic_aritimetic}    { yylval.strval = strdup(yytext); return(ARITMETICA_BASICA); }
+{times}               { yylval.strval = strdup(yytext); return(VEZES); }
+{divider}             { yylval.strval = strdup(yytext); return(DIVISAO); }
 
 %%
