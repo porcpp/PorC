@@ -1,5 +1,4 @@
-algoritmo exemplo;
-
+algoritmo exemplos;
 
 variáveis
     werd,a,sa,fds,dfs: caractere;
@@ -7,5 +6,5 @@ variáveis
     asdd,fgdsfh,dfgsfd,sdfdsg: real;
 fim-variáveis
 início
-    asd := 1;
+    asd := 1.2;
 fim

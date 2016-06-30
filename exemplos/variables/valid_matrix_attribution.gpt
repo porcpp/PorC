@@ -1,0 +1,13 @@
+algoritmo exemplo;
+
+variáveis
+    dfs: matriz[10][3] de reais;
+    fdsa: matriz[12][12] de inteiro;
+    asdf: matriz[14][19] de caracteres;
+fim-variáveis
+início
+    dfs[2][12] := 12+fdsa;
+    fdsa[3][0] := 12.9+12;
+    asdf[3][4] := 'g';
+fim
+

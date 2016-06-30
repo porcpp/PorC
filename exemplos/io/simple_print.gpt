@@ -1,0 +1,9 @@
+algoritmo exemplo;
+
+variáveis
+    asd:caractere;
+    a:inteiro;
+fim-variáveis
+início
+    imprima("Olá mundo!");
+fim

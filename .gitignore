@@ -3,6 +3,7 @@
 *.tab.*
 *.yy.*
 *.out
+*.log
 compiler
 execute_tests
 exemplo.c

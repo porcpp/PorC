@@ -1,0 +1,12 @@
+algoritmo exemplo;
+
+variáveis
+    idade: inteiro;
+    pi: real;
+fim-variáveis
+início
+  idade := 123;
+  pi := 3.14;
+
+  imprima("Uma idade: ", idade, " e o valor de pi: ", pi, " e fim !");
+fim

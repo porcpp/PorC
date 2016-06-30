@@ -2,7 +2,8 @@
 #include "variable_test.h"
 #include "node_test.h"
 #include "simbol_table_test.h"
-
+#include "transform_types_test.h"
+#include "translate_test.h"
 
 int main() {
   printf("\n");
@@ -15,6 +16,12 @@ int main() {
 
   printf("Testing simbol_table\n");
   execute_all_simbol_table_tests();
+
+  printf("Testing transform types\n");
+  execute_all_transform_types_tests();
+
+  printf("Testing translate sintax error\n");
+  execute_all_translate_tests();
 
   printf("\nTests ended\n");
 
