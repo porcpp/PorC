@@ -1,6 +1,5 @@
 algoritmo exemplo;
 
-
 variáveis
     dfs: caractere;
     asd: inteiro;

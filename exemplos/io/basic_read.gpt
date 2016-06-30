@@ -1,0 +1,12 @@
+algoritmo exemplo;
+
+variáveis
+    a: inteiro;
+    b:caractere;
+    c:real;
+fim-variáveis
+início
+    a := leia();
+    b := leia();
+    c := leia();
+fim

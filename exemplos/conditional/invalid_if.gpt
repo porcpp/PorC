@@ -4,11 +4,12 @@ algoritmo exemplo;
 variáveis
     werd,a,sa,fds,dfs: caractere;
     asd: inteiro;
-    asdf,fgdsfh,dfgsfd,sdfdsg: real;
+    asdd,fgdsfh,dfgsfd,sdfdsg: real;
 fim-variáveis
 início
-    b := "ads";
-    se oi = "fdsafds" então 
-    	ola; 
+    asd := 122;
+    se 123.45 <= 123 e 121 >=13 então
+    	asd := 12;
+        fim-
     fim-se
 fim

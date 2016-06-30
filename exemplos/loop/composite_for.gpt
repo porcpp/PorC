@@ -1,0 +1,26 @@
+algoritmo exemplo;
+
+variáveis
+  i : inteiro;
+  resultado : real;
+  base: real;
+  exp: inteiro;
+  exp2: inteiro;
+fim-variáveis
+
+início
+
+  resultado := 1;
+
+  para i de 1 até exp faça
+    resultado := resultado * base;
+
+    para i de exp até exp2 passo 2 faça
+        resultado := 1;
+        resultado := resultado * base;
+        resultado := 1;
+    fim-para
+
+  fim-para
+
+fim

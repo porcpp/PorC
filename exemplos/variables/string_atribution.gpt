@@ -1,0 +1,17 @@
+algoritmo exemplo;
+variáveis
+  nome: literal;
+  cpf: inteiro;
+fim-variáveis
+
+início
+  nome := "Usuário";
+
+  imprima(nome, " entre com o seu nome");
+  nome := leia();
+
+  imprima(nome, " entre com o seu CPF");
+  cpf := leia();
+
+  imprima("Seu nome: ", nome, "\nSua idade: ", idade);
+fim

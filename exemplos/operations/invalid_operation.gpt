@@ -1,0 +1,13 @@
+algoritmo exemplo;
+
+variáveis
+    asd:caractere;
+    a:inteiro;
+    b:real;
+fim-variáveis
+início
+
+    asd := '#';
+    a:=  a/(a  + 1) *;
+
+fim

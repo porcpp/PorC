@@ -5,14 +5,21 @@
 #include "lib/templates/transform_types.h"
 #include "lib/simbol_table/simbol_table.h"
 #include "lib/templates/verify_templates.h"
+#include "lib/util/log.h"
+#include "lib/util/string_builder.h"
+#include "lib/util/translate.h"
 #include <string.h>
 
 FILE* output_file = NULL;
 char* type=NULL;
 char* value=NULL;
+char* variableToFor=NULL;
 extern int quantity_lines;
-int counter_codicional=1;
+const unsigned short MAX_LOG_MESSAGE_SIZE;
+int counter_tabulation=1;
+int counter_loop=1;
 SimbolTable* simbols = NULL;
+StrList* strList = NULL;
 
 void open_output_file(char* algorithm_name) {
     if (!output_file) {
@@ -36,48 +43,47 @@ void close_output_file() {
     char* strval;
 }
 
-%token <strval> NAMEVAR
+%token <strval> NOME_VARIAVEL
 
 /* define types of attribution */
-%token ATTRIBUTION
+%token ATRIBUICAO
 
-%token <ival> VALUE_INT
-%token <dval> VALUE_DOUBLE
-%token <strval> VALUE_STRING
-%token <strval> VALUE_CHARACTER
-%token <strval> TEST_INT
+%token <ival> VALOR_INTEIRO
+%token <dval> VALOR_REAL
+%token <strval> VALOR_LITERAL
+%token <strval> VALOR_CARACTERE
 
 
-%token RESERVED_WORD_C
-%token TO_IMPLEMENT
-%token ALGORITHM
-%token END_ALGORITHM
-%token CONSTANTS
-%token VARIABLES
-%token VARIABLES_END
-%token BEGIN_BODY
-%token END_BODY
+%token PALAVRA_RESERVADA_C
+%token PARA_IMPLEMENTAR
+%token ALGORITMO
+%token FIM_ALGORITMO
+%token CONSTANTE
+%token VARIAVEIS
+%token FIM_VARIAVEIS
+%token INICIO_
+%token FIM_
 /* define tokens off operations */
 
-%token <strval> COMPARATOR
-%token <strval> BASIC_ARITIMETIC
-%token <strval> TIMES
-%token <strval> DIVIDER
+%token <strval> COMPARADOR
+%token <strval> ARITMETICA_BASICA
+%token <strval> VEZES
+%token <strval> DIVISAO
 
-%token LEFT_PARENTHESIS
-%token RIGHT_PARENTHESIS
-%token LEFT_COL
-%token RIGHT_COL
-%token LEFT_BRACKET
-%token RIGHT_BRACKET
+%token PARENTESE_ESQUERDO
+%token PARENTESE_DIREITO
+%token CHAVE_ESQUERDA
+%token CHAVE_DIREITA
+%token COLCHETE_ESQUERDA
+%token COLCHETE_DIREITA
 
 /* define tokens type */
-%token <strval> T_INT
-%token <strval> T_DOUBLE
-%token <strval> T_BOOLEAN
-%token <strval> T_CHAR
-%token MATRIX
-%token DE
+%token <strval> TIPO_INTEIRO
+%token <strval> TIPO_REAL
+%token <strval> TIPO_BOOLEANO
+%token <strval> TIPO_CARACTERE
+%token <strval> TIPO_LITERAL
+%token MATRIZ
 
 /* define function type */
 %type <strval> Type
@@ -88,18 +94,32 @@ void close_output_file() {
 %type <strval> Parenthesis
 %type <strval> Operator
 %type <strval> DimensionMatrix
+%type <strval> PrintBody
 
-%token COMMENT
-%token COLON
-%token COMMA
-%token SEMICOLON
+%token COMENTARIO
+%token VIRGULA
+%token PONTO
+%token PONTO_VIRGULA
 
-%token IF_
-%token THAN_
-%token ELSE_
-%token END_IF_
-%token AND_
-%token OR_
+%token SE_
+%token ENTAO
+%token SENAO
+%token FIM_SE
+%token E_
+%token OU_
+
+%token ENQUANTO
+%token FIM_ENQUANTO
+%token FACA
+%token FIM_PARA
+%token PARA
+%token DE_
+%token ATE_
+%token PASSO
+
+%token LEIA
+%token IMPRIMA
+%token STRING
 
 %start Compile
 
@@ -111,19 +131,26 @@ Compile:
     Header Body {
         Variable* variables = SimbolTable_get_variables_as_array(simbols);
         int i = 0;
-        printf("\nDEBUG - Variables insert in simbol table\n");
-        for(i =0; i< simbols->size; i++){
-            printf("%s %s\n",variables[i].type,variables[i].name);
+        char log_message[MAX_LOG_MESSAGE_SIZE];
+
+        Log_info("Variables insert in simbol table");
+
+        for(i =0; i< simbols->size; i++) {
+            sprintf(log_message, "Variable: %s %s", variables[i].type, variables[i].name);
+            Log_info(log_message);
         }
+
         SimbolTable_destroy(simbols);
+        Log_destroy();
         free(variables);
     }
 ;
 Header:
-    HeaderAlgorithm HeaderVariables
+    HeaderAlgorithm
+    | HeaderAlgorithm HeaderVariables
 ;
 HeaderAlgorithm:
-    ALGORITHM NAMEVAR SEMICOLON {
+    ALGORITMO NOME_VARIAVEL PONTO_VIRGULA {
         simbols = SimbolTable_new();
         open_output_file($2);
         write_default_header(output_file);
@@ -131,88 +158,166 @@ HeaderAlgorithm:
     }
 ;
 HeaderVariables:
-    VARIABLES MultiVariables VARIABLES_END{write_to_file(output_file,";\n");}
+    VARIAVEIS FIM_VARIAVEIS
+    | VARIAVEIS MultiVariables FIM_VARIAVEIS{write_to_file(output_file,";\n");}
 ;
 MultiVariables:
     Variables
     | Variables{write_to_file(output_file,";\n");}MultiVariables
 ;
 Variables:
-    NAMEVAR COMMA Variables { verify_before_insert(simbols,$1,type); write_declares_variable_with_comma(output_file, $1); }
-    | NAMEVAR COLON Type {type=$3;} SEMICOLON {verify_before_insert(simbols,$1,$3); write_declares_variable(output_file, $3 , $1); }
-    | NAMEVAR COLON MATRIX DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$6);} {write_to_file(output_file,$6); write_declares_vector(output_file, $1, $4);}
-    | NAMEVAR COLON MATRIX DimensionMatrix DimensionMatrix DE Type SEMICOLON {SimbolTable_insert(simbols,$1,$7);} {write_to_file(output_file,$7); write_declares_matrix(output_file, $1, $4, $5);}
-
+    NOME_VARIAVEL PONTO Variables {
+        verify_before_insert(simbols,$1,type);
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_variable_with_comma(output_file, $1,transform_type_inital_value(type));
+    }
+    | NOME_VARIAVEL VIRGULA Type {type=$3;} PONTO_VIRGULA {
+        verify_before_insert(simbols,$1,$3);
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_variable(output_file, $3 , $1,transform_type_inital_value(type));
+    }
+    | NOME_VARIAVEL VIRGULA MATRIZ DimensionMatrix DE_ Type PONTO_VIRGULA {
+	verify_before_insert(simbols,$1,$6);
+        write_tabulation(output_file,counter_tabulation);
+    	write_declares_vector_type(output_file,$1,$4,$6);    
+	write_tabulation(output_file,counter_tabulation);  	    	
+	write_initialize_vector(output_file,$1,$4,$6);
+    }
+    | NOME_VARIAVEL VIRGULA MATRIZ DimensionMatrix DimensionMatrix DE_ Type PONTO_VIRGULA {
+        verify_before_insert(simbols,$1,$7);
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_matrix_type(output_file, $1, $4, $5, $7);   
+	write_tabulation(output_file,counter_tabulation);  	    	
+	write_initialize_matrix(output_file,$1,$4,$5,$7);
+    }
 ;
 DimensionMatrix:
-    LEFT_BRACKET VALUE_INT RIGHT_BRACKET{ $$ = transform_int_string(value,$2); }
+    COLCHETE_ESQUERDA VALOR_INTEIRO COLCHETE_DIREITA { $$ = transform_int_string($2); }
 ;
 Type:
-    T_INT
-    |T_DOUBLE
-    |T_CHAR
-    |T_BOOLEAN
+    TIPO_INTEIRO
+    |TIPO_REAL
+    |TIPO_CARACTERE
+    |TIPO_BOOLEANO
+    |TIPO_LITERAL
 ;
 
 AttribuitionVariables:
-    
-    NAMEVAR ATTRIBUTION VALUE_STRING SEMICOLON {
-        write_tabulation(output_file,counter_codicional);
-        verify_type(simbols,$1,"string");
-        write_atribute_variable(output_file, $1, $3);
+    NOME_VARIAVEL ATRIBUICAO VALOR_LITERAL PONTO_VIRGULA {
+        write_tabulation(output_file,counter_tabulation);
+        verify_type(simbols,$1,"char*");
+        write_atribute_variable_string(output_file, $1, $3);
     }
-    | NAMEVAR ATTRIBUTION VALUE_CHARACTER SEMICOLON {
-        write_tabulation(output_file,counter_codicional);
+
+    | NOME_VARIAVEL ATRIBUICAO VALOR_CARACTERE PONTO_VIRGULA {
+        write_tabulation(output_file,counter_tabulation);
         verify_type(simbols,$1,"char");
         write_atribute_variable(output_file, $1, $3);
     }
-    | NAMEVAR ATTRIBUTION {
-       write_tabulation(output_file,counter_codicional);
-       write_valid_aritmetic(output_file,simbols,$1);
-    } Operations SEMICOLON { write_to_file(output_file,";\n"); }
-    | NAMEVAR DimensionMatrix { 
-        write_tabulation(output_file,counter_codicional);
-        write_declares_vector(output_file, $1, $2);} ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
-    | NAMEVAR DimensionMatrix DimensionMatrix { 
-        write_tabulation(output_file,counter_codicional);
-        write_declares_matrix(output_file, $1, $2,$3);}  ATTRIBUTION {write_to_file(output_file, " = ");} Operations SEMICOLON{write_to_file(output_file,";");} 
+
+    | NOME_VARIAVEL ATRIBUICAO {
+        write_tabulation(output_file,counter_tabulation);
+        write_valid_aritmetic(output_file,simbols,$1);
+    } Operations PONTO_VIRGULA { write_to_file(output_file,";\n"); }
+
+    | NOME_VARIAVEL DimensionMatrix ATRIBUICAO{
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_vector(output_file, $1, $2);
+	write_to_file(output_file, " = ");
+     } Operations PONTO_VIRGULA { write_to_file(output_file,";\n"); }
+     
+     | NOME_VARIAVEL DimensionMatrix ATRIBUICAO VALOR_CARACTERE{
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_vector(output_file, $1, $2);
+	verify_type(simbols,$1,"char"); 
+        write_to_file(output_file, " = ");
+        write_to_file(output_file, $4);
+     } PONTO_VIRGULA { write_to_file(output_file,";\n"); }
+
+    | NOME_VARIAVEL DimensionMatrix DimensionMatrix ATRIBUICAO {
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_matrix(output_file, $1, $2,$3);
+        write_to_file(output_file, " = ");
+    } Operations PONTO_VIRGULA{ write_to_file(output_file,";\n"); }
+
+    | NOME_VARIAVEL DimensionMatrix DimensionMatrix ATRIBUICAO VALOR_CARACTERE{
+        write_tabulation(output_file,counter_tabulation);
+        write_declares_matrix(output_file, $1, $2,$3);
+	verify_type(simbols,$1,"char"); 
+	write_to_file(output_file, " = ");    
+        write_to_file(output_file, $5); 
+     } PONTO_VIRGULA { write_to_file(output_file,";\n");}
+
 ;
 
 ValuesNumber:
-  VALUE_INT { $$ = transform_int_string(value,$1); }
-  | VALUE_DOUBLE { $$ = transform_double_string(value,$1); }
+  VALOR_INTEIRO { $$ = transform_int_string($1); }
+  | VALOR_REAL { $$ = transform_double_string($1); }
 ;
 ValuesString:
-  VALUE_STRING
-  | VALUE_CHARACTER
+  VALOR_LITERAL
+  | VALOR_CARACTERE
 ;
 
 
 Values:
-  NAMEVAR COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
-  | NAMEVAR COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
-  | ValuesNumber COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
-  | NAMEVAR COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
-  | ValuesString COMPARATOR NAMEVAR { write_condicional_sentece(output_file, $1, $2, $3); }
-  | ValuesNumber COMPARATOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
-  | ValuesString COMPARATOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
-  | NAMEVAR DimensionMatrix COMPARATOR ValuesNumber {printf("%s[%s] %s %s", $1, $2,$3,$4);}
-  | NAMEVAR DimensionMatrix DimensionMatrix COMPARATOR ValuesNumber {printf("%s[%s][%s] %s %s", $1, $2,$3,$4,$5);}
+  NOME_VARIAVEL COMPARADOR NOME_VARIAVEL {
+       transform_simbol_comparator($2);
+       write_condicional_sentece(output_file, $1, $2, $3);
+  }
+  | NOME_VARIAVEL COMPARADOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesNumber COMPARADOR NOME_VARIAVEL { write_condicional_sentece(output_file, $1, $2, $3); }
+  | NOME_VARIAVEL COMPARADOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesString COMPARADOR NOME_VARIAVEL { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesNumber COMPARADOR ValuesNumber { write_condicional_sentece(output_file, $1, $2, $3); }
+  | ValuesString COMPARADOR ValuesString { write_condicional_sentece(output_file, $1, $2, $3); }
+  | NOME_VARIAVEL DimensionMatrix COMPARADOR ValuesNumber {
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | ValuesNumber COMPARADOR NOME_VARIAVEL DimensionMatrix {
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | NOME_VARIAVEL DimensionMatrix COMPARADOR ValuesString {
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | ValuesString COMPARADOR NOME_VARIAVEL DimensionMatrix {
+        write_declares_vector(output_file, $1,$2);
+        write_condicional_sentece(output_file," ",$3,$4);
+  }
+  | NOME_VARIAVEL DimensionMatrix DimensionMatrix COMPARADOR ValuesNumber {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
+  | NOME_VARIAVEL DimensionMatrix DimensionMatrix COMPARADOR ValuesString {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
+  | ValuesNumber COMPARADOR  NOME_VARIAVEL DimensionMatrix DimensionMatrix {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
+  | ValuesString COMPARADOR  NOME_VARIAVEL DimensionMatrix DimensionMatrix {
+        write_declares_matrix(output_file, $1,$2,$3);
+        write_condicional_sentece(output_file," ",$4,$5);
+  }
 ;
 
 Operator:
-    BASIC_ARITIMETIC
-    | TIMES
-    | DIVIDER
+    ARITMETICA_BASICA
+    | VEZES
+    | DIVISAO
 ;
 
 Aritmetic:
-    NAMEVAR { write_variable_if_valid(output_file, simbols, $1); }
+    NOME_VARIAVEL { write_variable_if_valid(output_file, simbols, $1); }
     | ValuesNumber { write_to_file(output_file, $1); }
-    | BASIC_ARITIMETIC NAMEVAR {
-        write_operator_variable_valid(output_file,simbols,$1,$2); 
+    | ARITMETICA_BASICA NOME_VARIAVEL {
+        write_operator_variable_valid(output_file,simbols,$1,$2);
     }
-    | BASIC_ARITIMETIC ValuesNumber {
+    | ARITMETICA_BASICA ValuesNumber {
         write_aritmetic(output_file,$1,$2);
     }
     | Aritmetic Operator {write_to_file(output_file,$2); } Aritmetic
@@ -220,44 +325,47 @@ Aritmetic:
 ;
 
 Parenthesis:
-    LEFT_PARENTHESIS {write_to_file(output_file,"(");}Operations RIGHT_PARENTHESIS {write_to_file(output_file,")"); }
+    PARENTESE_ESQUERDO {
+      write_to_file(output_file,"(");
+    } Operations PARENTESE_DIREITO { write_to_file(output_file,")"); }
 ;
 Operations:
     Aritmetic
     | Parenthesis
-    | Parenthesis Operator {write_to_file(output_file,$2);} Operations
+    | Parenthesis Operator { write_to_file(output_file,$2); } Operations
 ;
 
 AndOr:
-  AND_ { write_to_file(output_file, " && "); } Condition
-  | OR_ { write_to_file(output_file, " || "); } Condition
+  E_ { write_to_file(output_file, " && "); } Condition
+  | OU_ { write_to_file(output_file, " || "); } Condition
 ;
 
 Condition:
   Values
   | Values AndOr
+
 ;
 
 ConditionalBegin:
-    IF_ {
-        write_tabulation(output_file,counter_codicional);
-        write_to_file(output_file, "if");
-    } Condition THAN_{
-        write_to_file(output_file, "{\n");
-        counter_codicional++;
+    SE_ {
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file, "if (");
+    } Condition ENTAO{
+        write_to_file(output_file, ") {\n");
+        counter_tabulation++;
     }
 ;
 
 ConditionalEnd:
-    ELSE_ {
-        counter_codicional--;
-        write_tabulation(output_file,counter_codicional);
-        counter_codicional++;
-        write_to_file(output_file, "}else{\n");
+    SENAO {
+        counter_tabulation--;
+        write_tabulation(output_file,counter_tabulation);
+        counter_tabulation++;
+        write_to_file(output_file, "} else{\n");
     } AlgorithmBody ConditionalEnd
-    | END_IF_ {
-        counter_codicional--;
-        write_tabulation(output_file,counter_codicional);
+    | FIM_SE {
+        counter_tabulation--;
+        write_tabulation(output_file,counter_tabulation);
         write_to_file(output_file, "}\n");
     }
 ;
@@ -267,28 +375,129 @@ ConditionalStruct:
     | ConditionalBegin ConditionalStruct ConditionalEnd
 ;
 
+LoopStruct:
+    ENQUANTO {
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file,"while (");
+    }
+    Condition FACA {
+        counter_loop++;
+        write_to_file(output_file,") {\n");
+        counter_loop--;
+        write_tabulation(output_file,counter_loop);
+        counter_loop++;
+     } AlgorithmBody FIM_ENQUANTO {
+        counter_loop--;
+        write_tabulation(output_file,counter_loop);
+        write_to_file(output_file,"}\n");
+    }
+    | PARA NOME_VARIAVEL DE_ {
+        verify_type(simbols,$2,"int");
+        variableToFor = $2;
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file,"for(");
+    } ForStep FACA { counter_tabulation++; }
+    AlgorithmBody { counter_tabulation--; }
+    FIM_PARA {
+        write_tabulation(output_file,counter_tabulation);
+        write_to_file(output_file,"}\n");
+    }
+;
+
+ForStatement:
+    VALOR_INTEIRO ATE_ VALOR_INTEIRO{
+        char *aux;
+        value = transform_int_string($3);
+        aux = transform_int_string($1);
+        write_for_statement(output_file,aux,value,variableToFor);
+        free(aux);
+    }
+    | VALOR_INTEIRO ATE_ NOME_VARIAVEL{
+        value = transform_int_string($1);
+        write_for_statement(output_file,value,$3,variableToFor);
+    }
+    | NOME_VARIAVEL ATE_ VALOR_INTEIRO{
+        value = transform_int_string($3);
+        write_for_statement(output_file,$1,value,variableToFor);
+    }
+    | NOME_VARIAVEL ATE_ NOME_VARIAVEL{
+        verify_type(simbols,$1,"int");
+        verify_type(simbols,$3,"int");
+        write_for_statement(output_file,$1,$3,variableToFor);
+    }
+;
+
+ForStep:
+    ForStatement{
+        write_for_statement_end(output_file,variableToFor,1);
+    }
+    | ForStatement PASSO VALOR_INTEIRO{
+        write_for_statement_end(output_file,variableToFor,$3);
+    }
+    |ForStatement PASSO ARITMETICA_BASICA VALOR_INTEIRO {
+        write_for_statement_end(output_file,variableToFor,-$4);
+    }
+;
+
+InputFunction:
+    NOME_VARIAVEL ATRIBUICAO LEIA PARENTESE_ESQUERDO PARENTESE_DIREITO PONTO_VIRGULA { 
+        write_tabulation(output_file,counter_tabulation);
+        char* type = NULL;
+        type = transform_type_input(simbols,type,$1);
+        write_input_file(output_file,$1,type);
+    }
+;
+
+PrintBody:
+    VALOR_LITERAL { StrList_add(strList, $1, "string"); }
+    | NOME_VARIAVEL { StrList_add(strList, $1, "variable"); }
+    | VALOR_LITERAL PONTO PrintBody {  StrList_add(strList, $1, "string"); }
+    | NOME_VARIAVEL PONTO PrintBody { StrList_add(strList, $1, "variable"); }
+;
+
+PrintStep:
+    IMPRIMA PARENTESE_ESQUERDO { strList = StrList_new(); } PrintBody PARENTESE_DIREITO PONTO_VIRGULA {
+        char* printfStr = StrList_makePrint(strList, simbols);
+        write_tabulation(output_file,counter_tabulation);
+        write_print(output_file, printfStr);
+        StrList_destroy(strList);
+        free(printfStr);
+    }
+
+;
+
 Body:
-    BEGIN_BODY END_BODY {
+    INICIO_ FIM_ {
         write_body_end(output_file);
         close_output_file();
     }
-    | BEGIN_BODY AlgorithmBody END_BODY {
-       write_body_end(output_file);
-       close_output_file();
+    | INICIO_ AlgorithmBody FIM_ {
+        write_body_end(output_file);
+        close_output_file();
     }
 ;
 
 AlgorithmBody:
     AttribuitionVariables
+    | InputFunction
     | ConditionalStruct
+    | LoopStruct
+    | InputFunction AlgorithmBody
+    | PrintStep
     | AttribuitionVariables AlgorithmBody
     | ConditionalStruct AlgorithmBody
+    | LoopStruct AlgorithmBody
+    | PrintStep AlgorithmBody
 ;
 
 %%
 
 int yyerror(char* errmsg) {
-    printf("\nErro: '%s' na linha: %d\n", errmsg, quantity_lines);
+    char* message = (char*) malloc(sizeof(char)*1000);
+    sprintf(message,"\nErro: %s na linha: %d\n", translate_message(errmsg,message), quantity_lines);
+    printf("%s",message);
+    Log_error(message);
+    free(message);
     return 0;
 }
 
